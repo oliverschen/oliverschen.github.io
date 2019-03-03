@@ -3,13 +3,13 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: jihe
-subtitle:
-description:
-keywords:
+title: 这个人很赖，什么也没有留下
+subtitle: ARE YOU OK?
+description: 一直在路上
+keywords: 海贼王追随者
 author: jihe
-language:
-timezone:
+language: zh-Hans
+timezone: GMT+8
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'

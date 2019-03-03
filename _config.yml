@@ -88,7 +88,7 @@ live2d:
     superSample: 2
     width: 120
     height: 200
-    position: left 
+    position: right 
     hOffset: 20
     vOffset: 50
   mobile:

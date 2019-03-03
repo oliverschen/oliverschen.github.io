@@ -83,16 +83,16 @@ live2d:
     scale: 1
     hHeadPos: 0.5
     vHeadPos: 0.618
-    use: live2d-widget-model-shizuku // 下载的动画模型名称
+    use: live2d-widget-model-shizuku  
   display:
     superSample: 2
     width: 120
     height: 200
-    position: left // 模型在网页显示位置
+    position: left 
     hOffset: 20
     vOffset: 50
   mobile:
-    show: true  // 移动设备是否显示
+    show: true
     scale: 0.5
   react:
     opacityDefault: 0.7

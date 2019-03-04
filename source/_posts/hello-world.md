@@ -1,9 +1,14 @@
 ---
 title: Hello World
+tags: hello
+category: hello
 ---
-Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [troubleshooting](https://hexo.io/docs/troubleshooting.html) or you can ask me on [GitHub](https://github.com/hexojs/hexo/issues).
 
-## Quick Start
+![https://upload-images.jianshu.io/upload_images/8609178-35a3f61a404e6a6c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/923/format/webp](good luck)
+是的，这是一篇欢迎页面，从开头大大的 `Hello World` 知道，这也是用来测试博客的页面。博客主题是 `nexT`，个人比较喜欢这种比较简洁的主题风格。
+既然这是一篇测试，那就留点东西在这里。其实写了这么多，也就是想测试下 `read more` 模式。好了，差不多有 150 个字了，这段话的使命结束了。
+
+## 快速开始
 
 ### Create a new post
 
@@ -11,7 +16,7 @@ Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [docume
 $ hexo new "My New Post"
 ```
 
-More info: [Writing](https://hexo.io/docs/writing.html)
+以上就是如何快速创建一篇新的博客文章。
 
 ### Run server
 
@@ -19,7 +24,7 @@ More info: [Writing](https://hexo.io/docs/writing.html)
 $ hexo server
 ```
 
-More info: [Server](https://hexo.io/docs/server.html)
+在本地运行服务，测试博客的效果。
 
 ### Generate static files
 
@@ -27,7 +32,7 @@ More info: [Server](https://hexo.io/docs/server.html)
 $ hexo generate
 ```
 
-More info: [Generating](https://hexo.io/docs/generating.html)
+生成静态页面。
 
 ### Deploy to remote sites
 
@@ -35,4 +40,4 @@ More info: [Generating](https://hexo.io/docs/generating.html)
 $ hexo deploy
 ```
 
-More info: [Deployment](https://hexo.io/docs/deployment.html)
+部署本地博客到远程服务器。这一步结束之后就可以愉快的访问到自己的博客了。

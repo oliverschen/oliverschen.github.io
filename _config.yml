@@ -9,7 +9,7 @@ description: 一直在路上
 keywords: 海贼王追随者
 author: jihe
 language: zh-Hans
-timezone: GMT+8
+timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'

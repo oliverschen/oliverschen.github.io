@@ -4,7 +4,7 @@ date: 2019-03-03 23:37:38
 type: "about"
 ---
 
-![](/about/images/aboutme.png)
+![](/images/aboutme.png)
 
 ###### 梦想
 ``` md

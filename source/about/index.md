@@ -6,9 +6,6 @@ type: "about"
 ---
 
 ![](https://upload-images.jianshu.io/upload_images/8609178-3dd4620d1a9a177a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-![](/images/aboutme.png)
-
 ###### 梦想
 
 ``` md

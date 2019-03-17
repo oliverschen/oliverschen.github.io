@@ -2,9 +2,8 @@
 title: Hello World
 tags: hello
 category: hello
+photos: http://pnvzvh2vw.bkt.clouddn.com//helloworld.png
 ---
-
-![hello jihe](http://pnvzvh2vw.bkt.clouddn.com//helloworld.png)
 
 是的，这是一篇欢迎页面，从开头大大的 `Hello World` 知道，这也是用来测试博客的页面。博客主题是 `nexT`，个人比较喜欢这种比较简洁的主题风格。
 既然这是一篇测试，那就留点东西在这里。其实写了这么多，也就是想测试下 `read more` 模式。好了，差不多有 150 个字了，这段话的使命结束了。

@@ -5,7 +5,7 @@ type: "about"
 
 ---
 
-![](https://upload-images.jianshu.io/upload_images/8609178-3dd4620d1a9a177a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![dream]( http://pnvzvh2vw.bkt.clouddn.com//aboutme.png)
 ###### 梦想
 
 ``` md

@@ -8,7 +8,7 @@ tags: manjaro
 
 一般做开发的话使用 Linux 是躲不开的，在学校的时候挺喜欢折腾，但也是局限于在虚拟机安装各种版本的 Linux 系统，但是有些 win 上必须应用软件在 Linux 找不到代替版，就一直只是当做服务器的角色，没有用在实际使用中，直到去年碰到 manjaro，就把常驻多年的 win 换成了 manjaro，使用起来很方便，应用软件基本都有了，安装过程也很简单，类 win 操作，这里也只是记录下配置和一些必要软件的安装命令，以防我哪天作死搞挂重装....o‿≖✧
 
-![我的桌面](http://pnvzvh2vw.bkt.clouddn.com//manjaro.png)
+![我的桌面]( http://pnvzvh2vw.bkt.clouddn.com//manjaro.png)
 
 > manjaro 安装比较简单，建议使用 [rufus](https://rufus.ie/)，还有 [manjaro](https://manjaro.org/) 官网地址。
 

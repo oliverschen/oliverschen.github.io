@@ -168,6 +168,29 @@ tar　-zxcf　ideaxxx.tar.gz
 完成安装
 ```
 
+**安装 svn 客户端 kdesvn**
+```
+sudo pacman -S kdesvn
+```
+**安装 mongodb**
+``` bash
+$ yay -S mongodb
+## 配置
+$ sudo vim /etc/mongodb.conf # 编辑 mongodb 数据库路径
+
+sudo chmod  u=rw /home/mj/mongodb  #  设置读写权限
+sudo chown -R mongodb:  /home/mj/mongodb  # 更改用户
+
+```
+**安装 docker**
+``` bash
+sudo pacman -S docker
+
+sudo systemctl start docker.service # 启动服务 
+
+```
+
+
 **安装 ss**
 
 ```

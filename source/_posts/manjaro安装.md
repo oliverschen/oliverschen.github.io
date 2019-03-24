@@ -188,6 +188,8 @@ sudo pacman -S docker
 
 sudo systemctl start docker.service # 启动服务 
 
+sudo systemctl enable docker.service # 设置 docker 自启动
+
 ```
 
 

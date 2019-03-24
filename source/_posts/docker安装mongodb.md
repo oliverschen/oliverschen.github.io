@@ -3,7 +3,7 @@ title: docker安装mongodb
 date: 2019-03-19 23:19:44
 tags: docker,mongodb
 category: docker,mongodb
-photos:  http://pnvzvh2vw.bkt.clouddn.com//mongodb.png
+photos:   http://pnvzvh2vw.bkt.clouddn.com//mongo.png
 ---
 
 mongodb 是一款很优秀的开源 nosql 数据库，它内部以 json 作为存储格式，在数据存储方面有很大的收缩性。因为前几天折腾 docker，这里记录一下在 docker 部署 mongdb 的步骤和简单的使用方法，其实之前接触 nosql 最多的就是 redis，目前公司大量使用 mongodb,在这里记录一些关键点，方便回顾。

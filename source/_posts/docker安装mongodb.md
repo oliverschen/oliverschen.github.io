@@ -3,10 +3,14 @@ title: docker安装mongodb
 date: 2019-03-19 23:19:44
 tags: docker,mongo
 category: docker,mongo
-photos:   http://pnvzvh2vw.bkt.clouddn.com//mongo.png
+photos:   
 ---
 
+![](docker安装mongodb/mongo.png)
+
 mongodb 是一款很优秀的开源 nosql 数据库，它内部以 json 作为存储格式，在数据存储方面有很大的收缩性。因为前几天折腾 docker，这里记录一下在 docker 部署 mongdb 的步骤和简单的使用方法，其实之前接触 nosql 最多的就是 redis，目前公司大量使用 mongodb,在这里记录一些关键点，方便回顾。
+
+<!-- more -->
 
 |    ev  |  version    |   
 | ---- | ---- |  
@@ -31,6 +35,10 @@ sudo docker pull mongo
 ``` bash
 # 启动 mongo    --auth 有此参数的话，在连接时需要用户名密码
 sudo docker run -d -p 27017:27017 -v /home/chenkui/database/mongodb/config:/data/configdb -v /home/chenkui/database/mongodb/data:/data/db --name mongo docker.io/mongo --auth
+
+# 启动 mongo (容器创建成功之后启动 mongo 命令)
+sudo docker start mongo
+
 # 停止 mongo
 sudo docker stop mongo
 

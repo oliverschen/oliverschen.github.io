@@ -6,7 +6,7 @@ category: mongo
 photos: 
 ---
 
-![](mongo权限设置/mongo.png)
+![](mongo权限设置/mongoPower.png)
 
 mongodb 使用起来还是相对简单的，但是在权限设置时，遇到了几个小问题，以至于花了比较久的时间，在给 mongo 设置权限前首先要清楚几点：
 

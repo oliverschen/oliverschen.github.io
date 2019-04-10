@@ -5,7 +5,7 @@ tags: mongo
 category: mongo
 ---
 
-![](mongo乐观锁/mongo.png)
+![](mongo乐观锁/mongoLock.png)
 
 前几天完了一下 mongo 的一些基础操作，在工作中遇到最多的就是 CRUD 这种操作，但是随着业务复杂度增加，访问数量增加之后，对系统的需求也会随之增加。我在业务中使用最多的就是乐观锁，主要原因是因
 

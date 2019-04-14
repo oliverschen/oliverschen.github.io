@@ -163,6 +163,11 @@ export JRE_HOME=${JAVA_HOEM}/jre
 export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib 
 ```
 
+**卸载 JDK**
+```
+pacman -R jdk8
+```
+
 **安装　idea**
 
 ```

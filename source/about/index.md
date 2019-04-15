@@ -4,8 +4,8 @@ date: 2019-03-03 23:37:38
 type: "about"
 
 ---
+![dream](/about/index/aboutme.png)
 
-![dream]( http://pnvzvh2vw.bkt.clouddn.com//aboutme.png)
 ###### 梦想
 
 ``` md

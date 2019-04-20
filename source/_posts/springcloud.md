@@ -5,7 +5,7 @@ tags: springcloud
 category: springcloud
 ---
 
-
+![大多数人的生活，是无数次选择的结果](springcloud/springcloud.png)
 
 最近两年微服务架构特别火，很多公司都投身到微服务的怀抱。面试的时候面试官也一定会问有没有用过或者了解过微服务，微服务的火热可见一斑。很多公司都在微服务的路上试探，我们公司也不例外。目前一般 Java 为基础的公司大多用的都是 spring 全家桶，而近年出了 spring boot 和 spring cloud，为微服务提供了一站式解决方案。
 
@@ -28,8 +28,28 @@ spring cloud 是一系列框架的集合，它包含了 服务的注册、发现
 
 #### dubbo
 
-dubbo 是阿里开源的一款服务治理中间件，在国内特别火，并且其
+dubbo 是阿里开源的一款服务治理中间件，在国内特别火，并且其有一个强大的监控后台，最近又开始了更新。相信未来在服务治理方面会做的更好。
 
 
 
 #### spring cloud 和 dubbo
+
+下面是一张它们核心功能对比表。
+
+| 组件     |   dubbo   |    spring cloud  |
+| ---- | ---- | ---- |
+|  服务注册中心    |   zookeeper   | Eureka 等等..     |
+|  服务网关    |  无    |  Zuul 等..    |
+|  断路器  | 不完善     |  Hystrix    |
+|配置中心| 无| Config|
+|链路追踪|无|Slenth|
+|消息总线|无|Bus|
+
+其实直接把 dubbo 和 spring cloud 放在一起对比是不公平的，spring cloud 是封装了很多优秀组件之后的一个微服务解决方案的集合，而 dubbo 更专注于服务治理，在服务治理和监控方面做的比是spring cloud 还要优秀。
+
+总的来说 spring cloud 有 spring 这个强大的组织做背书，在未来微服务方向肯定是所向披靡的，但是 dubbo 在服务治理方面也会一枝独秀，毕竟在阿里这样体量的公司和实际的业务场景下，它只会进化的越来越完善，越来越优秀。
+
+
+***
+
+<center>愿你 平安喜乐</center>

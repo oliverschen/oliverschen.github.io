@@ -18,15 +18,17 @@ category: springcloud
 
 #### 什么是 Spring Cloud
 
-spring cloud 是一系列框架的集合，它包含了 服务的注册、发现，服务网关，配置中心、消息总线、负载均衡、断路器、数据监控等
-
+spring cloud 是一系列框架的集合，它包含了 服务的注册、发现，服务网关，配置中心、消息总线、负载均衡、断路器、数据监控等，而这些组件中大部分也不是 spring 公司研发的，而是基于现有的一些优秀开源框架进行二次封装的。当然这也是 spring 不重复造轮子的理念。而这些服务的开发都是基于 spring boot 这款优秀的框架的。spring cloud 现有组件都有 20 多个，而且还在新增中。
 
 
 #### spring boot 和 spring cloud
 
+上面分别了解了 spring boot 和 spring cloud 之后相信对他们的区别和联系也有了认识。简单来说，没有 spring cloud，spring boot 是可以独立创建应用，并且投入生产不会有影响。而 spring cloud 的开发却离不开 spring boot 的支持。也就是说  spring cloud 是基于 spring boot 的，分清楚两者关系在学习微服务架构的时候就会有一个整体的概念，学好 spring boot 意味着 spring cloud 开发也会顺畅很多。
 
 
 #### dubbo
+
+dubbo 是阿里开源的一款服务治理中间件，在国内特别火，并且其
 
 
 

@@ -175,6 +175,32 @@ Finished building OpenJDK for target 'all'
 ```
 编译时会出现各种问题，可能是依赖版本，或者是包下载不下来导致问题，还有写是因为配置文件设置的问题。下面是我碰到的几个问题
 
+##### 设置环境变量
+
+现在已经拥有一个自己的 jdk 了，设置环境变量使用起来。
+
+先在 jdk8u/build/linux-x86_64-normal-server-release/images 下找到 j2sdk-image 目录，这个就是编译好的 jdk，把它复制到自己的 java 目录下，然后设置环境变量。 
+``` bash
+# 先卸载之前配置的 bootjdk 之后然后设置新的
+# 设置环境变量
+sudo vim /etc/profile
+# JDK
+export JAVA_HOME=/usr/local/java
+export JRE_HOME=${JAVA_HOEM}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib 
+
+```
+重启配置文件
+ source /etc/profile
+
+现在 java 环境变量已经设置好了，输入 java -version 可以查看到环境下面信息，而且还有**自己的机器名**在上面，开心一分钟
+``` bash
+➜  ~ java -version
+openjdk version "1.8.0-internal"
+OpenJDK Runtime Environment (build 1.8.0-internal-chenkui_2019_04_14_22_21-b00)
+OpenJDK 64-Bit Server VM (build 25.71-b00, mixed mode)
+```
+
 ##### 问题
 
 在编译时出现的 
@@ -196,6 +222,8 @@ WARNING_FLAGS = -w
 
 ```
 参考[链接](https://blog.csdn.net/desiyonan/article/details/80802066) 这个问题是解决最没有头绪的一个，不过在编译的过程中要仔细看报错信息，这样方便 Google 时能准确的找到问题所在。现在就可以愉快的调试源码来玩一下了。
+
+
 
 ##### the end
 记得第一次接触 Java 时，在命令行打印出 `hello world` 时真的很疑惑，就这么一个东西，能有什么用。但是随着一点一点的了解，慢慢发现它的强大之处。每天能进步一点，一年后看今天碰到的问题，其实也不难解决，不积跬步无以至千里，要加油啊！！！  ∩▂∩

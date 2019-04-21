@@ -11,10 +11,7 @@ spring cloud netflix eureka 是对 Netflix 公司开源组件封装后的服务�
 
 <!-- more -->
 
-***
-
 #### eureka server
-
 ##### pom 坐标
 
 ``` xml
@@ -45,7 +42,6 @@ spring cloud netflix eureka 是对 Netflix 公司开源组件封装后的服务�
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -95,7 +91,6 @@ public class JiheEurekaApplication {
 ```
 
 ##### 配置
-
 
 ``` yml
 # 日志
@@ -193,7 +188,7 @@ eureka:
 ###### 注册服务
 ``` java
 @SpringBootApplication
-@EnableDiscoveryClient # 开启服务发现
+@EnableDiscoveryClient // 开启服务发现
 public class JiheProducerApplication {
     public static void main(String[] args) {
         SpringApplication.run(JiheProducerApplication.class, args);
@@ -222,8 +217,9 @@ eureka:
 这样就注册好服务了，现在访问 http://localhost:8080 注册中心页面就可以看到已经注册的服务
 
 **Instances currently registered with Eureka**
-|Application|AMIs|Availability Zones|Status
-|----|----|----|----|
+
+| Application     |   AMIs   |   Availability Zones | Status|
+| ---- | ---- | ---- | ---- |
 |JIHE-PRODUCER| 	n/a (1) |(1) |UP (1) - 192.168.0.104:jihe-producer:8081|
 
 

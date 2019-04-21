@@ -16,7 +16,7 @@ category: openjdk
 | ---- | ---- |    
 |    os  |  Mangaro 18.0.1    |       
 |    openjdk  |    jdk8u  |      
-|boot jdk| 1.7.0_80|
+|boot jdk| 1.8.0_202|
 
 
 
@@ -224,8 +224,7 @@ WARNING_FLAGS = -w
 参考[链接](https://blog.csdn.net/desiyonan/article/details/80802066) 这个问题是解决最没有头绪的一个，不过在编译的过程中要仔细看报错信息，这样方便 Google 时能准确的找到问题所在。现在就可以愉快的调试源码来玩一下了。
 
 
-
-##### the end
+#### the end
 记得第一次接触 Java 时，在命令行打印出 `hello world` 时真的很疑惑，就这么一个东西，能有什么用。但是随着一点一点的了解，慢慢发现它的强大之处。每天能进步一点，一年后看今天碰到的问题，其实也不难解决，不积跬步无以至千里，要加油啊！！！  ∩▂∩
 
 官网提供的编译[文档](http://hg.openjdk.java.net/jdk8/jdk8/raw-file/tip/README-builds.html)

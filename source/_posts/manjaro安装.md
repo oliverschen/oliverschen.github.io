@@ -252,4 +252,9 @@ $ export LANG=zh_CN.UTF-8
 $ #然后重启电脑如果提示语言更改，保留旧的名称即可
 ```
 
+**设置环境变量**
+
+``` bash
+export PATH=/usr/local/...
+```
 补充 ing...

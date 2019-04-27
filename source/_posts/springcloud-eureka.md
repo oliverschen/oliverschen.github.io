@@ -222,8 +222,172 @@ eureka:
 | ---- | ---- | ---- | ---- |
 |JIHE-PRODUCER| 	n/a (1) |(1) |UP (1) - 192.168.0.104:jihe-producer:8081|
 
+到这里服务的注册和发现就完成了，可以看到服务提供者讲服务注册到服务中心，供服务的消费者调用服务,那微服务之间是如何调用的呢？下面看下另外一个组件。
 
-到这里服务的注册和发现就完成了，可以看到服务提供者讲服务注册到服务中心，供服务的消费者调用服务，如果熟悉 spring boot 的话其实 spring cloud 的简单使用并不难，继续加油。
+#### Feign
+
+Feign 是一个声明式 REST 客户端，可以创建基于 JAX-RS 或者 springMVC 注解修饰的接口的动态实现。也就是说它实现了通过注解和接口的方式进行服务的调用。下面我创建一个服务消费者来调用生产者的服务。
+
+#### 提供接口
+
+在 producer 服务中创建 UserController,并向外抛一个可以访问的接口
+```java
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+    @RequestMapping("/get/{name}")
+    public String get(@PathVariable("name") String name) {
+        return "this is PRODUCER " + "you name is =====" + name;
+    }
+
+}
+```
+
+#### 服务消费者
+
+创建服务的消费者，集成 Feign  客户端
+
+##### pom
+
+``` xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.3.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.jihe</groupId>
+    <artifactId>jihe-consumer</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>jihe-consumer</name>
+    <description>consumer for service</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+
+```
+
+##### 配置文件
+
+```properties
+debug: false
+spring:
+  application:
+    name: jihe-consumer
+
+# 端口
+server:
+  port: 8082
+
+# 注册服务
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8080/eureka/
+```
+
+##### 启动类配置
+
+消费者端开启服务发现和 Feign 客户端
+
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+@EnableFeignClients
+public class JiheConsumerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(JiheConsumerApplication.class, args);
+    }
+
+}
+
+```
+
+##### 消费者远程调用接口
+
+```java
+// jihe-producer 生产服务配置的 spring-application-name
+@FeignClient(serviceId = "jihe-producer")
+public interface RemoteService {
+
+    @RequestMapping("/get/{name}")
+    String get(@PathVariable("name") String name);
+}
+```
+这个是一个 interface ,写在 jihe-consumer 服务下面。在 controller 层直接调用。
+
+##### 调用
+
+```java
+@RestController
+@RequestMapping("/consumer")
+public class ConsumerController {
+
+    // 直接注入接口
+    @Autowired
+    private RemoteService remoteService;
+
+
+    // 调用远程服务
+    @RequestMapping("/get/{name}")
+    public String getConsumer(@PathVariable("name")String name) {
+        return remoteService.get(name);
+    }
+}
+```
+到这里就完成了微服务模块最小的一个结构，`服务注册中心`，`服务提供者`，`服务调用者`。先启动 注册中心，然后在启动服务提供者，在启动服务调用者，在浏览器可以测试，直接访问服务的提供者，是可以访问到。通过调用者，也可以直接访问到服务的提供者，但是访问的端口和路径是不一样的。如果熟悉 spring boot 的话其实 spring cloud 的简单使用并不难，继续加油。
 以上代码[地址](https://github.com/oliverschen/spring-cloud-example)
 
 ***

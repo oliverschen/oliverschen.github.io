@@ -359,10 +359,10 @@ public class JiheConsumerApplication {
 
 ```java
 // jihe-producer 生产服务配置的 spring-application-name
-@FeignClient(serviceId = "jihe-producer")
+@FeignClient("jihe-producer")
 public interface RemoteService {
 
-    @RequestMapping("/get/{name}")
+    @RequestMapping("user/get/{name}")
     String get(@PathVariable("name") String name);
 }
 ```

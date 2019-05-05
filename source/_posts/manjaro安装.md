@@ -257,4 +257,11 @@ $ #然后重启电脑如果提示语言更改，保留旧的名称即可
 ``` bash
 export PATH=/usr/local/...
 ```
+
+**安装 flash player**
+
+```bash
+# 安装好之后重启浏览器就可以正常访问了
+yaourt -S flashplugin pepper-flash
+```
 补充 ing...

@@ -7,7 +7,7 @@ category: springcloud
 
 ![行到水穷处，坐看云起时](springcloud-hystrix/hystrix.png)
 
-springcloud hystrix 熔断器，顾名思义。在启动类配置现实生活中也有很多熔断器，像家里的过载保护开关就充当这个角色，当有用电器过载或者发生短路时，就能及时切断电路，避免造成更大的损坏。hystrix 在整个微服务系统中也充当类似这种角色，但是它的功能要远比刚刚这个例子要丰富的多。
+springcloud hystrix 熔断器，顾名思义。在现实生活中也有很多熔断器，像家里的过载保护开关就充当这个角色，当有用电器过载或者发生短路时，就能及时切断电路，避免造成更大的损坏。hystrix 在整个微服务系统中也充当类似这种角色，但是它的功能要远比刚刚这个例子要丰富的多。
 <!-- more -->
 
 #### 雪崩效应
@@ -111,7 +111,7 @@ public class JiheConsumerApplication {
 public interface UserRemote {
 
     /**
-     * 远程到用
+     * 远程调用
      * @param name 参数
      * @return 调用结果
      */
@@ -140,7 +140,8 @@ public class UserRemoteHystrix implements UserRemote {
 
 首先访问服务提供方 producer `http://localhost:8081/user/info/jihe`,这时会直接访问到 producer 返回的消息。现在通过 consumer 进行远程调用 `http://localhost:8082/api/user/jihe` 这时可以看到返回的结果是一致的，远程调用成功，那如果我关掉服务的提供方在访问服务消费方会发生什么呢？这时会执行 fallback 指定的类中的逻辑，实现熔断作用。
 
-###
+***
+
 <center>天涯远不远？人就在天涯，天涯怎会远呢</center>
 
 

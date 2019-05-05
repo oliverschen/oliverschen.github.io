@@ -264,4 +264,10 @@ export PATH=/usr/local/...
 # 安装好之后重启浏览器就可以正常访问了
 yaourt -S flashplugin pepper-flash
 ```
+
+**远程连接服务器**
+```bash
+# 使用 ssh 连接
+ssh username@hostaddress
+```
 补充 ing...

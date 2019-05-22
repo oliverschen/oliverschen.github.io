@@ -68,6 +68,7 @@ public class ClassStructure extends Thread implements Serializable {
 首先使用 `javac ClassStructure.java` 编译文件，正常情况下会生成一个 ClassStructure.class 文件，然后使用  `javap -v ClassStructure.class` 命令查看文件信息，会生成下面的内容
 
 ```bash
+
 G:\jvm\src\main\java\com\jihe\jvm\test>javap -v ClassStructure.class
 Classfile /G:/jvm/src/main/java/com/jihe/jvm/test/ClassStructure.class
   Last modified 2019-5-21; size 617 bytes
@@ -109,11 +110,11 @@ Constant pool:
   #29 = Utf8               java/lang/Thread
   #30 = Utf8               java/io/Serializable
 {
-  public com.jihe.jvm.test.ClassStructure();
-    descriptor: ()V
-    flags: ACC_PUBLIC
-    Code:
-      stack=2, locals=1, args_size=1
+  public com.jihe.jvm.test.ClassStructure();                   // 构造器
+    descriptor: ()                                             // 方法参数等描述
+    flags: ACC_PUBLIC                                          // 访问标志
+    Code:                                                         
+      stack=2, locals=1, args_size=1                         
          0: aload_0
          1: invokespecial #1                  // Method java/lang/Thread."<init>":()V
          4: aload_0
@@ -180,7 +181,7 @@ Constant pool:
           stack = [ class java/lang/Exception ]
         frame_type = 4 /* same */
 
-  static {};
+  static {};                                 // 静态变量初始化方法
     descriptor: ()V
     flags: ACC_STATIC
     Code:
@@ -195,4 +196,16 @@ SourceFile: "ClassStructure.java"
 
 ```
 
-其实在这里看的话已经很明了了，在一些代码后面还有相应的注释，我们都知道一个类对象创建是在调用其构造方法的时候，那先从构造器开始看起
+其实在这里看的话已经很明了了，在一些代码后面还有相应的注释，我们都知道一个类对象创建是在调用其构造方法的时候，那先从构造器开始看起。
+在我注释构造器的地方就是这个类的构造方法，入口从 `invokespecial #1` 开始，它后面指向了 `#1`， 在常量池 `Constant pool` 中找到 `#1`：
+
+|  编号说明    |   编号   |   注释   |
+| ---- | ---- | ---- |
+| #1 = Methodref     |  #6.#24       |    // java/lang/Thread."<init>":()V  |
+|   Methodref 方法的符号引用   | 指向的常量池编号     |  注释，#6 号和 #24 注释   |
+
+在 class 中是按照编号的形式查找的，一级指向一级，常量池中保存了整个类的一些结构定义，相当于一个 `元数据` 部分。今年准备好好回归到底层部分，对 Java 底层部分进行比较深入的了解，字节码文件是熟悉的陌生人之一，所以 class 也是我学习的开始。
+
+***
+<center>不忘初心，方得始终</center>
+                

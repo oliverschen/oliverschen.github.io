@@ -29,7 +29,52 @@ iOS 对接相对来说比较容易点，客户端 SDK 已经集成了支付相�
 ```
 ###### 相关代码
 
+> 
+1. 内购沙盒地址：SANDBOX_CERTIFICATE_URL = https://sandbox.itunes.apple.com/verifyReceipt
+2. 正式地址：    BUY_CERTIFICATE_URL = https://buy.itunes.apple.com/verifyReceipt
+
 ``` java
+/**
+ * 
+ * @param receiptData app 端传来的交易数据
+ * @param userId 用户ID
+ * @return 
+*/
+public Order iosInnerBuy(String receiptData, String userId) {
+        String payChannel = "sandbox";
+        String result = OkHttpUtil.sendHttpPost(SANDBOX_CERTIFICATE_URL, "{\"receipt-data\":\"" + receiptData + "\"}");
+        JSONObject obj = JSONObject.parseObject(result);
+        // 如果沙箱环境没有成功，调用正式环境处理
+        if (obj.getInteger("status") != 0) {
+            payChannel = "formal";
+            result = OkHttpUtil.sendHttpPost(BUY_CERTIFICATE_URL, "{\"receipt-data\":\"" + receiptData + "\"}");
+        }
+        String productId = "";
+        JSONObject jsonArry = JSONObject.parseObject(result);
+        if (jsonArry == null) {
+            throw new ParamsException(Code.FAILED, "参数有误");
+        }
+        JSONObject map = (JSONObject) jsonArry.get("receipt");
+        if (map == null) {
+            throw new ParamsException(Code.FAILED, "参数有误");
+        }
+        JSONArray inApp = (JSONArray) map.get("in_app");
+        if (inApp == null) {
+            throw new ParamsException(Code.FAILED, "参数有误");
+        }
+        if (inApp.size() > 0) {
+            for (int i = 0; i < inApp.size(); i++) {
+                JSONObject json = inApp.getJSONObject(i);
+                productId = (String) json.get("product_id");
+            }
+        }
+        if (StringUtils.isBlank(productId)) {
+            log.info("product_id 为空，返回结果为:{}", result);
+            throw new ParamsException(Code.FAILED, "product_id 不能为空");
+        }
+        // TODO 具体的业务逻辑...
+        return order;
+    }
 
 ```
 

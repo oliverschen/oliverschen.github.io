@@ -16,17 +16,16 @@ category: pay
 iOS 对接相对来说比较容易点，客户端 SDK 已经集成了支付相关的很多流程，这里服务端只是做一个校验，保存相关数据和业务操作就可以。
 
 ###### 购买流程：
-```
+
 1. app 购买成功之后，将 receipt-data 提交给自己的应用服务器
 2. 应用服务器拿到数据之后解析后拿着数据去苹果服务器验证。
 3. 苹果返回验证结果给应用服务器，应用服务器返回给 app。
-```
+
 ####### 问题
-```
+
 1. 应用服务器到苹果服务器验证数时会有两个环境，沙盒测试环境和正式环境，这里在保存数据的时候要注意标记支付环境，方便后续统计数据。
 2. 苹果服务器访问是真慢。
 
-```
 ###### 相关代码
 
 > 
@@ -41,6 +40,7 @@ iOS 对接相对来说比较容易点，客户端 SDK 已经集成了支付相�
  * @return 
 */
 public Order iosInnerBuy(String receiptData, String userId) {
+        // 用于记录是沙盒测试支付还是实际用户购买支付，可用于以后对账
         String payChannel = "sandbox";
         String result = OkHttpUtil.sendHttpPost(SANDBOX_CERTIFICATE_URL, "{\"receipt-data\":\"" + receiptData + "\"}");
         JSONObject obj = JSONObject.parseObject(result);
@@ -78,6 +78,25 @@ public Order iosInnerBuy(String receiptData, String userId) {
 
 ```
 
-###### 微信 app 支付
+##### 微信 app 支付
 
-微信支付我们在生活中使用也比较多，流程也相对比较清晰，并且官方提供的文档都是中文的，所以比较容易一点。
+> 推荐参考 https://github.com/binarywang
+
+微信支付我们在生活中使用也比较多，流程也相对比较清晰，并且官方提供的文档都是中文的，所以比较容易一点。微信支付一般涉及到 APP 拉起支付，h5 支付，JSAPI 支付，Native 支付这几种，具体描述![官网](https://pay.weixin.qq.com/wiki/doc/api/index.html)看起来比较清晰，也更加详细，这里先看下 ![APP 支付](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=8_1)，在自己 APP 中集成微信支付。
+
+###### 流程
+
+1. 选择要购买的商品，调用 APP 自己的服务生成订单和支付数据，加签后返回给客户端。
+2. 客户端校验服务端返回的参数，拉起微信支付。
+3. 输入密码进行支付，生成支付信息。
+
+###### 问题
+
+1. 前后端验签的时候特别容易出错，这里要仔细看文档。
+
+###### 相关代码
+
+``` java
+
+```
+

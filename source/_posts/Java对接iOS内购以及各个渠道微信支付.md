@@ -97,6 +97,98 @@ public Order iosInnerBuy(String receiptData, String userId) {
 ###### 相关代码
 
 ``` java
+ /**
+     * 统一预下单接口
+     *
+     * @param jsonParam
+     * @param request
+     * @return
+     * @throws WxPayException
+     */
+    @RequestMapping("/unifiedOrder")
+    @ResponseBody
+    public ResponseMsg unifiedOrder(@RequestBody JSONObject jsonParam,
+                                    HttpServletRequest request) throws WxPayException {
+        ResponseMsg responseMsg = new ResponseMsg(Code.SUCCESSED, Constants.SUCCESS);
+        // 1. 根据自己业务校验参数
+        // 2. 创建订单
+        WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
+        //商品描述
+        orderRequest.setBody("some desc");
+        //商户订单号
+        orderRequest.setOutTradeNo(order.getOrderId());
+        //订单总金额，单位为分
+        orderRequest.setTotalFee(Item.getPrice());
+        //终端IP
+        orderRequest.setSpbillCreateIp(request.getRemoteAddr());
+        //指定支付方式 no_credit--可限制用户不能使用信用卡支付
+        orderRequest.setLimitPay("no_credit");
+        //交易类型
+        orderRequest.setTradeType("APP");
+        //用户的 openid
+        orderRequest.setOpenid(user.getOpenidApp());
+       
+        WxPayUnifiedOrderResult result = this.wxAppPayService.unifiedOrder(orderRequest);
+        HashMap<String, String> param = new HashMap<>(8);
+        param.put("appid", result.getAppid());
+        param.put("partnerid", result.getMchId());
+        param.put("prepayid", result.getPrepayId());
+        param.put("package", "Sign=WXPay");
+        param.put("noncestr", result.getNonceStr());
+        param.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
+        final WxPayAppOrderResult pay = WxPayAppOrderResult.builder()
+                .sign(SignUtils.createSign(param, null, properties.getMchKey(), new String[]{}))
+                .prepayId(result.getPrepayId())
+                .partnerId(result.getMchId())
+                .appId(result.getAppid())
+                .timeStamp(param.get("timestamp"))
+                .nonceStr(result.getNonceStr())
+                .packageValue("Sign=WXPay")
+                .rechargeOrderId(order.getRechargeOrderId())
+                .build();
+        responseMsg.setData(pay);
+        return responseMsg;
+    }
 
 ```
+加签方法：在 https://github.com/binarywang 加到本地后可以直接使用
+```java
+
+/**
+   * 微信支付签名算法(详见:https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=4_3).
+   *
+   * @param params        参数信息
+   * @param signType      签名类型，如果为空，则默认为MD5
+   * @param signKey       签名Key
+   * @param ignoredParams 签名时需要忽略的特殊参数
+   * @return 签名字符串 string
+   */
+  public static String createSign(Map<String, String> params, String signType, String signKey, String[] ignoredParams) {
+    SortedMap<String, String> sortedMap = new TreeMap<>(params);
+
+    StringBuilder toSign = new StringBuilder();
+    for (String key : sortedMap.keySet()) {
+      String value = params.get(key);
+      boolean shouldSign = false;
+      if (StringUtils.isNotEmpty(value) && !ArrayUtils.contains(ignoredParams, key)
+        && !Lists.newArrayList("sign", "key", "xmlString", "xmlDoc", "couponList").contains(key)) {
+        shouldSign = true;
+      }
+
+      if (shouldSign) {
+        toSign.append(key).append("=").append(value).append("&");
+      }
+    }
+
+    toSign.append("key=").append(signKey);
+    if (WxPayConstants.SignType.HMAC_SHA256.equals(signType)) {
+      return me.chanjar.weixin.common.util.SignUtils.createHmacSha256Sign(toSign.toString(), signKey);
+    } else {
+      return DigestUtils.md5Hex(toSign.toString()).toUpperCase();
+    }
+  }
+
+```
+
+加签返回给 APP 后进行验证拉起支付，这里得特别小心加签前后的参数大小写，很容易出现问题。以上就是微信 APP 支付。
 

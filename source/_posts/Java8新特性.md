@@ -98,3 +98,123 @@ public void testFor() {
 
 #### Stream 流
 Java8 提供了一种新的数据处理方式---流。流的处理的概念类似管道处理，结合 Lambda 表达式使得集合等数据处理变得简洁高效，还可以对数据进行筛选、排序、聚合等操作，简直不要太爽。
+
+> 集合，数组，I/O channel，generator 等。
+> 集合中包含串行流和并行流，一般情况下并行流比串行流效率更高。
+> 串行流：stream()。
+> 并行流：parallelStream()。
+
+下面是一个简单的列子：
+
+```java
+// javabean 添加了 name 属性
+public class Person {
+
+    private Integer age;
+    private String name;
+    public Person() {
+        age = new Random().nextInt(10);
+    }
+
+    public Person(String name,Integer age) {
+        this.age = age;
+        this.name = name;
+    }
+    public static Person newPerson(final Supplier<Person> supplier) {
+        return supplier.get();
+    }
+    public Integer getAge() {
+        System.out.println(age);
+        return age;
+    }
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+// 测试
+@Test
+public void testStream() {
+    List<Person> list = new ArrayList<>();
+    list.add(new Person("小明", 20));
+    list.add(new Person("李四", 25));
+    list.add(new Person("二炮", 23));
+    list.add(new Person("大同", 29));
+    list.add(new Person("王五", 34));
+    list.add(new Person("小二", 18));
+    Predicate<Person> predicate = (person) -> person.getAge() > 25;
+    list.forEach(person -> {
+        if(predicate.test(person)){
+            System.out.println(person.getName());
+        }
+    });
+}
+```
+这里的串行流比较类似迭代器，使用 Predicate 创建了一个条件，在迭代时将满足条件的接口打印出来。
+
+##### 聚合操作
+
+###### forEach
+> forEach() 在上面的例子中已经出现了很多次了，也是我经常用的方法之一，stream 流内部遍历简化了代码，在语法上面更加清晰。
+
+###### map
+
+> map 可以按照规则映射成另一个元素，简单来说就是可以给某个元素设置另外的值。
+```java
+@Test
+public void testMap() {
+    List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
+    List<Integer> collect = integers.stream().map(i -> i+1).collect(Collectors.toList());
+    System.out.println(collect);
+}
+```
+
+###### filter
+
+> filter 可以对 stream 中元素进行过滤
+
+```java
+@Test
+public void filter() {
+    List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
+    long count = integers.stream().filter(integer -> integer > 3).count();
+    System.out.println(count);
+}
+```
+集合中数值大于 3 的数量统计。
+
+###### limit 
+
+> 此方法可以获取指定数量的流
+
+```java
+@Test
+public void testLimit() {
+    List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5, 8, 9, 34);
+    List<Integer> collect = integers.stream().limit(6).collect(Collectors.toList());
+    System.out.println(collect);
+}
+```
+打印前 6 条记录，这里 limit 指定想要的条数，从 0 开始取。
+
+###### sorted
+
+> 顾名思义，可以利用 sorted 方法对流数据进行排序
+
+```java
+@Test
+public void testSorted() {
+    List<Integer> integers = Arrays.asList(1, 99, 22, 4, 3, 11, 9, 34);
+    List<Integer> collect = integers.stream().sorted().collect(Collectors.toList());
+    System.out.println(collect);
+}
+```
+这个使用还是很顺滑的，减少了很多代码就可以优雅进行排序了。

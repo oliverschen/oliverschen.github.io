@@ -218,3 +218,140 @@ public void testSorted() {
 }
 ```
 这个使用还是很顺滑的，减少了很多代码就可以优雅进行排序了。
+
+###### concat
+
+> 对流进行合并操作
+
+concat 方法是 Stream 接口的一个静态方法，如果合并时两个流中元素是经过排序的，则得到的元素也是排序的结果。
+
+```java
+@Test
+public void testConcat() {
+    List<Integer> integers = Arrays.asList(11, 9, 34);
+    List<Integer> integerList = Arrays.asList(10,19, 2);
+    List<Integer> collect = Stream.concat(integers.stream(), integerList.stream()).collect(Collectors.toList());
+    System.out.println(collect);
+}
+```
+
+###### distinct
+
+> 对流中元素进行去重操作
+
+```java
+@Test
+public void testDistinct() {
+    List<Integer> integers = Arrays.asList(1, 99, 1, 4, 1, 11, 1, 34);
+    List<Integer> collect = integers.stream().distinct().collect(Collectors.toList());
+    System.out.println(collect);
+}
+```
+
+###### skip
+
+> 跳过流中的某几个元素，经常和 limit 配置使用。
+
+使用 skip 配合 limit 可以更好的对流中元素进行分页操作。
+
+```java
+@Test
+public void testSkip() {
+    List<Integer> integers = Arrays.asList(1, 99, 12, 40, 8, 11);
+    List<Integer> collect = integers.stream().skip(2).limit(3).collect(Collectors.toList());
+    System.out.println(collect);
+}
+```
+
+###### match
+
+> 匹配指定的元素
+> Stream 提供了 3 个 api 接口，分别是：allMatch()，anyMatch()，noneMatch() 方法的功能基本顾名思义的。
+
+```java
+ @Test
+public void testMatch() {
+    List<Integer> integers = Arrays.asList(1, 99, 12, 40, 8, 11);
+    boolean b = integers.stream().allMatch(integer -> integer > 8);
+    System.out.println(b);
+    boolean anyMatch = integers.stream().anyMatch(integer -> integer > 8);
+    System.out.println(anyMatch);
+    boolean noneMatch = integers.stream().noneMatch(integer -> integer > 8);
+    System.out.println(noneMatch);
+}
+```
+
+#### Optional
+
+代码中空指针异常是一个让人很头疼但是又不得不去检查的操作，在 Java8 之前都是用过 if 来判断的，Java8 则引入了 Optional 来解决，使代码不被空间查污染。
+Optional 是一个容器，它可以保存任意类型的值，也可以保存 null，通过它提供的方法，就可以不用显式的进行空值判断。书面话的说明看着都是似懂非懂的感觉，还是看代码更有感觉一点。
+
+##### Optional 创建
+
+1. Optional.empty():创建一个空的 Optional 对象
+2. Optional.of(T value):传入的 value 值为 null 的话，会抛空指针异常。
+3. Optional.ofNullable(T value): 传入的 value 值允许为空。
+```java
+@Test
+public void testOptional() {
+    // empty()
+    Optional<Person> empty = Optional.empty();
+    // of(T value)
+    Optional<Person> optional = Optional.of(new Person());
+    // ofNullable(T value)
+    Optional<Person> ofNullable = Optional.ofNullable(null);
+}
+```
+###### orElse
+
+> 有值则返回，没有则返回其他值
+
+如果传入的值是 null 时，返回 orElse 方法中指定的结果，否则返回实例的值。
+
+```java
+@Test
+public void testOrElse() {
+    Person p = new Person();
+    Optional<String> optional = Optional.ofNullable(p.getName());
+    String name_is_null = optional.orElse("name is null");
+    System.out.println(name_is_null);
+    p.setName("jihe");
+    Optional<String> optionalS = Optional.ofNullable(p.getName());
+    String name_is_nullS = optionalS.orElse("name is null");
+    System.out.println(name_is_nullS);
+}
+```
+
+###### orElseGet
+
+> 在功能上和 orElse() 方法类似，只是 orElseGet 指出传入一个 Lambda 表达式生产默认值
+
+如果想要的实例为 null 时，就可以通过 orElseGet 获取一个非空实例
+
+```java
+@Test
+public void testOrElseGet() {
+    Person p = null;
+    Optional<Person> optional = Optional.ofNullable(p);
+    Person person = optional.orElseGet(() -> new Person("jihe", 23));
+    System.out.println(person.getName());
+}
+```
+
+以上是一些比较常用的 Java8 新特性，后面会一点点的完善上来。另外 Java8 对时间日期处理也引入了新的 API 来解决让人傻傻分不清的日期类。让日期和时间的处理更加人性化，易于理解。在 JVM 层面，PermGen 空间被移除了，取而代之的是 MetaSpace，与之对应的 -XX:PermSize 和 -XX:MaxPermSize 参数分别被 -XX:MetaSpaceSize 和 -XX:MaxMetaSpaceSize 所代替。[ PermSize 是用来存放 Class 类元数据的内存区域，如果在应用启动时加载的类信息比较的的话，可能会抛出 "java.lang.OutOfMemoryError: PermGen space" 异常，Java8 使用了本地内存来存储这部分信息，将这部分空间全部移除]
+
+
+
+今晚去看了哪吒，超级好看。里面一句台词让人印象深刻。
+
+
+<center>人的成见就像一座大山</center>
+
+
+
+
+
+
+
+
+

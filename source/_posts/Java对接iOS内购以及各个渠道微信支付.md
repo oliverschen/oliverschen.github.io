@@ -99,7 +99,7 @@ public Order iosInnerBuy(String receiptData, String userId) {
 
 > 推荐参考 https://github.com/binarywang
 
-微信支付我们在生活中使用也比较多，流程也相对比较清晰，并且官方提供的文档都是中文的，所以比较容易一点。微信支付一般涉及到 APP 拉起支付，h5 支付，JSAPI 支付，Native 支付这几种，具体描述![官网](https://pay.weixin.qq.com/wiki/doc/api/index.html)看起来比较清晰，也更加详细，这里先看下 ![APP 支付](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=8_1)，在自己 APP 中集成微信支付。
+微信支付我们在生活中使用也比较多，流程也相对比较清晰，并且官方提供的文档都是中文的，所以比较容易一点。微信支付一般涉及到 APP 拉起支付，h5 支付，JSAPI 支付，Native 支付这几种，具体描述[官网](https://pay.weixin.qq.com/wiki/doc/api/index.html)看起来比较清晰，也更加详细，这里先看下 [APP 支付](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=8_1)，在自己 APP 中集成微信支付。
 
 ###### 流程
 

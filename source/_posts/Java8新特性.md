@@ -248,6 +248,8 @@ public void testDistinct() {
 }
 ```
 
+这里有个坑，就是如果List 是一个对象集合，没有重写 equals() 方法的话，得到的答案是不正确的，因为它是基于 equals() 方法来实现的。
+
 ###### skip
 
 > 跳过流中的某几个元素，经常和 limit 配置使用。

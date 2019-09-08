@@ -85,3 +85,26 @@ rabbitmqctl set_permissions -p admin admin ".*" ".*" ".*"
 ```
 
 
+##### 关键字
+
+1. Broker：可以理解成 rabbitmq 服务。
+2. vhost:  虚拟主机，一个 broker 可以创建多个 vhost，用作权限分离。
+3. Producer：消息生产者，消息的来源。
+4. Consumer：消息消费者，负责消费生产者生产的消息。
+5. Exchange：交换机，可以看作是一个消息的中转站。
+6. Queue：队列，消息的载体，消息会被投递到一个或者多个队列中。
+7. Binding：绑定，按照一定规则绑定交换机和队列。
+8. Routing Key：路由key，交换机根据这个关键字投递到对应的队列。
+9. Channel：通道，在 client 端每个链接，可以建立多个通道。
+
+
+
+
+
+https://blog.csdn.net/hellozpc/article/details/81436980
+
+
+https://blog.csdn.net/whoamiyang/article/details/54954780
+
+
+

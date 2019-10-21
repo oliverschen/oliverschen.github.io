@@ -97,7 +97,167 @@ rabbitmqctl set_permissions -p admin admin ".*" ".*" ".*"
 8. Routing Key：路由key，交换机根据这个关键字投递到对应的队列。
 9. Channel：通道，在 client 端每个链接，可以建立多个通道。
 
+#### 模式
 
+##### 简单队列
+
+生产者将消息推到队列，消费者从队列消费消息。一个生产者对应一个消费者。
+
+#### work 模式
+
+一个生产者对应多个消费者，但是一个消息只能被一个消费者获取。
+
+1. 创建一个 Direct 交换机
+``` java
+@Configuration
+public class ExchangeConfig {
+
+    @Bean
+    public DirectExchange directExchange(){
+        // params
+        // 1. name:交换机名字
+        // 2. durable:持久化，当为 true 时，在 mq 重启之后会重新加载此交换机
+        // 3. autoDelete:自动删除，当交换机长时间不使用时，自动删除此交换机
+        return new DirectExchange(RabbitMqConfig.EXCHANGE_TEST,
+                true, false);
+    }
+}
+```
+2. 配置
+``` java
+@Configuration
+public class RabbitMqConfig {
+
+    public static final String EXCHANGE_TEST = "exchange_test";
+    public static final String FIRST_QUEUE = "first_queue";
+    public static final String SECOND_QUEUE = "second_queue";
+
+    /** 队列key1*/
+    public static final String FIRST_ROUTING_KEY = "first_routing_key";
+    /** 队列key2*/
+    public static final String SECOND_ROUTING_KEY = "second_routing_key";
+
+    private final ConnectionFactory connectionFactory;
+    private final ExchangeConfig exchangeConfig;
+    private final QueueConfig queueConfig;
+
+
+    public RabbitMqConfig(ConnectionFactory connectionFactory, ExchangeConfig exchangeConfig,
+                          QueueConfig queueConfig) {
+        this.connectionFactory = connectionFactory;
+        this.exchangeConfig = exchangeConfig;
+        this.queueConfig = queueConfig;
+    }
+
+    @Bean
+    public SimpleMessageListenerContainer simpleMessageListenerContainer(){
+        SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer(connectionFactory);
+        simpleMessageListenerContainer.addQueues(queueConfig.firstQueue());
+        simpleMessageListenerContainer.setExposeListenerChannel(true);
+        simpleMessageListenerContainer.setMaxConcurrentConsumers(5);
+        simpleMessageListenerContainer.setConcurrentConsumers(1);
+        //设置确认模式手工确认
+        simpleMessageListenerContainer.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+        return simpleMessageListenerContainer;
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate() {
+        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        template.setConfirmCallback(msgSendConfirmCallBack());
+        return template;
+    }
+
+    @Bean
+    public AckCallback msgSendConfirmCallBack(){
+        return new AckCallback();
+    }
+
+
+    /**
+     * 根据指定的 key 将具体的队列绑定到 direct 交换机
+     */
+    @Bean
+    public Binding firstBinding() {
+        return BindingBuilder.bind(queueConfig.firstQueue())
+                             .to(exchangeConfig.directExchange())
+                             .with(RabbitMqConfig.FIRST_ROUTING_KEY);
+    }
+    @Bean
+    public Binding secondBinding() {
+        return BindingBuilder.bind(queueConfig.secondQueue())
+                             .to(exchangeConfig.directExchange())
+                             .with(RabbitMqConfig.SECOND_ROUTING_KEY);
+    }
+}
+```
+3. 队列
+```java
+@Configuration
+public class QueueConfig {
+
+    @Bean
+    public Queue firstQueue() {
+        // params
+        // 1. name:队列名称
+        // 2. durable:持久化，当为 true 时，在 mq 重启之后此队列自动加载
+        // 3. exclusive:排他队列，当为 true 时，只有队列声明者才能调用
+        // 4. autoDelete:自动删除，当为 true 时，自动删除长时间不适用的队列
+        return new Queue(RabbitMqConfig.FIRST_QUEUE,
+                true,false,false);
+    }
+
+    @Bean
+    public Queue secondQueue() {
+        return new Queue(RabbitMqConfig.SECOND_QUEUE,
+                true, false, false);
+    }
+}
+```
+4. 回调
+```java
+@Slf4j
+public class AckCallback implements RabbitTemplate.ConfirmCallback {
+    @Override
+    public void confirm(CorrelationData correlationData, boolean ack, String cause) {
+        log.info("AckCallback 回调，ID:{}",correlationData);
+        if (ack) {
+            log.info("消息消费成功");
+        }else {
+            log.info("消息消费失败，原因：{}",cause);
+        }
+    }
+}
+```
+消息消费完之后会有回调
+
+5. 生产者
+```java
+@Test
+public void sender() {
+    CorrelationData correlationData = new CorrelationData("123456789");
+    String msg = "第一次发送消息";
+    rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_TEST,
+            RabbitMqConfig.SECOND_ROUTING_KEY,msg,correlationData);
+}
+```
+我这里直接用 JUnit 进行测试
+
+6. 消费费者
+```java
+@Component
+public class MqConsumer {
+    // 监听的队列名称，链接工厂实例
+    @RabbitListener(queues = {RabbitMqConfig.SECOND_QUEUE, RabbitMqConfig.FIRST_QUEUE},
+            containerFactory = "rabbitListenerContainerFactory")
+    public void handlerMessage(String msg) {
+        System.out.println("消费成功" + msg);
+    }
+}
+```
+
+
+参考[链接](https://blog.csdn.net/zhuzhezhuzhe1/article/details/80454956)
 
 
 

@@ -255,16 +255,10 @@ public class MqConsumer {
     }
 }
 ```
-
+当消费者启动时，会自动监听消费相应的消息。
 
 参考[链接](https://blog.csdn.net/zhuzhezhuzhe1/article/details/80454956)
 
-
-
-https://blog.csdn.net/hellozpc/article/details/81436980
-
-
-https://blog.csdn.net/whoamiyang/article/details/54954780
 
 
 

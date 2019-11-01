@@ -103,7 +103,7 @@ rabbitmqctl set_permissions -p admin admin ".*" ".*" ".*"
 
 生产者将消息推到队列，消费者从队列消费消息。一个生产者对应一个消费者。
 
-#### work 模式
+###### work 模式
 
 一个生产者对应多个消费者，但是一个消息只能被一个消费者获取。
 
@@ -255,9 +255,55 @@ public class MqConsumer {
     }
 }
 ```
-当消费者启动时，会自动监听消费相应的消息。
+
+在 Direct 交换机中，一个交换机可以绑定多个队列，通过不同的路由 key 来指定消息发送到对应的队列中进行消费。当消费者启动时，会自动监听消费相应的消息。
+
+
+##### Fanout 交换机（订阅模式）
+
+订阅模式类似公众号，推送一条消息之后，关注者都可以收到这天推送。
+
+1. 枚举类
+
+交换机配置枚举类
+``` java
+@Getter
+@AllArgsConstructor
+public enum MqExchangeEnum {
+
+    FANOUT_EXCHANGE_TEST("fanout_exchange_test", "fanout交换机");
+
+
+    private String key;
+    private String desc;
+}
+```
+
+队列枚举类
+
+```java
+@Getter
+@AllArgsConstructor
+public enum MqQueueEnum {
+
+    FANOUT_QUEUE_A("fanout_queue_a","fanout交换机队列1"),
+    FANOUT_QUEUE_B("fanout_queue_b", "fanout交换机队列2");
+
+    private String key;
+    private String desc;
+}
+```
+
+
 
 参考[链接](https://blog.csdn.net/zhuzhezhuzhe1/article/details/80454956)
+
+
+
+
+
+
+
 
 
 

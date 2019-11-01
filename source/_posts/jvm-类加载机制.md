@@ -147,8 +147,23 @@ public class User {
 
 ###### Serial
 
-单线程：它不仅在收集时使用单线程来完成工作，并且在新生代和老年代收集时都会出现 STW (stop the world)现象。
-适用场景：桌面应用
+1. 配置
+> -XX:+UseSerialGC
+
+2. 工作方式
+> 它不仅在收集时使用单线程来完成工作，并且在新生代和老年代收集时都会出现 STW (stop the world)现象。
+3. 适用场景
+> 桌面应用
+
+###### ParNew (ParalleNew)
+
+1. 配置
+>-XX:+UseParNewGc
+
+2. 工作方式
+> 只针对新生代使用多线程，老年代还是单线程，收集过程中会出现 STW
+3. 使用场景
+> server 新生代收集器
 
 
 

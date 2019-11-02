@@ -294,6 +294,153 @@ public enum MqQueueEnum {
 }
 ```
 
+交换机配置
+``` java 
+@Configuration
+public class FanoutExchangeConfig {
+
+
+    @Bean
+    public FanoutExchange fanoutExchange() {
+        return new FanoutExchange(MqExchangeEnum.FANOUT_EXCHANGE_TEST.getKey(),
+                true,false);
+    }
+
+}
+```
+2. 绑定
+```java
+@Bean
+    public Binding fanBindingA() {
+        return BindingBuilder.bind(queueConfig.fanoutQueueA()).to(fanoutExchangeConfig.fanoutExchange());
+    }
+
+    @Bean
+    public Binding fanBindingB() {
+        return BindingBuilder.bind(queueConfig.fanoutQueueB()).to(fanoutExchangeConfig.fanoutExchange());
+```
+
+3. 发送消息
+```java 
+@Test
+    public void fanoutSender() {
+        for (int i = 0; i < 20; i++) {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            CorrelationData correlationData = new CorrelationData(i + "消息");
+            String msg = "fanout exchange first test, time: " + System.currentTimeMillis() + " . msg num: " + i;
+            rabbitTemplate.convertAndSend(MqExchangeEnum.FANOUT_EXCHANGE_TEST.getKey(),"",msg,correlationData);
+        }
+    }
+```
+
+4. 消费消息
+监听相应的队列，进行消息处理。
+``` java
+@Component
+@RabbitListener(queues = {"fanout_queue_a", "fanout_queue_b"})
+public class FanoutConsumer {
+
+    @RabbitHandler
+    public void process(String msg) {
+        System.out.println("fanout exchange 消息内容：" + msg);
+    }
+
+}
+```
+fanout 交换机推送消息到所有绑定到它的队列，这里指定具体的路由也是不会生效的
+
+
+##### Topic 交换机（匹配模式）
+
+topic 交换机绑定队列之后，可以根据路由 key 来匹配具体的队列，进行消息消费，以通配符的方式绑定到相应的队列，生产者发送相应的路由后，会按照规则匹配到具体的队列
+
+1. 交换机配置
+
+```java
+@Configuration
+public class TopicExchangeConfig {
+
+    @Bean
+    public TopicExchange topicExchange() {
+        return new TopicExchange(MqExchangeEnum.TOPIC_EXCHANGE_TEST.getKey());
+    }
+}
+```
+
+2. 队列
+```java
+@Bean
+    public Queue topicQueueA() {
+        return new Queue(MqQueueEnum.TOPIC_QUEUE_A.getKey(),
+                true, false, false);
+    }
+
+@Bean
+public Queue topicQueueB() {
+    return new Queue(MqQueueEnum.TOPIC_QUEUE_B.getKey(),
+            true, false, false);
+}
+```
+
+3. 路由
+
+> `#` 表示 零个或者多个单词，匹配任何字符， 以 # 作为路由，topic 交换机的工作模式会和 fanout 交换机工作模式相同
+> *   表示一个单词
+```java
+@Bean
+    public Binding topicBindingA() {
+        return BindingBuilder.bind(queueConfig.topicQueueA())
+                .to(topicExchangeConfig.topicExchange()).with("#.user.#");
+    }
+
+@Bean
+public Binding topicBindingB() {
+    return BindingBuilder.bind(queueConfig.topicQueueB())
+            .to(topicExchangeConfig.topicExchange()).with("topic.#");
+}
+```
+
+4. 生产者
+```java
+@Test
+public void topicSender() {
+    for (int i = 0; i < 20; i++) {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String msg = "top message:" + i;
+        rabbitTemplate.convertAndSend(MqExchangeEnum.TOPIC_EXCHANGE_TEST.getKey(), "topic.user", msg);
+    }
+}
+```
+
+5. 消费者
+
+```java
+@Component
+public class TopicConsumer {
+
+    @RabbitListener(queues = "topic_queue_a")
+    public void topicConsumerOne(String msg) {
+        System.out.println("topic_queue_a 1 消费" + msg);
+    }
+
+    @RabbitListener(queues = "topic_queue_b")
+    public void topicConTow(String tow) {
+        System.out.println("topic_queue_b 2 消费" + tow);
+    }
+}
+```
+
+
+
+
 
 
 参考[链接](https://blog.csdn.net/zhuzhezhuzhe1/article/details/80454956)

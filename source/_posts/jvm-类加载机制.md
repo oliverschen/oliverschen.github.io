@@ -165,6 +165,12 @@ public class User {
 3. 使用场景
 > server 新生代收集器
 
+###### Parallel Scavenge(PS)
 
+1. 配置
+> -XX:+UseParallelGC
+
+2. 工作方式
+> 可控制吞吐量，所谓吞吐量 = 运行用户代码时间/（运行用户代码时间 + 垃圾收集时间）
 
 

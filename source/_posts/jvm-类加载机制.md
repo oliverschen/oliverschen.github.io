@@ -378,6 +378,9 @@ jdk 中自带的用于监视虚拟机和故障处理工具
 > -finalizerinfo：显示在 F-Queue 中等待 Finalizer 线程执行 finalize 方法对象。 在 Linux 下有效。
 > -F：当虚拟机进程多 -dump 没有响应时，可以使用这个选项强制生成 dump 快照。在 Linux 下有效。
 
+3. 用法
+> jmap -dump vmid
+
 ###### jstack
 
 1. 功能
@@ -389,3 +392,6 @@ jdk 中自带的用于监视虚拟机和故障处理工具
 > -l：除堆栈信息外，附加显示关于锁 的信息
 > -m：如果涉及本地方法调用，则显示C/C++ 的堆栈
 
+3. 用法
+
+> jstack -l vmid

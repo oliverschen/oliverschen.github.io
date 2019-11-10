@@ -363,3 +363,29 @@ jdk 中自带的用于监视虚拟机和故障处理工具
 > jinfo -flag -PrintGCTimestamp pid
 
 
+###### jmap
+
+1. 功能
+
+> 用于生产 heap dump 文件，如果不适用这个命令，还可以使用 -XX:+HeapDumpOnOutOfMemoryError 参数来让虚拟机出现 OOM 的时候自动生产 dump 文件。jmap 不仅能生成 dump 文件，还可以查询 finalize 执行队列，Java 堆和永久带的详细信息，如当前使用率，当前使用的是那种收集器。
+
+2. 参数
+
+> -dump：生成 Java 堆快照。格式：-dump:[live,]format=b,file=<filename>,live 为是否只生成存活的对象
+> -histo：显示堆中对象的统计信息，包括类，有都少个实例，合计容量等
+> -permstat：显示永久代内存状态。在 Linux 下有效
+> -heap：显示堆详细信息，如使用哪种回收器，参数配置，分代状况等。在 Linux 下有效
+> -finalizerinfo：显示在 F-Queue 中等待 Finalizer 线程执行 finalize 方法对象。 在 Linux 下有效。
+> -F：当虚拟机进程多 -dump 没有响应时，可以使用这个选项强制生成 dump 快照。在 Linux 下有效。
+
+###### jstack
+
+1. 功能
+> 用于生成虚拟机当前时刻的线程快照，一边可以进一步定位线程出现长时间停顿原因，如线程间死锁，死循环，清酒外部资源导致的长时间等待等。
+
+2. 参数
+
+> -F：输出请求不被响应时，强制输出线程堆栈信息
+> -l：除堆栈信息外，附加显示关于锁 的信息
+> -m：如果涉及本地方法调用，则显示C/C++ 的堆栈
+

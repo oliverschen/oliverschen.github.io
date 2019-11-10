@@ -284,3 +284,82 @@ public class User {
 1. 如果方法在子类中没有被重写，那子类虚方法表里面的地址入口和父类相同方法的地址入口是一致的，都是指向父类的实现入口。
 2. 如果子类中重写了这个方法，子类方法表中的地址将会替换为指向子类实现版本的入口地址。
 
+##### JDK 性能监控与故障处理工具
+
+jdk 中自带的用于监视虚拟机和故障处理工具
+
+
+|  名称    |   作用描述  |
+| ---- | ---- |
+|jps|JVM 进程状态工具（JVM Process Status Tool），用于显示目标系统上 JVM 的 Java 进程信息|
+|jstat|JVM 统计监测工具（JVM Statistics Monitoring Tool），用于监控并显示 JVM 性能统计信息|
+|jinfo|Java 配置信息工具（Java Configuration Information），用于打印指定 Java 进程，核心文件或远程调试服务器的配置信息。|
+|jhat|Java 堆分析工具（Java Heap Analysis Tool），用于分析 Java 堆内存中的对象信息|
+|jmap|Java 内存映射工具（Java Memory Map），用于打印指定 Java 进程，核心文件或远程调试服务器共享对象内存映射或堆内存细节|
+|jstack|Java 堆栈跟踪工具，主要用于打印指定 Java 进程，核心文件或远程调试服务器的 Java 线程的堆栈跟踪信息|
+|jmc|Java 任务控制工具（Java Misson Control），主要用于 JVM 的生产时间监测，分析，诊断|
+|jvisualvm|JVM 监测，故障排除，分析工具，主要以图形化界面的方式梯控与指定虚拟机的 Java 应用程序的详细信息|
+|jconsole|图形化用户界面监控工具，主要用于监测并显示运行于 Java 平台上的应用程序的性能和资源占用等信息|
+
+###### jps
+
+1. 功能
+
+> 显示正在运行的虚拟机进程
+
+2. 参数
+
+> -q    只显示 LVMID，省略主类信息（LVMID: 本地虚拟机进程唯一编号）
+> -l    显示虚拟机启动进程时传递给 main() 的参数
+> -m    显示类全面，如果是 jar 包显示 jar 路径
+> -v    显示虚拟机启动时候的 JVM 参数
+3. 用法
+
+> jps -l
+
+###### jstat
+
+1. 功能
+> 显示本地或者远程虚拟机进程中的类装载，内存，垃圾收集，JIT 编译等运行数据，是定位虚拟机性能问题的首选工具。
+
+2. 参数
+
+> -class：类加载，卸载数量，总空间及类装载所耗费时间
+> -compiler：显示 JIT 编译器编译过的方法，耗时等信息
+> -gc：统计 Java 堆，包括 Eden,Survior,老年代，永久代的容量，已用空间，GC时间等信息。
+> -gccapacity：显示 Java 堆各个区域使用到的最大，最小空间
+> -gcutil：显示已使用空间占总空间的百分比
+> -gccause：垃圾收集统计概述，和 -gcutil 相同，附件最近两次垃圾回收时间的原因
+> -gcnew：新生代行为统计
+> -gcnewcapacity：兴盛带使用到的最大，最小空间统计
+> -gcold：统计老年代 GC 状况
+> -gcoldcapacity：年老代行为统计，主要关注使用最大，最小空间
+> -gcpermcapacity：显示永久代使用到的最大，最小空间（-gcmetacapacity）
+> printcompilation：显示已经被 JIT 编译的方法
+
+3. 用法
+
+> jstat -gccause vmid  [时间间隔/毫秒]
+
+###### jinfo
+
+1. 功能
+> 可以用来查看正在运行的 Java 应用程序的扩展参数，甚至支持在运行时，修改部分参数
+
+2. 参数
+
+> -flag <name> pid:打印指定 JVM 的参数值。
+> -flag [+|-]<name> pid：设置指定 JVM 参数值
+> -flag <name> =<value> pid :设置指定 JVM 参数值
+
+3. 用法
+
+> jinfo -flag +PrintGC pid
+> jinfo -flag +PrintGCDetails pid
+> jinfo -flag +PrintGCTimestamp pid
+
+> jinfo -flag -PrintGC pid
+> jinfo -flag -PrintGCDetails pid
+> jinfo -flag -PrintGCTimestamp pid
+
+

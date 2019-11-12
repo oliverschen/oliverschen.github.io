@@ -395,3 +395,4 @@ jdk 中自带的用于监视虚拟机和故障处理工具
 3. 用法
 
 > jstack -l vmid
+>查看堆情况：jmap -heap pid 

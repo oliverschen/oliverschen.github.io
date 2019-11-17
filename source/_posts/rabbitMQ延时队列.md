@@ -5,7 +5,7 @@ tags: RabbitMQ
 category: MQ
 ---
 
-![Photo by Vadim Sadovski on Unsplash](RabbitMQ延时队列/rabbitMqDelayQueue.png)
+![Photo by Vadim Sadovski on Unsplash](rabbitMQ延时队列/rabbitMqDelayQueue.png)
 
 
 #### 延迟

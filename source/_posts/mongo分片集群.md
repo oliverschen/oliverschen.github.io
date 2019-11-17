@@ -21,7 +21,7 @@ mongo 通过分片机制，将数据拆分后存储在不同机器上面。这�
 |    mongo  |    mongodb-linux-x86_64-v4.0-latest  |   
 
 
-###### 搭建
+###### 配置服务搭建
 
 创建 3 台虚拟机，分别搭建 mongo 实例
 机器分配
@@ -67,6 +67,11 @@ about to fork child process, waiting until server is ready for connections.
 forked process: 8982
 child process started successfully, parent exiting
 ```
+
+**备注**
+其他两台机器也按照以上方式同样配置
+
+
 4. 初始化副本集
 
 ```json
@@ -86,7 +91,28 @@ rs.initiate(config)
 configs:配置文件中副本集名称
 
 
+###### 分片副本集
 
+1. 配置文件
+
+```properties
+
+port = 27001                                            #端口，默认 27017 
+bind_ip = 0.0.0.0                                       #绑定地址，默认127.0.0.1只能通过本地连接，0.0.0.0允许任何机器连接
+maxConns=2000                                           #最大连接数
+logpath = /usr/local/mongo/shard1/log/mongo.log         #指定日志文件
+logappend = true                                        #写日志的模式：设置为true为追加。默认是覆盖
+pidfilepath = /usr/local/mongo/shard1/log/mongo.pid     #进程ID，没有指定则启动时候就没有PID文件。默认缺省
+fork = true                                             #是否后台运行，设置为true 启动 进程在后台运行的守护进程模式。默认false
+dbpath = /usr/local/mongo/shard1/data                   #数据存放目录。默认： /data/db/
+
+
+nohttpinterface=false                                   #打开web监控
+rest=true                                               #默认false，设置为true开启后，在MongoDB默认会开启一个HTTP协议的端口提供REST的服务，默认的端口28017是数据库状态页面
+replSet=shard1                                          #使用此设置来配置复制副本集。指定一个副本集名称作为参数，所有主机都必须有相同的名称作为同一个副本集。
+shardsvr = true                                         #设置是否分片，默认端口27018
+
+```
 
 
 

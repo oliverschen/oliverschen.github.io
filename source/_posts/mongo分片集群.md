@@ -13,6 +13,80 @@ mongdb 通过分片机制将数据分布在多台机器上面，实现了横向�
 
 mongo 通过分片机制，将数据拆分后存储在不同机器上面。这样就可以存储更多的数据，并且能以很快的速度读取出来。mongo 原生就支持了分布式特性，在使用方面也是非常方便。下面先[下载](https://www.mongodb.org/dl/linux/x86_64)进行部署。
 
+###### 环境
+
+|    ev  |  version    |   
+| ---- | ---- |    
+|    os  | CentOS Linux release 7.6.1810 (Core)   |       
+|    mongo  |    mongodb-linux-x86_64-v4.0-latest  |   
+
+
+###### 搭建
+
+创建 3 台虚拟机，分别搭建 mongo 实例
+机器分配
+|    os  |  ip    |   
+| ---- | ---- |    
+|  centos7   | 192.168.31.107    |       
+|    centos7  |  192.168.31.107  |  
+|centos7|192.168.31.107 | 
+
+1. 下载并安装
+```bash
+# 创建目录 /usr/local
+mkdir mongo
+# 解压到 mongo 目录
+tar -zxvf mongodb-linux-x86_64-v4.0-latest.gz
+```
+
+2. 配置文件
+先创建下面对应的文件夹
+
+```properties
+
+port = 27017                                            #端口，默认 27017 
+bind_ip = 0.0.0.0                                       #绑定地址，默认127.0.0.1只能通过本地连接，0.0.0.0允许任何机器连接
+maxConns=2000                                           #最大连接数
+logpath = /usr/local/mongo/config/log/mongo.log         #指定日志文件
+logappend = true                                        #写日志的模式：设置为true为追加。默认是覆盖
+pidfilepath = /usr/local/mongo/config/log/mongo.pid     #进程ID，没有指定则启动时候就没有PID文件。默认缺省
+fork = true                                             #是否后台运行，设置为true 启动 进程在后台运行的守护进程模式。默认false
+dbpath = /usr/local/mongo/config/data                   #数据存放目录。默认： /data/db/
+replSet=configs                                         #使用此设置来配置复制副本集。指定一个副本集名称作为参数，所有主机都必须有相同的名称作为同一个副本集。
+configsvr = true                                        ##设置是否是配置服务，默认端口27019，默认目录/data/configdb
+
+```
+
+3. 启动服务
+```bash
+
+/usr/local/mongo/bin/mongod -f /usr/local/mongo/conf/config.conf
+
+#启动成功
+about to fork child process, waiting until server is ready for connections.
+forked process: 8982
+child process started successfully, parent exiting
+```
+4. 初始化副本集
+
+```json
+#config变量
+config = {
+    _id : "configs",
+     members : [
+         {_id : 0, host : "192.168.31.107:27017" },
+         {_id : 1, host : "192.168.31.108:27017" },
+         {_id : 2, host : "192.168.31.109:27017" }
+    ]
+ }
+
+ #初始化配置
+rs.initiate(config)
+```
+configs:配置文件中副本集名称
+
+
+
 
 
 

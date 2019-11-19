@@ -106,14 +106,44 @@ pidfilepath = /usr/local/mongo/shard1/log/mongo.pid     #进程ID，没有指定
 fork = true                                             #是否后台运行，设置为true 启动 进程在后台运行的守护进程模式。默认false
 dbpath = /usr/local/mongo/shard1/data                   #数据存放目录。默认： /data/db/
 
-
-nohttpinterface=false                                   #打开web监控
-rest=true                                               #默认false，设置为true开启后，在MongoDB默认会开启一个HTTP协议的端口提供REST的服务，默认的端口28017是数据库状态页面
 replSet=shard1                                          #使用此设置来配置复制副本集。指定一个副本集名称作为参数，所有主机都必须有相同的名称作为同一个副本集。
 shardsvr = true                                         #设置是否分片，默认端口27018
 
 ```
 
+2. 启动 shard1 服务
+
+按照相同的方式配置其他 2 台服务并启动
+
+```bash
+bin/mongod -f conf/shard1.conf 
+```
+
+
+3. 初始化副本集
+进入 shell 命令行
+```bash
+mongo --port 27001
+```
+
+初始化
+```json
+#使用admin数据库
+use admin
+#定义副本集配置，第三个节点的 "arbiterOnly":true 代表其为仲裁节点。
+config = {
+    _id : "shard1",
+     members : [
+         {_id : 0, host : "192.168.31.107:27001" },
+         {_id : 1, host : "192.168.31.108:27001" },
+         {_id : 2, host : "192.168.31.109:27001" }
+    ]
+ }
+
+#初始化副本集配置
+rs.initiate(config);
+
+```
 
 
 

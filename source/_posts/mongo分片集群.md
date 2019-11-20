@@ -93,7 +93,14 @@ configs:配置文件中副本集名称
 
 ###### 分片副本集
 
+**配置 shard1**
+
 1. 配置文件
+
+创建配置文件
+```bash
+vim conf/shard1.conf
+```
 
 ```properties
 
@@ -145,10 +152,222 @@ rs.initiate(config);
 
 ```
 
+**配置 shard2**
+
+1. 配置文件
+
+创建配置文件
+```bash
+vim conf/shard2.conf
+```
+
+```properties
+
+port = 27002                                            #端口，默认 27017 
+bind_ip = 0.0.0.0                                       #绑定地址，默认127.0.0.1只能通过本地连接，0.0.0.0允许任何机器连接
+maxConns=2000                                           #最大连接数
+logpath = /usr/local/mongo/shard2/log/mongo.log         #指定日志文件
+logappend = true                                        #写日志的模式：设置为true为追加。默认是覆盖
+pidfilepath = /usr/local/mongo/shard2/log/mongo.pid     #进程ID，没有指定则启动时候就没有PID文件。默认缺省
+fork = true                                             #是否后台运行，设置为true 启动 进程在后台运行的守护进程模式。默认false
+dbpath = /usr/local/mongo/shard2/data                   #数据存放目录。默认： /data/db/
+
+replSet=shard2                                          #使用此设置来配置复制副本集。指定一个副本集名称作为参数，所有主机都必须有相同的名称作为同一个副本集。
+shardsvr = true                                         #设置是否分片，默认端口27018
+
+```
+
+2. 启动 shard2 服务
+
+按照相同的方式配置其他 2 台服务并启动
+
+```bash
+bin/mongod -f conf/shard2.conf 
+```
 
 
+3. 初始化副本集
+进入 shell 命令行
+```bash
+mongo --port 27002
+```
+
+初始化
+```json
+#使用admin数据库
+use admin
+#定义副本集配置，第三个节点的 "arbiterOnly":true 代表其为仲裁节点。
+config = {
+    _id : "shard2",
+     members : [
+         {_id : 0, host : "192.168.31.107:27002" },
+         {_id : 1, host : "192.168.31.108:27002" },
+         {_id : 2, host : "192.168.31.109:27002" }
+    ]
+ }
+
+#初始化副本集配置
+rs.initiate(config);
+
+```
+
+**配置 shard3**
+
+配置 shard3
+
+1. 配置文件
+
+创建配置文件
+```bash
+vim conf/shard3.conf
+```
+
+```properties
+
+port = 27003                                            #端口，默认 27017 
+bind_ip = 0.0.0.0                                       #绑定地址，默认127.0.0.1只能通过本地连接，0.0.0.0允许任何机器连接
+maxConns=2000                                           #最大连接数
+logpath = /usr/local/mongo/shard3/log/mongo.log         #指定日志文件
+logappend = true                                        #写日志的模式：设置为true为追加。默认是覆盖
+pidfilepath = /usr/local/mongo/shard3/log/mongo.pid     #进程ID，没有指定则启动时候就没有PID文件。默认缺省
+fork = true                                             #是否后台运行，设置为true 启动 进程在后台运行的守护进程模式。默认false
+dbpath = /usr/local/mongo/shard3/data                   #数据存放目录。默认： /data/db/
+
+replSet=shard3                                          #使用此设置来配置复制副本集。指定一个副本集名称作为参数，所有主机都必须有相同的名称作为同一个副本集。
+shardsvr = true                                         #设置是否分片，默认端口27018
+
+```
+
+初始化
+```json
+#使用admin数据库
+use admin
+#定义副本集配置，第三个节点的 "arbiterOnly":true 代表其为仲裁节点。
+config = {
+    _id : "shard3",
+     members : [
+         {_id : 0, host : "192.168.31.107:27003" },
+         {_id : 1, host : "192.168.31.108:27003" },
+         {_id : 2, host : "192.168.31.109:27003" }
+    ]
+ }
+
+#初始化副本集配置
+rs.initiate(config);
+
+```
+
+2. 启动 shard3 服务
+
+按照相同的方式配置其他 2 台服务并启动
+
+```bash
+bin/mongod -f conf/shard3.conf 
+```
 
 
+3. 初始化副本集
+进入 shell 命令行
+```bash
+mongo --port 27003
+```
+
+初始化
+```json
+#使用admin数据库
+use admin
+#定义副本集配置，第三个节点的 "arbiterOnly":true 代表其为仲裁节点。
+config = {
+    _id : "shard3",
+     members : [
+         {_id : 0, host : "192.168.31.107:27003" },
+         {_id : 1, host : "192.168.31.108:27003" },
+         {_id : 2, host : "192.168.31.109:27003" }
+    ]
+ }
+
+#初始化副本集配置
+rs.initiate(config);
+
+```
+
+###### 配置路由服务
+
+1. 配置文件
+
+创建配置文件
+```bash
+vim conf/shard3.conf
+```
+
+```properties
+
+port = 28000                                            #端口，默认 27017 
+bind_ip = 0.0.0.0                                       #绑定地址，默认127.0.0.1只能通过本地连接，0.0.0.0允许任何机器连接
+maxConns=2000                                           #最大连接数
+logpath = /usr/local/mongo/mongos/log/mongos.log         #指定日志文件
+logappend = true                                        #写日志的模式：设置为true为追加。默认是覆盖
+pidfilepath = /usr/local/mongo/mongos/log/mongos.pid     #进程ID，没有指定则启动时候就没有PID文件。默认缺省
+fork = true                                             #是否后台运行，设置为true 启动 进程在后台运行的守护进程模式。默认false
+#配置服务器，只能是一个或者3个。configs 是上面配置服务器副本集名字
+configdb = configs/192.168.31.107:27017,192.168.31.108:27017,192.168.31.109:27017
+
+```
+
+2. 启动
+使用 **mongos**命令启动
+```bash
+bin/mongos -f conf/mongos.conf
+```
+
+按照以上方式配置启动其他2台mongos服务
+
+3. 启动分片
+
+```bash
+#登录 mongos
+mongo --port 28000
+#使用admin数据库
+use  admin
+#配置分片
+sh.addShard("shard1/192.168.31.107:27001,192.168.31.108:27001,192.168.31.109:27001")
+sh.addShard("shard2/192.168.31.107:27002,192.168.31.108:27002,192.168.31.109:27002")
+sh.addShard("shard3/192.168.31.107:27003,192.168.31.108:27003,192.168.31.109:27003")
+#查看集群状态
+sh.status()
+```
+
+> 完成以上 mongo 分片部署就完成了，下面进行简单测试。
+
+###### 验证
+
+1. 指定分片库
+
+```bash
+# 切换到 admin 账户
+use admin
+# 指定 testdb 分片生效
+db.runCommand( { enablesharding :"testdb"});
+# 指定数据库里需要分片的集合和片键
+db.runCommand( { shardcollection : "testdb.user",key : {id: 1} } )
+```
+指定 testdb 下 user 表数据进行分片处理，对 user 表插入数据测试
+
+```bash
+# 进入任意分片
+mongo --port 28000
+# 切换数据库
+use testdb
+# 插入数据
+for (var i=1;i<=100000;i++) db.user.insert({id:i,"userId":"user"+i})
+```
+使用 [studio 3T](https://studio3t.com/download/) 连接 mongo ，连接之后点击：
+> 1. 右键连接
+> 2. Curent Operations
+
+进入 Curent Operations 页面，就可以看到数据是写入到了不同的分片之上的。
 
 
-[官方文档](https://docs.mongodb.com/manual/sharding/)
+mongdb 对于快速迭代开发是一个非常不错的选择，因为在不断迭代变化的过程中既可以满足前期快速的迭代，也能抗住后期海量数据存储和并发访问问题。而且对开发者很友好，非关系型结构可以让开发按照需求快速调整数据结构，但是也有一个弊端，可能造成表结构数据混乱等情况。在横向扩展方面更是有非常大的优势，在未来潜力无限。[官方文档](https://docs.mongodb.com/manual/sharding/)
+
+<center>mongo is not mango</center>

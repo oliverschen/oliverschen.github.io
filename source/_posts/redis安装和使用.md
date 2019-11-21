@@ -1,7 +1,14 @@
 ---
 title: redis安装和使用
 date: 2019-11-20 00:53:22
-tags:
+tags: redis
+category: 缓存
 ---
 
-![Photo by Vadim Sadovski on Unsplash](RabbitMQ安装和使用/rabbitmq.png)
+![Photo by Richs on wallhaven.cc](/redis.png)
+
+在互联网项目中，缓存中间件是一个必不可少的组件。由于磁盘 IO 和 内存 IO 在性能上的差异，通常一些热点数据都会放在缓存中，既提高了用户访问速度，缓存也在很大程度上减轻了数据库的压力，提高了系统整体的吞吐量，redis 是很成熟的一款 NoSql 数据库，是目前使用最多的缓存中间件，当然它的作用不仅仅可以用来做缓存，可以做分布式锁，简单消息队列等。性能稳定且高效，是居家必备用品。┑(￣▽ ￣)┍ 
+
+<!--more-->
+
+

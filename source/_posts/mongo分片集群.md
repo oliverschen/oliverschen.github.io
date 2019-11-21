@@ -5,9 +5,11 @@ tags: mongo
 category: mongo
 ---
 
-![Photo by Unsplash](mongo分片集群/replicaSet.png)
+![Photo by Unsplash](/replicaSet.png)
 
 mongdb 通过分片机制将数据分布在多台机器上面，实现了横向扩展。也支持了非常大数集和高吞吐量操作。mongodb 可以很好的利用机器的内存资源，内存越大，查询就会越快。mongo 对数据的结构没有其他限制，对开发者很友好，很适合迭代很快，表字段变化很多的场景。
+
+<!-- more -->
 
 ##### 分片
 

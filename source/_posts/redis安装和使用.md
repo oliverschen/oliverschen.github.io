@@ -142,13 +142,14 @@ redis 支持很多数据结构，String，List，Hash，Sort，ZSort等，简单
 
 1. 命令
 
-存入/获取字符串键值对 `GET`,`SET`
+==GET==,==SET==
+存入/获取字符串键值对 
 ```bash
 SET key value
 GET key  
 ```
-
-批量存入/获取字符串键值对 `MSET`,`MGET`
+==MSET==,==MGET==
+批量存入/获取字符串键值对 
 ```bash
 MSET key value [key value]
 MGET key [key]
@@ -175,26 +176,27 @@ OK
 1) "zhangsanMOD"
 127.0.0.1:6379>
 ```
-
-存入不存在的键值对 `SETNX`
+==SETNX==
+存入不存在的键值对 
 当设置的 key 存在时，则设置不成功，当不存在时，设置成功。因为 redis 是单线程模型，此命令可以用来实现**分布式锁功能**
 ```bash
 # 设置送出15001礼物价值1000元
 SETNX gift:15001 1000
 ```
-
-删除一个键值对 `DEL`
+==DEL==
+删除一个键值对 
 ```bash
 DEL gift:15001
 ```
-计数器 `INCR`
+==INCR==
+计数器 
 这个命令可以很方便的对 key 的 value 加 1 操作，而且不用考虑并发等问题，在实际场景中**文章阅读量可以使用此功能来实现**
 ```bash
 # 111111 文章对应的阅读量
 INCR article:readcount:111111
 ```
-
-增量添加 `INCRBY`
+==INCRBY==
+增量添加 
 将 key 中储存的数字加上指定的增量值。
 ```bash
 # 键不存在时初始化为 0 之后在加 50
@@ -211,7 +213,8 @@ INCRBY gift:15001:count 50
 
 1. 命令
 
-存储/获取键值对。`HSET`,`HGET`
+==HSET==,==HGET==
+存储/获取键值对
 
 Hash 结构的 key 对应的值类似于 Java 中的 HashMap 结构。
 ```bash
@@ -232,7 +235,8 @@ HSET user 1001:age 20
 127.0.0.1:6379> HGET user 1001:name
 "zhangsan"
 ```
-存储多个键值对（批量）`HMSET`,`HMGET`
+==HMSET==,==HMGET==
+存储多个键值对（批量）
 ```bash
 HMSET key field value [key field valye]
 HMGET key field [field]
@@ -252,7 +256,8 @@ HMGET user 1002:name 1002:age
 3) "lisi"
 4) "21"
 ```
-存储一个不存在的键值对 `HSETNX`
+==HSETNX==
+存储一个不存在的键值对 
 ```bash
 HSETNX key field value
 ```
@@ -264,8 +269,8 @@ HSETNX key field value
 (integer) 0
 
 ```
-
-删除键对应的属性 `HDEL`
+==HDEL==
+删除键对应的属性 
 ```bash
 HDEL key field [field]
 ```
@@ -275,8 +280,8 @@ HDEL gift 15000:count
 127.0.0.1:6379> HSET gift 15000:count 1
 (integer) 1
 ```
-
-Hash 表大小 `HLEN`
+==HLEN==
+Hash 表大小
 ```bash
 HLEN key
 ```
@@ -286,7 +291,8 @@ HLEN user
 127.0.0.1:6379> HLEN user
 (integer) 4
 ```
-Hash 表所有的键值对 `HGETALL`
+==HGETALL==
+Hash 表所有的键值对 
 ```bash
 HGETALL key
 ```
@@ -303,7 +309,8 @@ HGETALL user
 7) "1002:age"
 8) "21"
 ```
-Hash 表 key 中属性的键的值设置增量（increment）`HINCRBY`
+==HINCRBY==
+Hash 表 key 中属性的键的值设置增量（increment）
 ```bash
 HINCRBY key field increament
 ```
@@ -347,7 +354,8 @@ key  ---> |   a   |   b   |   c   |   d   |
 ```
 1. 命令
 
-插入/取出一个或者多个值插入列表头部（最左边） `LPUSH`,`LPOP`
+==LPUSH==,==LPOP==
+插入/取出一个或者多个值插入列表头部（最左边） 
 ```bash
 LPUSH key value [value]
 LPOP key
@@ -362,14 +370,15 @@ LPOP ordinary
 "4004"
 127.0.0.1:6379> LPOP ordinary
 ```
-
-插入/取出一个或者多个值插入列表头部（最右边） `RPUSH`,`RPOP`
+==RPUSH==,==RPOP==
+插入/取出一个或者多个值插入列表头部（最右边） 
 这个命令和上面的命令是相同的结果，只是取出的位置不一样。
 ```bash
 RPUSH key value [value]
 RPOP key
 ```
-列表头/尾取出一个元素，如果没有则阻塞等待，timeout = 0 时一直阻塞等待（timeout/s） `BLPOP`,`BRPOP`
+==BLPOP==,==BRPOP==
+列表头/尾取出一个元素，如果没有则阻塞等待，timeout = 0 时一直阻塞等待（timeout/s） 
 ```bash
 BLPOP key [key] timeout
 BRPOP key [key] timeout
@@ -383,9 +392,10 @@ LPUSH ordinary 4001 4002 4003 4004
 1) "ordinary"
 2) "4001"
 ```
-`等待时添加一个元素，等待中的 BRPOP 立马输出新添加的元素`
+等待时添加一个元素，等待中的 BRPOP 立马输出新添加的元素
 
-获取指定 key 列表区间的元素 `LRANGE`
+==LRANGE==
+获取指定 key 列表区间的元素 
 ```bash
 LRANGE key start stop
 ```
@@ -411,6 +421,142 @@ LPUSH 1001:msg 5001,5002
 ```
 
 ###### SET
+
+Set 键值对中的值数据结构类似 Java 中 Set 集合中的 key 值结构，元素不能重复。
+
+1. 命令
+
+ ==SADD==,==SREM==
+添加/删除集合中元素，添加时如果存在则忽略
+
+```bash
+SADD key member [member]
+SREM key member
+```
+```bash
+# 用户 6001,6002 关注用户 1001
+SADD user:1001:fans 6001 6002
+# 用户 6002 取消关注用户 1001
+SREM user:1001:fans 6002
+```
+==SMEMBERS==
+获取集合所有元素 
+```bash
+SMEMBERS key
+```
+```bash
+# 用户 1001 粉丝
+127.0.0.1:6379> SMEMBERS user:1001:fans
+1) "6001"
+```
+==SISMEMBER==
+判断元素是否存在 
+```bash
+SISMEMBER key member
+```
+```bash
+# 判断 6002 是否在集合 user:1001:fans 中
+127.0.0.1:6379> SISMEMBER user:1001:fans 6002
+(integer) 0
+```
+
+==SCARD==
+获取集合元素个数 
+```bash
+SCARD key
+```
+```bash
+# 获取用户 1001 的粉丝数
+127.0.0.1:6379> SCARD user:1001:fans
+(integer) 1
+```
+==SRANDMEMBER==
+从集合随机获取 count 个元素，默认获取 1 个，元素不删除 
+```bash
+SRANDMEMBER key [count]
+```
+```bash
+# 给用户 1001 添加粉丝
+SADD user:1001:fans 6002 6003 6004 6005 6006
+# 随机获取 2 个粉丝 ID
+127.0.0.1:6379> SRANDMEMBER user:1001:fans 2
+1) "6002"
+2) "6006"
+# 查看用户 1001 的粉丝，刚刚查看的还在集合中
+127.0.0.1:6379> SMEMBERS user:1001:fans
+1) "6001"
+2) "6002"
+3) "6003"
+4) "6004"
+5) "6005"
+6) "6006"
+```
+
+==SPOP==
+从集合随机获取 count 个元素，默认获取 1 个，删除元素 
+```bash
+SPOP key [count]
+```
+```bash
+# 随机获取用户 1001 的 2 个粉丝
+127.0.0.1:6379> SPOP user:1001:fans 2
+1) "6003"
+2) "6004"
+# 查看用户 1001 的粉丝，刚刚取出的已经被移除
+127.0.0.1:6379> SMEMBERS user:1001:fans
+1) "6001"
+2) "6002"
+3) "6005"
+4) "6006"
+```
+2. 应用
+微信小程序抽奖活动
+> 1. 用户 1001,1002,1003,1004 参与活动 7001 ----> SADD act:7001 1001 1002 1003 1004
+> 2. 查看参与 7001 活动的全部用户 ----> SMEMBERS act:7001
+> 3. 随机抽奖 2 名用户 ----> SRANDMEMBER act:7001 2
+> 4. 抽取 1 等奖 1 名，2 等奖 2 名(去除一等奖用户) ----> SPOP act:7001 1 ,SPOP act:7001 2
+
+微信点赞，收藏，标签
+> 1. 用户 1002 点赞用户 1001 的朋友圈消息 8001 ----> SADD like:1001:8001 1002
+> 2. 取消点赞 ----> SREM like:1001:8001 1002
+> 3. 查看用户 1003 是否点赞 ----> SISMEMBER like:1001:8001 1003
+> 4. 获取点赞朋友列表 ----> SMEMBERS like:1001:8001
+> 5. 获取点赞用户数 ----> SCARD like:1001:8001
+
+3. Set 集合运算操作
+
+集合 set1:{a,b,e,f},set2:{c,d,e},set3:{a,b,e,g}
+```bash
+# 交集：多个集合中共有的元素
+set1 set2 set3 ----> {e}
+# 并集：去重多个集合中所有元素
+set1 set2 set3 ----> {a,b,c,d,e,f,g}
+# 差集：第一个集合和其他集合不一样的元素
+set1 set2 set3 ----> {f}
+```
+Set 中对应的集合运算
+==SINTER== 
+交集运算
+```bash
+SINTER set1 set2 set3
+```
+==SUNION==
+并集运算
+```bash
+SUNION set1 set2 set3
+```
+==SDIFF==
+差集运算
+```bash
+SDIFF set1 set2 set3
+```
+4. 运算应用
+关注模型
+> 1. zhangsan/lisi 关注的人：zhangsan/lisi 粉丝 set 集合
+> 2. zhangsan 和 list 共同关注：集合求并集 SINTER zhangsan lisi
+> 3. 我关注的人也关注了他（wangwu）：遍历 zhangsan 关注列表用户是否关注 wangwu SISMEMBER
+> 4. 可能认识的人：求差集 SDIFF zhangsan lisi
+
 
 
 

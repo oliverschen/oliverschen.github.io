@@ -136,7 +136,7 @@ databases 16
 
 ##### redis 数据结构
 
-redis 支持很多数据结构，String，List，Hash，Sort，ZSort等，简单理解它每种数据结构，都是它的 value 对应的数据结构。
+redis 支持很多数据结构，String，List，Hash，Set，ZSet等，简单理解它每种数据结构，都是它的 value 对应的数据结构。
 
 ###### String
 
@@ -420,7 +420,7 @@ LRANGE key start stop
 LPUSH 1001:msg 5001,5002
 ```
 
-###### SET
+###### Set
 
 Set 键值对中的值数据结构类似 Java 中 Set 集合中的 key 值结构，元素不能重复。
 
@@ -557,6 +557,92 @@ SDIFF set1 set2 set3
 > 3. 我关注的人也关注了他（wangwu）：遍历 zhangsan 关注列表用户是否关注 wangwu SISMEMBER
 > 4. 可能认识的人：求差集 SDIFF zhangsan lisi
 
+###### ZSet
+有序集合，且不允许有重复的元素，通过 score 对集合中元素排序
+==ZADD==,==ZREM==
+添加/移除集合中的元素
+```bash
+ZADD key score member [score member]
+ZREM key member [member]
+```
+通过热度值对直播房间排序
+```bash
+# 房间 1100 的热度值 90000
+ZADD room:sort 90000 1100 80000 2200 70000 3300
+# 移除 3300 这个房间
+ZREM room:sort 3300 
+```
+==ZCARD==
+获取有序集合的元素个数
+```bash
+ZCARD key
+```
+```bash
+127.0.0.1:6379> ZCARD room:sort
+(integer) 2
+```
+==ZCOUNT==
+获取有序集合 [min,max] 区间 score 元素数量
+```bash
+ZCOUNT key min max
+```
+```bash
+# 获取 热度在80000-85000 之间的房间
+127.0.0.1:6379> ZCOUNT room:sort 80000 85000
+(integer) 1
+```
+==ZINCRBY==
+有序集合中指定成员 score 增加 increment
+```bash
+ZINCRBY key increment member
+```
+```bash
+# 1100 房间热度增加 1000
+127.0.0.1:6379> ZINCRBY room:sort 1000 1100
+"91000"
+```
+
+==ZRANGE==,==ZREVRANGE==
+有序集合 [start,stop] 区间元素，通过 score，递增/递减
+start 和 stop 都是以 0 开始，0 表示第一个元素，1 表示第二个，以此类推
+负数下标 -1 表示倒数第一个元素，-2 表示倒数第二个元素，以此类推
+```bash
+ZRANGE key start stop [WITHSCORES]
+ZREVRANGE key start stop [WITHSCORES]
+```
+```bash
+# 递增排序 room:sort 下所有元素
+127.0.0.1:6379> ZRANGE room:sort 0 -1 WITHSCORES
+1) "2200"
+2) "80000"
+3) "1100"
+4) "91000"
+# 递减排序 room:sort 下所有元素
+127.0.0.1:6379> ZREVRANGE room:sort 0 -1 WITHSCORES
+1) "1100"
+2) "91000"
+3) "2200"
+4) "80000"
+```
+==ZUNIONSTORE==
+运算多个有序集合并集，并存储在新 key 中, `destination`新集合 key 值，`numkeys`合并的集合个数
+```bash
+ZUNIONSTORE destination numkeys key [key]
+```
+```bash
+# 添加房间在线人数集合
+ZADD room:onlinenum 800 3300 1000 4400
+# 合并房间在线人数集合和房间热度集合为房间信息集合 room:info
+ZUNIONSTORE room:info 2 room:sort room:onlinenum
+```
+2. 应用
+各类排行榜实现
+
+> 1. 用户点击新闻 ----> ZINCRBY hotnews:20191125 1 学好redis
+> 2. 展示当日排行榜前十 ----> ZREVRANGE hotnews:20191125 0 10 WITHSORES
+> 3. 七日搜索榜统计 ----> ZUNIONSTROE hotnews:20191119-20191125 7 hotnews:20191119 ... hotnews:20191125
+> 4. 七日排行前十 ----> ZREVRANGE hotnews:20191119-20191125 0 10 WITHSCORES
+
 
 
 
@@ -583,6 +669,8 @@ SDIFF set1 set2 set3
 
 
 参考 [testerhome](https://testerhome.com/topics/16402),[redis](http://redis.io)
+
+
 
 
 

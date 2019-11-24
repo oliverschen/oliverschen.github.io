@@ -212,6 +212,7 @@ INCRBY gift:15001:count 50
 1. 命令
 
 存储/获取键值对。`HSET`,`HGET`
+
 Hash 结构的 key 对应的值类似于 Java 中的 HashMap 结构。
 ```bash
 HSET key field value
@@ -231,6 +232,188 @@ HSET user 1001:age 20
 127.0.0.1:6379> HGET user 1001:name
 "zhangsan"
 ```
+存储多个键值对（批量）`HMSET`,`HMGET`
+```bash
+HMSET key field value [key field valye]
+HMGET key field [field]
+```
+使用批量的方式存储用户 `lisi` 的信息
+```bash
+HMSET user 1002:name lisi 1002:age 21
+HMGET user 1002:name 1002:age
+# 批量获取
+127.0.0.1:6379> HMGET user 1002:name 1002:age
+1) "lisi"
+2) "21"
+# 获取多个
+127.0.0.1:6379> HMGET user 1001:name 1001:age 1002:name 1002:age
+1) "zhangsan"
+2) "20"
+3) "lisi"
+4) "21"
+```
+存储一个不存在的键值对 `HSETNX`
+```bash
+HSETNX key field value
+```
+```bash
+127.0.0.1:6379> HSET gift 15000:count 1
+(integer) 1
+#第二次设置不成功
+127.0.0.1:6379> HSET gift 15000:count 1
+(integer) 0
+
+```
+
+删除键对应的属性 `HDEL`
+```bash
+HDEL key field [field]
+```
+```bash
+HDEL gift 15000:count
+# 删除之后重新设置成功
+127.0.0.1:6379> HSET gift 15000:count 1
+(integer) 1
+```
+
+Hash 表大小 `HLEN`
+```bash
+HLEN key
+```
+```bash
+HLEN user
+# 用户 Hash 表大小 4 
+127.0.0.1:6379> HLEN user
+(integer) 4
+```
+Hash 表所有的键值对 `HGETALL`
+```bash
+HGETALL key
+```
+```bash
+HGETALL user
+# 用户表中所有键值对
+127.0.0.1:6379> HGETALL user
+1) "1001:name"
+2) "zhangsan"
+3) "1001:age"
+4) "20"
+5) "1002:name"
+6) "lisi"
+7) "1002:age"
+8) "21"
+```
+Hash 表 key 中属性的键的值设置增量（increment）`HINCRBY`
+```bash
+HINCRBY key field increament
+```
+```bash
+# 用户 1001 年龄 +1
+127.0.0.1:6379> HINCRBY user 1001:age 1
+(integer) 21
+```
+
+2. 应用
+
+购物车
+```bash
+1. 用户 ID 为 key
+2. 商品 ID 为 field
+3. 商品数量为 value
+# 购物车操作
+1. 添加：                 HSET cart:1001 2001 1
+2. 增加数量：             HINCRBY cart:1001 2001 1
+3. 商品总数：             HLEN cart:1001
+4. 删除商品：             HDEL cart:1001 2001
+5. 获取购物车所有商品：    HGETALL cart:1001
+```
+> 1. 用户 1001 添加 了 1 个 2001 商品到购物车
+> 2. 用户 1001 又新增了 1 个商品 2001
+> 3. 用户 1001 购物车商品总数
+> 4. 用户 1001 删除购物车商品 2001 
+> 5. 用户 1001 获取购物车所有商品 
+
+
+###### List
+List 结构中 key 对应的 value 是一个链表结构，**实现常用数据结构**
+> Stack(栈) = LPUSH + LPOP -> FILO（先进后出）
+> Queue(队列) = LPUSH + RPOP 
+> Blocking MQ(阻塞队列) = LPUSH + BRPOP 在阻塞队列中，LPUSH 一条数据之后，使用 BRPOP 获取数据，区别于 RPOP 的是，当 List 中没有数据时 BRPOP 会一直监听这个 List，有值被 push 进来它会立马获取
+```bash
+# 结构
+           LPUSH                   RPUSH
+key  ---> |   a   |   b   |   c   |   d   |
+           LPOP                    RPOP
+```
+1. 命令
+
+插入/取出一个或者多个值插入列表头部（最左边） `LPUSH`,`LPOP`
+```bash
+LPUSH key value [value]
+LPOP key
+```
+将礼物按照分类存入列表中
+```bash
+# 普通礼物列表存入 4 个礼物
+LPUSH ordinary 4001 4002 4003 4004
+LPOP ordinary
+# 4001 在最右边，第一次取出最左边的 4004
+127.0.0.1:6379> LPOP ordinary
+"4004"
+127.0.0.1:6379> LPOP ordinary
+```
+
+插入/取出一个或者多个值插入列表头部（最右边） `RPUSH`,`RPOP`
+这个命令和上面的命令是相同的结果，只是取出的位置不一样。
+```bash
+RPUSH key value [value]
+RPOP key
+```
+列表头/尾取出一个元素，如果没有则阻塞等待，timeout = 0 时一直阻塞等待（timeout/s） `BLPOP`,`BRPOP`
+```bash
+BLPOP key [key] timeout
+BRPOP key [key] timeout
+```
+监听礼物列表是否有商品，有则在右边阻塞取出
+```bash
+LPUSH ordinary 4001 4002 4003 4004
+
+# 执行 BRPOP 每次取出一条，如果没有，则一直等待
+127.0.0.1:6379> BRPOP ordinary 0
+1) "ordinary"
+2) "4001"
+```
+`等待时添加一个元素，等待中的 BRPOP 立马输出新添加的元素`
+
+获取指定 key 列表区间的元素 `LRANGE`
+```bash
+LRANGE key start stop
+```
+获取 0-2 区间的值
+```bash
+127.0.0.1:6379> LPUSH ordinary 4001 4002 4003 4004
+(integer) 4
+# 
+127.0.0.1:6379> LRANGE ordinary 0 2
+1) "4004"
+2) "4003"
+3) "4002"
+
+```
+
+2. 应用
+
+微信公众号的推送信息可以使用 List 结构，用户关注的公众号每推送一个消息，在用户对应的列表增加一个文章ID
+
+```bash
+# 用户 1001 有 5001，5002 两个推送文章消息
+LPUSH 1001:msg 5001,5002
+```
+
+###### SET
+
+
+
 
 
 
@@ -254,3 +437,6 @@ HSET user 1001:age 20
 
 
 参考 [testerhome](https://testerhome.com/topics/16402),[redis](http://redis.io)
+
+
+

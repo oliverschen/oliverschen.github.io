@@ -209,6 +209,31 @@ INCRBY gift:15001:count 50
 
 ###### Hash
 
+1. 命令
+
+存储/获取键值对。`HSET`,`HGET`
+Hash 结构的 key 对应的值类似于 Java 中的 HashMap 结构。
+```bash
+HSET key field value
+HGET key field
+```
+上面将用户信息用 `MSET` 以批量字符串的形式存储，现在将用户表中用户信息用 Hash 结构存储：
+
+| userId     |   userName   |  age |  
+| ---- | ---- | ---- |  
+|1001| zhangsan |20 | 
+|1002|lisi|21|
+
+```bash
+HSET user 1001:name zhangsan
+HSET user 1001:age 20
+# 获取 key 中的属性对应的值
+127.0.0.1:6379> HGET user 1001:name
+"zhangsan"
+```
+
+
+
 
 
 

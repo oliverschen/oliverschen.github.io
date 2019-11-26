@@ -142,13 +142,13 @@ redis 支持很多数据结构，String，List，Hash，Set，ZSet等，简单�
 
 1. 命令
 
-==GET==,==SET==
+**GET**,**SET**
 存入/获取字符串键值对 
 ```bash
 SET key value
 GET key  
 ```
-==MSET==,==MGET==
+**MSET**,**MGET**
 批量存入/获取字符串键值对 
 ```bash
 MSET key value [key value]
@@ -176,26 +176,26 @@ OK
 1) "zhangsanMOD"
 127.0.0.1:6379>
 ```
-==SETNX==
+**SETNX**
 存入不存在的键值对 
 当设置的 key 存在时，则设置不成功，当不存在时，设置成功。因为 redis 是单线程模型，此命令可以用来实现**分布式锁功能**
 ```bash
 # 设置送出15001礼物价值1000元
 SETNX gift:15001 1000
 ```
-==DEL==
+**DEL**
 删除一个键值对 
 ```bash
 DEL gift:15001
 ```
-==INCR==
+**INCR**
 计数器 
 这个命令可以很方便的对 key 的 value 加 1 操作，而且不用考虑并发等问题，在实际场景中**文章阅读量可以使用此功能来实现**
 ```bash
 # 111111 文章对应的阅读量
 INCR article:readcount:111111
 ```
-==INCRBY==
+**INCRBY**
 增量添加 
 将 key 中储存的数字加上指定的增量值。
 ```bash
@@ -213,7 +213,7 @@ INCRBY gift:15001:count 50
 
 1. 命令
 
-==HSET==,==HGET==
+**HSET**,**HGET**
 存储/获取键值对
 
 Hash 结构的 key 对应的值类似于 Java 中的 HashMap 结构。
@@ -235,7 +235,7 @@ HSET user 1001:age 20
 127.0.0.1:6379> HGET user 1001:name
 "zhangsan"
 ```
-==HMSET==,==HMGET==
+**HMSET**,**HMGET**
 存储多个键值对（批量）
 ```bash
 HMSET key field value [key field valye]
@@ -256,7 +256,7 @@ HMGET user 1002:name 1002:age
 3) "lisi"
 4) "21"
 ```
-==HSETNX==
+**HSETNX**
 存储一个不存在的键值对 
 ```bash
 HSETNX key field value
@@ -269,7 +269,7 @@ HSETNX key field value
 (integer) 0
 
 ```
-==HDEL==
+**HDEL**
 删除键对应的属性 
 ```bash
 HDEL key field [field]
@@ -280,7 +280,7 @@ HDEL gift 15000:count
 127.0.0.1:6379> HSET gift 15000:count 1
 (integer) 1
 ```
-==HLEN==
+**HLEN**
 Hash 表大小
 ```bash
 HLEN key
@@ -291,7 +291,7 @@ HLEN user
 127.0.0.1:6379> HLEN user
 (integer) 4
 ```
-==HGETALL==
+**HGETALL**
 Hash 表所有的键值对 
 ```bash
 HGETALL key
@@ -309,7 +309,7 @@ HGETALL user
 7) "1002:age"
 8) "21"
 ```
-==HINCRBY==
+**HINCRBY**
 Hash 表 key 中属性的键的值设置增量（increment）
 ```bash
 HINCRBY key field increament
@@ -354,7 +354,7 @@ key  ---> |   a   |   b   |   c   |   d   |
 ```
 1. 命令
 
-==LPUSH==,==LPOP==
+**LPUSH**,**LPOP**
 插入/取出一个或者多个值插入列表头部（最左边） 
 ```bash
 LPUSH key value [value]
@@ -370,14 +370,14 @@ LPOP ordinary
 "4004"
 127.0.0.1:6379> LPOP ordinary
 ```
-==RPUSH==,==RPOP==
+**RPUSH**,**RPOP**
 插入/取出一个或者多个值插入列表头部（最右边） 
 这个命令和上面的命令是相同的结果，只是取出的位置不一样。
 ```bash
 RPUSH key value [value]
 RPOP key
 ```
-==BLPOP==,==BRPOP==
+**BLPOP**,**BRPOP**
 列表头/尾取出一个元素，如果没有则阻塞等待，timeout = 0 时一直阻塞等待（timeout/s） 
 ```bash
 BLPOP key [key] timeout
@@ -394,7 +394,7 @@ LPUSH ordinary 4001 4002 4003 4004
 ```
 等待时添加一个元素，等待中的 BRPOP 立马输出新添加的元素
 
-==LRANGE==
+**LRANGE**
 获取指定 key 列表区间的元素 
 ```bash
 LRANGE key start stop
@@ -426,7 +426,7 @@ Set 键值对中的值数据结构类似 Java 中 Set 集合中的 key 值结构
 
 1. 命令
 
- ==SADD==,==SREM==
+ **SADD**,**SREM**
 添加/删除集合中元素，添加时如果存在则忽略
 
 ```bash
@@ -439,7 +439,7 @@ SADD user:1001:fans 6001 6002
 # 用户 6002 取消关注用户 1001
 SREM user:1001:fans 6002
 ```
-==SMEMBERS==
+**SMEMBERS**
 获取集合所有元素 
 ```bash
 SMEMBERS key
@@ -449,7 +449,7 @@ SMEMBERS key
 127.0.0.1:6379> SMEMBERS user:1001:fans
 1) "6001"
 ```
-==SISMEMBER==
+**SISMEMBER**
 判断元素是否存在 
 ```bash
 SISMEMBER key member
@@ -460,7 +460,7 @@ SISMEMBER key member
 (integer) 0
 ```
 
-==SCARD==
+**SCARD**
 获取集合元素个数 
 ```bash
 SCARD key
@@ -470,7 +470,7 @@ SCARD key
 127.0.0.1:6379> SCARD user:1001:fans
 (integer) 1
 ```
-==SRANDMEMBER==
+**SRANDMEMBER**
 从集合随机获取 count 个元素，默认获取 1 个，元素不删除 
 ```bash
 SRANDMEMBER key [count]
@@ -492,7 +492,7 @@ SADD user:1001:fans 6002 6003 6004 6005 6006
 6) "6006"
 ```
 
-==SPOP==
+**SPOP**
 从集合随机获取 count 个元素，默认获取 1 个，删除元素 
 ```bash
 SPOP key [count]
@@ -535,17 +535,17 @@ set1 set2 set3 ----> {a,b,c,d,e,f,g}
 set1 set2 set3 ----> {f}
 ```
 Set 中对应的集合运算
-==SINTER== 
+**SINTER** 
 交集运算
 ```bash
 SINTER set1 set2 set3
 ```
-==SUNION==
+**SUNION**
 并集运算
 ```bash
 SUNION set1 set2 set3
 ```
-==SDIFF==
+**SDIFF**
 差集运算
 ```bash
 SDIFF set1 set2 set3
@@ -559,7 +559,7 @@ SDIFF set1 set2 set3
 
 ###### ZSet
 有序集合，且不允许有重复的元素，通过 score 对集合中元素排序
-==ZADD==,==ZREM==
+**ZADD**,**ZREM**
 添加/移除集合中的元素
 ```bash
 ZADD key score member [score member]
@@ -572,7 +572,7 @@ ZADD room:sort 90000 1100 80000 2200 70000 3300
 # 移除 3300 这个房间
 ZREM room:sort 3300 
 ```
-==ZCARD==
+**ZCARD**
 获取有序集合的元素个数
 ```bash
 ZCARD key
@@ -581,7 +581,7 @@ ZCARD key
 127.0.0.1:6379> ZCARD room:sort
 (integer) 2
 ```
-==ZCOUNT==
+**ZCOUNT**
 获取有序集合 [min,max] 区间 score 元素数量
 ```bash
 ZCOUNT key min max
@@ -591,7 +591,7 @@ ZCOUNT key min max
 127.0.0.1:6379> ZCOUNT room:sort 80000 85000
 (integer) 1
 ```
-==ZINCRBY==
+**ZINCRBY**
 有序集合中指定成员 score 增加 increment
 ```bash
 ZINCRBY key increment member
@@ -602,7 +602,7 @@ ZINCRBY key increment member
 "91000"
 ```
 
-==ZRANGE==,==ZREVRANGE==
+**ZRANGE**,**ZREVRANGE**
 有序集合 [start,stop] 区间元素，通过 score，递增/递减
 start 和 stop 都是以 0 开始，0 表示第一个元素，1 表示第二个，以此类推
 负数下标 -1 表示倒数第一个元素，-2 表示倒数第二个元素，以此类推
@@ -624,7 +624,7 @@ ZREVRANGE key start stop [WITHSCORES]
 3) "2200"
 4) "80000"
 ```
-==ZUNIONSTORE==
+**ZUNIONSTORE**
 运算多个有序集合并集，并存储在新 key 中, `destination`新集合 key 值，`numkeys`合并的集合个数
 ```bash
 ZUNIONSTORE destination numkeys key [key]
@@ -644,7 +644,7 @@ ZUNIONSTORE room:info 2 room:sort room:onlinenum
 > 4. 七日排行前十 ----> ZREVRANGE hotnews:20191119-20191125 0 10 WITHSCORES
 
 
-参考 [testerhome](https://testerhome.com/topics/16402),[redis](http://redis.io) 官网
+参考 [testerhome](https://testerhome.com/topics/16402),[redis](http://redis.io) 官网，[redisdoc](http://redisdoc.com/)
 
 
 <center>拥有每一天</center>

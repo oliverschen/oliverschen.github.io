@@ -209,5 +209,7 @@ public Order iosInnerBuy(String receiptData, String userId) {
 
 加签返回给 APP 后进行验证拉起支付，这里得特别小心加签前后的参数大小写，很容易出现问题。以上就是微信 APP 支付。
 
+***
+
 <center>沉淀</center>
 

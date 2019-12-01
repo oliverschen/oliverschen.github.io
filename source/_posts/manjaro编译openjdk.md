@@ -228,3 +228,7 @@ WARNING_FLAGS = -w
 记得第一次接触 Java 时，在命令行打印出 `hello world` 时真的很疑惑，就这么一个东西，能有什么用。但是随着一点一点的了解，慢慢发现它的强大之处。每天能进步一点，一年后看今天碰到的问题，其实也不难解决，不积跬步无以至千里，要加油啊！！！  ∩▂∩
 
 官网提供的编译[文档](http://hg.openjdk.java.net/jdk8/jdk8/raw-file/tip/README-builds.html)
+
+***
+
+<center>我最爱海南，每个地方都有挥之不去的记忆</center>

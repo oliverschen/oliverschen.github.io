@@ -396,3 +396,7 @@ jdk 中自带的用于监视虚拟机和故障处理工具
 
 > jstack -l vmid
 >查看堆情况：jmap -heap pid 
+
+***
+
+<center>很平凡，很认真</center>

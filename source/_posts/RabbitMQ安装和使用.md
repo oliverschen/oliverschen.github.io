@@ -437,10 +437,14 @@ public class TopicConsumer {
     }
 }
 ```
-<center>When life gives you lemons,make Lemonade</center>
-
 参考[链接](https://blog.csdn.net/zhuzhezhuzhe1/article/details/80454956)
 参考[RabbitMq教程](https://www.kancloud.cn/digest/rabbitmq-for-java/122041)
+
+***
+
+<center>When life gives you lemons,make Lemonade</center>
+
+
 
 
 

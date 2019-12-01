@@ -271,3 +271,7 @@ yaourt -S flashplugin pepper-flash
 ssh username@hostaddress
 ```
 补充 ing...
+
+***
+
+<center>秋天来了，老家落叶的样子又错过了。最怕提及的是，深秋早晨的白霜更有奶奶的背影</center>

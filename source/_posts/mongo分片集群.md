@@ -372,4 +372,6 @@ for (var i=1;i<=100000;i++) db.user.insert({id:i,"userId":"user"+i})
 
 mongdb 对于快速迭代开发是一个非常不错的选择，因为在不断迭代变化的过程中既可以满足前期快速的迭代，也能抗住后期海量数据存储和并发访问问题。而且对开发者很友好，非关系型结构可以让开发按照需求快速调整数据结构，但是也有一个弊端，可能造成表结构数据混乱等情况。在横向扩展方面更是有非常大的优势，在未来潜力无限。[官方文档](https://docs.mongodb.com/manual/sharding/)
 
+***
+
 <center>mongo is not mango</center>

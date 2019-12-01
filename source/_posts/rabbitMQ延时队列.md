@@ -133,9 +133,10 @@ public class DeadLetterConsumer {
 
 延迟在很多场景中都会使用的到，如果使用定时任务处理在大数据情况下会产生延迟等问题，这是不能被容忍的，并且使用任务来执行定时任务也不是很优的处理方式。使用 mq 延迟队列的话可以很好的解决对延迟场景下的业务处理，而且姿势比较帅。
 
+mq (官方文档)[https://www.rabbitmq.com/dlx.html]
 
+***
 
 <center>我命由我不由天</center>
 
 
-mq (官方文档)[https://www.rabbitmq.com/dlx.html]

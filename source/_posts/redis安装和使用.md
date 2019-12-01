@@ -76,6 +76,10 @@ PONG
 ```
 完成以上步骤，redis 就使用默认配置启动成功了。
 
+###### redis 可视化工具
+
+推荐一款免费的 windows 下 redis 可视化工具[Anotherredisdesktopmanager](http://electronjs.org/apps/anotherredisdesktopmanager)
+
 ##### 参数
 
 redis 在配置文件中提供了很多可供修改的参数，在实际使用中需要对这些参数进行配置在使用。
@@ -132,6 +136,14 @@ redis 数据库数量，默认 16
 
 ```bash
 databases 16
+```
+###### requirepass
+在客户端连接后设置密码
+```bash
+# 设置
+config set requirepass "password"
+# 验证
+auth "password"
 ```
 
 ##### redis 数据结构

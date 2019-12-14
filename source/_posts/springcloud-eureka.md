@@ -33,34 +33,50 @@ spring cloud netflix eureka 是对 Netflix 公司开源组件封装后的服务�
 
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.3.RELEASE</version>
+        <version>2.2.2.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.jihe</groupId>
     <artifactId>jihe-eureka</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>jihe-eureka</name>
-    <description>demo of the eureka server</description>
+    <description>eureka server</description>
 
     <properties>
         <java.version>1.8</java.version>
-        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+        <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
     </properties>
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -87,6 +103,7 @@ spring cloud netflix eureka 是对 Netflix 公司开源组件封装后的服务�
 
 </project>
 
+
 ```
 如果是第一次引入的话要下载依赖包，可能需要一会。
 
@@ -95,8 +112,8 @@ spring cloud netflix eureka 是对 Netflix 公司开源组件封装后的服务�
 在启动类加入注解
 
 ``` java
+@EnableEurekaServer
 @SpringBootApplication
-@EnableEurekaServer  // 开启服务
 public class JiheEurekaApplication {
     public static void main(String[] args) {
         SpringApplication.run(JiheEurekaApplication.class, args);
@@ -132,28 +149,29 @@ eureka:
 
 #### 服务提供者
 
+这里以用户 user 服务来充当服务的提供者
 ##### pom 坐标
 
 ``` xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.4.RELEASE</version>
+        <version>2.2.2.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.jihe</groupId>
-    <artifactId>jihe-producer</artifactId>
+    <artifactId>jihe-user</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>jihe-producer</name>
-    <description>Demo of the service producer</description>
+    <name>jihe-user</name>
+    <description>user service</description>
 
     <properties>
         <java.version>1.8</java.version>
-        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+        <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
     </properties>
 
     <dependencies>
@@ -161,16 +179,26 @@ eureka:
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -202,12 +230,14 @@ eureka:
 
 ###### 注册服务
 ``` java
+@EnableEurekaClient
 @SpringBootApplication
-@EnableDiscoveryClient // 开启服务发现
-public class JiheProducerApplication {
+public class JiheUserApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(JiheProducerApplication.class, args);
+        SpringApplication.run(JiheUserApplication.class, args);
     }
+
 }
 ```
 ##### 配置
@@ -220,7 +250,7 @@ server:
 
 spring:
   application:
-    name: jihe-producer
+    name: jihe-user
 
 # 注册到服务中心
 eureka:
@@ -235,25 +265,21 @@ eureka:
 
 | Application     |   AMIs   |   Availability Zones | Status|
 | ---- | ---- | ---- | ---- |
-|JIHE-PRODUCER| 	n/a (1) |(1) |UP (1) - 192.168.0.104:jihe-producer:8081|
+|JIHE-USER| 	n/a (1) |(1) |UP (1) - 192.168.0.104:jihe-user:8081|
 
 到这里服务的注册和发现就完成了，可以看到服务提供者讲服务注册到服务中心，供服务的消费者调用服务,那微服务之间是如何调用的呢？下面看下另外一个组件。
 
-#### Feign
-
-Feign 是一个声明式 REST 客户端，可以创建基于 JAX-RS 或者 springMVC 注解修饰的接口的动态实现。也就是说它实现了通过注解和接口的方式进行服务的调用。下面我创建一个服务消费者来调用生产者的服务。
 
 #### 提供接口
 
-在 producer 服务中创建 UserController,并向外抛一个可以访问的接口
+在 user 服务中创建 UserController,并向外抛一个可以访问的接口
 ```java
 @RestController
-@RequestMapping("/user")
 public class UserController {
 
-    @RequestMapping("/get/{name}")
-    public String get(@PathVariable("name") String name) {
-        return "this is PRODUCER " + "you name is =====" + name;
+    @RequestMapping("/user/{id}")
+    public String getUser(@PathVariable("id") int id) {
+        return "我是" + id + "号用户";
     }
 
 }
@@ -261,30 +287,30 @@ public class UserController {
 
 #### 服务消费者
 
-创建服务的消费者，集成 Feign  客户端
+订单 order 服务充当 user 服务的消费者
 
 ##### pom
 
 ``` xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.3.RELEASE</version>
+        <version>2.2.2.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.jihe</groupId>
-    <artifactId>jihe-consumer</artifactId>
+    <artifactId>jihe-order</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>jihe-consumer</name>
-    <description>consumer for service</description>
+    <name>jihe-order</name>
+    <description>order service</description>
 
     <properties>
         <java.version>1.8</java.version>
-        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+        <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
     </properties>
 
     <dependencies>
@@ -296,15 +322,22 @@ public class UserController {
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -335,22 +368,26 @@ public class UserController {
 
 ##### 配置文件
 
-```properties
+```yml
 debug: false
-spring:
-  application:
-    name: jihe-consumer
 
-# 端口
 server:
   port: 8082
 
-# 注册服务
+spring:
+  application:
+    name: jihe-order
+
+# 注册到服务中心
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8080/eureka/
 ```
+
+#### RestTemplate
+
+spring 提供了一个 rest 接口调用组件 restTemplate 来调用其他服务，这里使用它来调用 user 服务接口，在订单服务中，创建 restTemplate 实例对象。
 
 ##### 启动类配置
 
@@ -358,52 +395,58 @@ eureka:
 
 ```java
 @SpringBootApplication
-@EnableDiscoveryClient
-@EnableFeignClients
-public class JiheConsumerApplication {
+public class JiheOrderApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(JiheConsumerApplication.class, args);
+        SpringApplication.run(JiheOrderApplication.class, args);
+    }
+
+    @Bean
+    @LoadBalanced
+    @ConditionalOnMissingBean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
     }
 
 }
-
 ```
 
 ##### 消费者远程调用接口
+创建 OderService 类，调用 user 服务（这里直接写了具体的类，没有使用接口的方式）
 
 ```java
-// jihe-producer 生产服务配置的 spring-application-name
-@FeignClient("jihe-producer")
-public interface RemoteService {
+@Service
+public class OderService {
+    @Autowired
+    private RestTemplate restTemplate;
 
-    @RequestMapping("user/get/{name}")
-    String get(@PathVariable("name") String name);
+    public String getUser(int id) {
+        String url = "http://jihe-user/user/{id}";
+        return restTemplate.getForObject(url, String.class, id);
+    }
 }
 ```
-这个是一个 interface ,写在 jihe-consumer 服务下面。在 controller 层直接调用。
+
 
 ##### 调用
 
 ```java
 @RestController
-@RequestMapping("/consumer")
-public class ConsumerController {
+public class OderController {
 
-    // 直接注入接口
     @Autowired
-    private RemoteService remoteService;
+    private OderService oderService;
 
-
-    // 调用远程服务
-    @RequestMapping("/get/{name}")
-    public String getConsumer(@PathVariable("name")String name) {
-        return remoteService.get(name);
+    @RequestMapping("/order/{name}/{id}")
+    public String getOrderAndUserInfo(@PathVariable("name") String name, @PathVariable("id") int id) {
+        String user = oderService.getUser(id);
+        return "我是：" + name + "," + user;
     }
 }
 ```
 到这里就完成了微服务模块最小的一个结构，`服务注册中心`，`服务提供者`，`服务调用者`。先启动 注册中心，然后在启动服务提供者，在启动服务调用者，在浏览器可以测试，直接访问服务的提供者，是可以访问到。通过调用者，也可以直接访问到服务的提供者，但是访问的端口和路径是不一样的。如果熟悉 spring boot 的话其实 spring cloud 的简单使用并不难，继续加油。
 以上代码[地址](https://github.com/oliverschen/spring-cloud-example)
+
 
 ***
 <center>不积跬步，无以至千里</center>

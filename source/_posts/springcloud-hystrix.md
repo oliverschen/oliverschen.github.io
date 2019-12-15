@@ -19,105 +19,62 @@ springcloud hystrix 熔断器，顾名思义。在现实生活中也有很多熔
 
 hystrix 一般部署在服务的调用方，也就是服务的消费放，我这里创建的项目和昨天的一样，今天会多创建一个服务的调用方，来部署 hystrix
 
+##### 特性
+
+1. 请求熔断：当请求到达服务失败的数量到达一定比例（默认50%），断路器会自动切换到 Open 状态，这时所有的请求会直接失败，不会发送到具体的服务，一般断路器 Open 状态一段时间（默认5秒）后，自动切换到 HALF-Open 半开状态。这时会判断下次请求，如果成功，则切换到 CLOSE 关闭状态。否则重新回到 Open 状态。
+2. 服务降级：FallBack 相当于服务降级操作，当服务不可用时走异常处理逻辑返回一个默认结果，告知调用方服务处于异常状态。
+
 ##### pom
-``` bash
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.3.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
-    <groupId>com.jihe</groupId>
-    <artifactId>jihe-consumer</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>jihe-consumer</name>
-    <description>Demo project for Spring Boot</description>
 
-    <properties>
-        <java.version>1.8</java.version>
-        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
-</project>
-
+也是依赖 [eureka](https://fengzhu.top/2019/04/18/springcloud-eureka/)中的例子来进行集成 Hystrix 使用。
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+</dependency>
 ```
 
 ##### 启动类
 ```java
 @SpringBootApplication
-@EnableDiscoveryClient
 @EnableFeignClients
-public class JiheConsumerApplication {
+// 开启 Hystrix
+@EnableHystrix
+public class JiheOrderApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(JiheConsumerApplication.class, args);
+        SpringApplication.run(JiheOrderApplication.class, args);
+    }
+
+    @Bean
+    @LoadBalanced
+    @ConditionalOnMissingBean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
     }
 
 }
 ```
 
-##### 回调
+##### 开启 hystrix
+
+```yaml
+# 开启 hystrix
+feign:
+  hystrix:
+    enabled: true
+```
+
+##### fallback
 
 之前我们使用 feigin 进行远程调用，现在 feign 配合 hystrix 进行使用，首先使用 @FeignClient 注解中的回调参数 fallback 指定具体的回调类。
 
 ```java
-@FeignClient(name = "jihe-producer", fallback = UserRemoteHystrix.class)
-public interface UserRemote {
+@FeignClient(value = "jihe-user",fallback = FeignServiceFallBack.class)
+public interface FeignService {
 
-    /**
-     * 远程调用
-     * @param name 参数
-     * @return 调用结果
-     */
-    @RequestMapping("/user/info/{name}")
-    String whoImI(@PathVariable("name") String name);
-
+    @RequestMapping(value = "/user/{id}",method = RequestMethod.GET)
+    String getUser(@PathVariable("id") int id);
 }
 ```
 
@@ -126,19 +83,17 @@ public interface UserRemote {
 编写具体的回调实现类，继承远程调用接口,编写相应的回调处理逻辑。 
 
 ```java
-public class UserRemoteHystrix implements UserRemote {
-
+@Component
+public class FeignServiceFallBack implements FeignService {
     @Override
-    public String whoImI(String name) {
-        return "I'm api,my name is " + name + " and my service has down";
+    public String getUser(int id) {
+        return "user service is busy,please wait";
     }
 }
 
 ```
 
-到这里工程就搭建好了，一次启动项目。
-
-首先访问服务提供方 producer `http://localhost:8081/user/info/jihe`,这时会直接访问到 producer 返回的消息。现在通过 consumer 进行远程调用 `http://localhost:8082/api/user/jihe` 这时可以看到返回的结果是一致的，远程调用成功，那如果我关掉服务的提供方在访问服务消费方会发生什么呢？这时会执行 fallback 指定的类中的逻辑，实现熔断作用。
+到这里工程就搭建好了，按顺序启动项目。访问 order 服务 `http://localhost:8082/order-feign/jihe/1002` 会看到 `FEIGN-我是：jihe,我是1002号用户,访问端口：8081` 的结果，这是服务正常情况下的结果，现在将 user 服务直接关机，然后访问，则返回熔断后的结果 `FEIGN-我是：jihe,user service is busy,please wait`。
 
 ***
 

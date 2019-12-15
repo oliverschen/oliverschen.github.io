@@ -5,7 +5,7 @@ tags: Java
 category: Java
 ---
 
-![Photo by kejsirajbek on wallhaven.cc](java-fragment-knowledge/class.png)
+![Photo by vinc on wallhaven.cc](/java-konwlege.png)
 
 
 记录 Java 中一些有趣但是容易忽略的碎片知识。

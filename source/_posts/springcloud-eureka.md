@@ -445,7 +445,7 @@ public class OderController {
 }
 ```
 到这里就完成了微服务模块最小的一个结构，`服务注册中心`，`服务提供者`，`服务调用者`。先启动 注册中心，然后在启动服务提供者，在启动服务调用者，在浏览器可以测试，直接访问服务的提供者，是可以访问到。通过调用者，也可以直接访问到服务的提供者，但是访问的端口和路径是不一样的。如果熟悉 spring boot 的话其实 spring cloud 的简单使用并不难，继续加油。
-以上代码[地址](https://github.com/oliverschen/spring-cloud-example)
+以上代码[地址](https://github.com/oliverschen/springcloud)
 
 
 ***

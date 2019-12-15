@@ -5,7 +5,7 @@ tags: springcloud
 category: springcloud
 ---
 
-![Photo by kejsirajbek on wallhaven.cc](/springcloud-ribbon.png)
+![Photo by kejsirajbek on wallhaven.cc](/springcloud-zuul.png)
 
 
 #### 网关
@@ -287,6 +287,168 @@ public class UnionFilter extends ZuulFilter {
 配置好过滤器之后访问 `http://localhost:9999/api-user/user/1` 服务，直接返回 `auth failed,please reload` 结果，鉴权失败，请重试。
 
 网关将鉴权等操作和服务分离出来，并且将整个微服务架构统一入口，也是微服务架构中重要的环节之一。以上就是 zuul 学习中的一些记录。
+
+#### 用户系统集成 swagger
+
+##### swagger
+swagger 是一个 Restfull 接口文档在线自动生成和测试框架
+
+##### 优点
+1. 及时更新文档：修改接口之后，接口文档即使更新，提高和前端，测试沟通效率。
+2. 方便测试：可以给到测试接口测试信息，避免手写文档
+
+##### 缺点
+代码侵入太高。
+
+##### pom
+
+```xml
+<dependency>
+    <groupId>com.spring4all</groupId>
+    <artifactId>swagger-spring-boot-starter</artifactId>
+    <version>1.7.0.RELEASE</version>
+</dependency>
+```
+
+##### 配置
+```java
+package com.jihe.user.config;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+/**
+ * @description: swagger config
+ * @author: ck
+ * @time: 2019-12-16 00:06
+ **/
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig {
+
+    @Bean
+    public Docket createTestApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.jihe.user.controller"))
+                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
+                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                .paths(PathSelectors.any())
+                .build();
+    }
+
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title("用户系统Api")
+                .description("用户系统接口文档")
+                .contact(new springfox.documentation.service.Contact("jihe", "http://fengzhu.top","XXX@gmail.com"))
+                .version("1.0")
+                .build();
+
+    }
+}
+```
+
+##### 使用
+```java
+@Api("用户系统-API")
+@RestController
+public class UserController {
+
+    @Value("${server.port}")
+    String port;
+
+    @ApiOperation(value = "返回用户服务信息",notes = "根据 ID 返回用户和服务信息")
+    @ApiImplicitParam(name = "id",value = "用户ID",required = true,dataType = "Integer")
+    @PostMapping("/user/{id}")
+    public String getUser(@PathVariable("id") int id) {
+        return "我是" + id + "号用户" + ",访问端口：" + port;
+    }
+}
+```
+
+以上 swagger 就集成好了，启动注册中心，启动 user 服务访问 `http://localhost:8081/swagger-ui.html` 就可以看到具体的接口文档。不过通过上面的代码也可以看出来 swagger 对代码的侵入性很高，本来简单的代码写了很多东西。果然有利则有弊。 
+
+#### zuul 集成 swagger
+```xml
+<dependency>
+    <groupId>com.spring4all</groupId>
+    <artifactId>swagger-spring-boot-starter</artifactId>
+    <version>1.7.0.RELEASE</version>
+</dependency>
+```
+开启
+
+```java
+@EnableSwagger2
+@EnableZuulProxy
+@EnableEurekaClient
+@SpringBootApplication
+public class JiheZuulApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(JiheZuulApplication.class, args);
+    }
+
+}
+```
+配置
+```java
+package com.jihe.zuul.config;
+
+import org.springframework.cloud.netflix.zuul.filters.RouteLocator;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
+import springfox.documentation.swagger.web.SwaggerResource;
+import springfox.documentation.swagger.web.SwaggerResourcesProvider;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @description: swagger config
+ * @author: ck
+ * @time: 2019-12-16 00:26
+ **/
+@Component
+@Primary
+public class SwaggerConfig implements SwaggerResourcesProvider {
+
+    private RouteLocator routeLocator;
+    public SwaggerConfig(RouteLocator routeLocator) {
+        this.routeLocator = routeLocator;
+    }
+
+    @Override
+    public List<SwaggerResource> get() {
+        List resources = new ArrayList();
+        resources.add(swaggerResource("订单系统", "/api-order/v1/api-docs", "1.0"));
+        resources.add(swaggerResource("用户系统", "/api-user/v1/api-docs", "1.0"));
+        return resources;
+    }
+
+    private SwaggerResource swaggerResource(String name, String location, String version) {
+        SwaggerResource swaggerResource = new SwaggerResource();
+        swaggerResource.setName(name);
+        swaggerResource.setLocation(location);
+        swaggerResource.setSwaggerVersion(version);
+        return swaggerResource;
+    }
+}
+```
+在浏览器访问 `http://localhost:9999/swagger-ui.html` 可以看到右上角有个下拉选择框(Select a spec) 不同服务的接口在不同的分区下面。
+
+
 
 今天重新看了一遍 `启示录`，还是很震撼，血腥而真实。还有一个月左右就要 2020 了，年初的 flag ，实现了几个？？？
 

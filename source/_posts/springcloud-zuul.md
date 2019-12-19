@@ -432,8 +432,8 @@ public class SwaggerConfig implements SwaggerResourcesProvider {
     @Override
     public List<SwaggerResource> get() {
         List resources = new ArrayList();
-        resources.add(swaggerResource("订单系统", "/api-order/v1/api-docs", "1.0"));
-        resources.add(swaggerResource("用户系统", "/api-user/v1/api-docs", "1.0"));
+        resources.add(swaggerResource("订单系统", "/api-order/v2/api-docs", "1.0"));
+        resources.add(swaggerResource("用户系统", "/api-user/v2/api-docs", "1.0"));
         return resources;
     }
 
@@ -447,7 +447,6 @@ public class SwaggerConfig implements SwaggerResourcesProvider {
 }
 ```
 在浏览器访问 `http://localhost:9999/swagger-ui.html` 可以看到右上角有个下拉选择框(Select a spec) 不同服务的接口在不同的分区下面。
-
 
 
 今天重新看了一遍 `启示录`，还是很震撼，血腥而真实。还有一个月左右就要 2020 了，年初的 flag ，实现了几个？？？

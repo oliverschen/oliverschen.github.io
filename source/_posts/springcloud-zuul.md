@@ -8,9 +8,9 @@ category: springcloud
 ![Photo by kejsirajbek on wallhaven.cc](/springcloud-zuul.png)
 
 
-#### 网关
-
 服务网关时微服务架构中服务的统一入口，除了服务路由分发，负载均衡等，还具备鉴权等功能。zuul 就是 springcloud 中提供服务网关的组件。
+
+<!--more-->
 
 ![网关作为微服务架构统一入口](/zuul-user.png)
 

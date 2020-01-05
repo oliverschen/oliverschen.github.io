@@ -5,7 +5,7 @@ tags: springcloud
 category: springcloud
 ---
 
-![Photo by kejsirajbek on wallhaven.cc](/springcloud-ribbon.png)
+![Photo by Maskarido on wallhaven.cc](/springcloud-config.png)
 
 项目拆分成微服务架构之后，各个服务的配置文件会增多，并且每个环境（开发，测试，预发布，生产）都会有各自环境对应的配置，单独管理起来很容易出问题，springcloud-config 就是来解决这个问题的，它将配置文件统一管理，它支持将配置放在配置服务内存中，也支持放在远程 git 仓库中，它和注册中心结构类似，也是由两个部分组成，config server & config client。
 

@@ -8,6 +8,8 @@ category: Linux
 ![Photo by kejsirajbek on wallhaven.cc](/linux.png)
 
 
+Linux 是服务端最常用的操作系统，也是范围最广的，都是通过命令来交互的，记录些常用命令，这里会一直追加，年底了，回家的诱惑越来越强。
+<!--more-->
 
 #### 基础命令
 
@@ -274,7 +276,9 @@ reboot -h now
 poweroff
 ```
 
+***
 
+<center>越来越好</center>
 
 
 

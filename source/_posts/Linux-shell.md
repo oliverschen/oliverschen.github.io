@@ -154,6 +154,56 @@ none
 `$(())`：可以对双括号里面的公式进行算数运算
 
 
+#### 日期
+
+##### date
+
+显示当前时间
+```bash
+date
+```
+
+##### 格式化
+
+```bash
+[root@jihe shell]# date +%Y-%m-%d
+2020-01-05
+```
+##### 获取时间戳
+
+```bash
+[root@jihe shell]# date +%s
+1578188573
+```
+
+##### 指定时间
+
+```bash
+# 获取前一天时间，按照指定格式输出
+[root@jihe shell]# date --date='1 days ago' +%Y-%m-%d
+2020-01-04
+# 获取后一天时间，按照指定格式输出
+[root@jihe shell]# date --date='-1 days ago' +%Y-%m-%d
+2020-01-06
+# 获取指定时间的前一天
+[root@jihe shell]# date --date='20191111 1 days ago' +%Y-%m-%d
+2019-11-10
+```
+
+#### 后台执行
+
+在后台执行脚本
+
+```bash
+
+```
+
+***
+
+<center></center>
+
+
+
 
 
 

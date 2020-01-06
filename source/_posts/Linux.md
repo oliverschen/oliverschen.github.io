@@ -205,6 +205,9 @@ history -w jihe.txt
 查看处于活动状态的服务进程
 ```bash
 ps -ef | grep 进程名[tomcat]
+
+# 查看端口
+ss -ntl
 ```
 
 **netstat**
@@ -274,6 +277,14 @@ reboot -h now
 关机
 ```bash
 poweroff
+```
+
+3. 查看系统
+
+**lscpu**
+```bash
+# 查看系统 cpu 信息
+lscpu
 ```
 
 ***

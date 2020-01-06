@@ -194,13 +194,77 @@ date
 
 在后台执行脚本
 
+##### nohup
+不挂断的运行命令，忽略所有挂断（hangup）信号
 ```bash
+nohup for.sh &
+```
+nohup 会忽略进程的挂断信号，也会在当前执行目录生成一个 nohup.out 日志文件。
+
+
+#### 标准输入，输出，重定向
+
+标准输入，输出，错误可以使用文件描述符 0，1，2 引用
+
+##### 重定向
+```bash
+# > 将输出结果重定向输出到 file 文件中
+# 1> 将输出的正确结果重定向到 file 文件中
+# >> 将输出的结果追加到 file 文件中，不做覆盖处理
+ls >file 或者 ls 1>file (ls >>file)
+
+# 2> 将错误输出到 file 文件中，haha 是一个错误命令
+haha 2>file 
+```
+特殊
+
+```bash
+# 把输出信息直接丢失，既不保存也不打印到控制台
+ls >/dev/null
+```
+
+#### 定时器
+
+Linux 下有专门执行定时任务的配置
+```bash
+vim /etc/crontab
+
+# 下面是 crontab 文件的内容
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+
+# For details see man 4 crontabs
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name  command to be executed
+
+# 在这里追加定时任务，都为 * 时为 1 分钟执行一次。root 为执行用户，后面跟脚本绝对路径。
+* * * * * root /usr/local/shell/crontab.sh
 
 ```
+crontab.sh
+脚本将文本内容输出到指定文件 cron.txt。
+```bash
+#!/bin/bash
+echo "hello world" >>/usr/local/shell/cron.txt
+```
+查看 cron.txt 文件
+```bash
+# 实时输出内容
+tail -f cron.txt
+```
+
 
 ***
 
-<center></center>
+<center>美好的事即将发生</center>
 
 
 

@@ -14,3 +14,8 @@ category: tomcat
 2.SecurityManager
 
 3.spring boot + embedTomcat + servlet
+
+socket 编程
+
+bio 和 nio 区别
+

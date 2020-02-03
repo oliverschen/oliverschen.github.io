@@ -87,8 +87,12 @@ http{
       # 每个 server 用于定义一个虚拟主机  
     }
     server{
-        listen IP:PORT
+        # 当前虚拟主机监听的端口
+        listen IP:PORT                       # ipV4 地址
+        listen       [::]:80 default_server; # ipV6 地址
+        # 当前虚拟主机名称 eg：www.baidu.com
         server_name 虚拟主机名
+        # root：server 虚拟主机下的根目录
         root        主目录
         location [OPERATOR] URL {  # 指定 URL 的特性
             if CONDITION{
@@ -98,6 +102,15 @@ http{
     }
 }
 ```
+server_name
+
+> 1. 虚拟主机名称后可以跟多个由空白字符分割的字符串
+> 2. 支持 * 通配任意长度的任意字符：server_name *.baidu.com www.baidu.*
+> 3. 支持 ~ 起始的字符做正则表达式匹配，但是存在性能问题：server_name ~^www\d+\.baidu\.com$
+> 匹配优先级：
+> a. 字符串精确匹。b. 左侧 * 通配符。c. 右侧 * 通配符 eg:com.www.baidu.* 。 d. 正则。e. defult_server
+
+
 
 location 配置
 
@@ -105,11 +118,40 @@ location 配置
 # 在一个 sever 中 location 配置段可存在多个，用于实现从 uri 到文件系统的路径映射，nginx 会根据用户请求的 uri 来检查定义的所有 location,并找出一个最佳匹配进行应用。
 location [ = | ~ | ~* | ^~ ] uri { ... }
 location @name { ... }
-
 ```
+location 中也有 root 路径，当请求是具体的 location 指向的路径时，走 location 中的 root 目录
+```bash
+# 如果访问 http:192.168.31.107/news 则访问的时 location 指向的 /usr/local/html/news 目录下的文件，不带路径则访问的是 server 下 root 目录下的文件
+server {
+        listen       80 default_server;
+        server_name  _;
+        root        /usr/local/html;
+        location /news {
+                root /usr/local/html
+        }
+    }
+```
+
+路径解析
+> 在 location 中指定路径有两种方式，一种是 root，一种是 alias。它们之间的区别是：
+> root 方式处理结果 = root 路径 + location 路径
+> alias 方式处理结果 = alias 路径直接替换 location 路径。
+
+
+
+匹配：
+`=` ：对 URL 精确匹配；
+```bash
+location = /{  }  只能精确匹配 http:fengzhu.top/  
+```
+`^~`：对 URL　的最右边部分做匹配检查，不区分字符大小写
+`~`：对 URL 做正则匹配，区分大小写
+`~*`：对 URL 做正则匹配，不区分大小写
+不带符号：匹配起始于此 URL 的所有 URL
+优先级：=,^~,~/~*,不带符号
 
 
 
 ***
 
-<center></center>
+<center>just do it</center>

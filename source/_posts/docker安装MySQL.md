@@ -16,6 +16,7 @@ category: [docker,mysql]
 ##### 拉取镜像
 
 ``` bash
+# 拉去最新版的 mysql
 sudo docker pull mysql
 
 ```
@@ -25,11 +26,11 @@ sudo docker pull mysql
 ##### 启动 MySQL
 
 ``` bash
-sudo docker run -p 3306:3306 --name mysql -v  /home/chenkui/database/mysql/data  -e MYSQL_ROOT_PASSWORD=root -d mysql
+docker run -p 3306:3306 --name mysql-ck -v /usr/local/mysql/conf:/etc/mysql/conf.d -v /usr/local/mysql/logs:/logs -v /usr/local/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.7
 
 # -p 将 3306 端口映射到本机 3306 端口
 # --name 后面跟 MySQL 别名
-# -v MySQL 数据保存路径
+# -v MySQL 数据保存路径：/usr/local/mysql/conf:/etc/mysql/conf.d   将本机 /usr/local/mysql/conf 映射到 docker 的 /etc/mysql/conf.d 目录
 # -e 设置初始密码
 # -d 后台运行
 ```

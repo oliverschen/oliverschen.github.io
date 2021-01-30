@@ -5,3 +5,6 @@ db.json
 public/
 .deploy*/
 .vscode
+.idea
+node_modules
+node_modules

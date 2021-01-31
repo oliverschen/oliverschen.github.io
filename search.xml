@@ -1,111 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Java8新特性</title>
-    <url>/2019/07/27/Java8%E6%96%B0%E7%89%B9%E6%80%A7/</url>
-    <content><![CDATA[<p><img lazyload src="/images/loading.svg" data-src="Java8%E6%96%B0%E7%89%B9%E6%80%A7/Java8%E6%96%B0%E7%89%B9%E6%80%A7.png" alt="Photo by Cristofer Jeschke"></p>
-<p>Java8 相对之前版本来说是更新比较大的一个版本，不仅在 Java 语言本身，而且在编译器，类库，jvm 都引入了很多新的特性，工作中虽然偶尔会用到一些简单的特性，比如 forEach,stream,等相关功能，但是没有专门花时间去整理这些特性，最近新版本刚刚发布完成，抽空整理学习下这部分内容。用了 Java8 这么久，新特性面前不能瑟瑟发抖，哈哈哈….  <a id="more"></a></p>
-<h4 id="Lambda-表达式和函数式接口-FunctionInterface"><a href="#Lambda-表达式和函数式接口-FunctionInterface" class="headerlink" title="Lambda 表达式和函数式接口 FunctionInterface"></a>Lambda 表达式和函数式接口 FunctionInterface</h4><p>Lambda 表达式是 Java8 引入的一个新特性，它允许将函数作为参数传递给调用方法，极大程度的简化了 Java 的代码量，这里举个例子：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/// 栗子</span></span><br><span class="line"><span class="comment">// Java8 之前遍历 List 实例</span></span><br><span class="line">List&lt;String&gt; strings = Arrays.asList(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (String s : strings) &#123;</span><br><span class="line">    System.out.println(s);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Java8 </span></span><br><span class="line">List&lt;String&gt; strings = Arrays.asList(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line">strings.forEach(s -&gt; System.out.println(s));</span><br></pre></td></tr></table></figure>
-<p>上面这个例子比较简单，看起来也就省了一行代码，但是代码在整体的简洁程度有了很大的提高，Lambda 表达式主要符号是 <code>-&gt;</code>，在上面的例子中，参数 <code>s</code> 的类型是编译器自动去推断的，当然也可以自己声明参数的类型：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;String&gt; strings = Arrays.asList(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line">strings.forEach((String s )-&gt; System.out.println(s));</span><br></pre></td></tr></table></figure>
-<p>Lambda 表达式引用成员变量或者局部变量时，会被隐式的转成 final 类型</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;String&gt; strings = Arrays.asList(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line">String ext = <span class="string">&quot;,&quot;</span>;</span><br><span class="line">strings.forEach((String s )-&gt; System.out.println(s + ext));</span><br></pre></td></tr></table></figure>
-<p>上面其实等价于</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;String&gt; strings = Arrays.asList(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line"><span class="keyword">final</span> String ext = <span class="string">&quot;,&quot;</span>;</span><br><span class="line">strings.forEach((String s )-&gt; System.out.println(s + ext));</span><br></pre></td></tr></table></figure>
-<h4 id="方法引用"><a href="#方法引用" class="headerlink" title="方法引用"></a>方法引用</h4><p>Java8 提供了方法引用的语法来直接访问类或者已经存在的方法或者构造方法，是语法更加简洁紧凑，一般主要有下面几种形式：</p>
-<h5 id="构造方法引用"><a href="#构造方法引用" class="headerlink" title="构造方法引用"></a>构造方法引用</h5><p>通过构造方法引用，可以实例化一个对象</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Person 类【</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Person <span class="title">newPerson</span><span class="params">(<span class="keyword">final</span> Supplier&lt;Person&gt; supplier)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> supplier.get();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// test</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testNew</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Person person = Person.newPerson(Person::<span class="keyword">new</span>);</span><br><span class="line">    System.out.println(person);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>通过 Class::new 这种语法来创建对象，这里要提供一个无参构造器，否则会编译出错。</p>
-<h5 id="类实例方法引用-amp-静态方法引用"><a href="#类实例方法引用-amp-静态方法引用" class="headerlink" title="类实例方法引用&amp;静态方法引用"></a>类实例方法引用&amp;静态方法引用</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        age = <span class="keyword">new</span> Random().nextInt(<span class="number">10</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Person <span class="title">newPerson</span><span class="params">(<span class="keyword">final</span> Supplier&lt;Person&gt; supplier)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> supplier.get();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(age);</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(Integer age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// test</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testFor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Person&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) &#123;</span><br><span class="line">        list.add(Person.newPerson(Person::<span class="keyword">new</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 类的实例方法引用</span></span><br><span class="line">    list.forEach(Person::getAge);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上面的例子可以看到，每次输出的都是不同的 age 属性，语法上更加简洁明了。<strong>静态方法引用</strong>和类的实例方法引用一样，也是 ClassName::methodName 的方式引用。一般用的最多的也就是这几种引用，后面有机会在补充上来。</p>
-<h4 id="Stream-流"><a href="#Stream-流" class="headerlink" title="Stream 流"></a>Stream 流</h4><p>Java8 提供了一种新的数据处理方式—流。流的处理的概念类似管道处理，结合 Lambda 表达式使得集合等数据处理变得简洁高效，还可以对数据进行筛选、排序、聚合等操作，简直不要太爽。</p>
-<blockquote>
-<p>集合，数组，I/O channel，generator 等。<br>集合中包含串行流和并行流，一般情况下并行流比串行流效率更高。<br>串行流：stream()。<br>并行流：parallelStream()。</p>
-</blockquote>
-<p>下面是一个简单的列子：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// javabean 添加了 name 属性</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        age = <span class="keyword">new</span> Random().nextInt(<span class="number">10</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name,Integer age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Person <span class="title">newPerson</span><span class="params">(<span class="keyword">final</span> Supplier&lt;Person&gt; supplier)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> supplier.get();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(age);</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(Integer age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStream</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Person&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    list.add(<span class="keyword">new</span> Person(<span class="string">&quot;小明&quot;</span>, <span class="number">20</span>));</span><br><span class="line">    list.add(<span class="keyword">new</span> Person(<span class="string">&quot;李四&quot;</span>, <span class="number">25</span>));</span><br><span class="line">    list.add(<span class="keyword">new</span> Person(<span class="string">&quot;二炮&quot;</span>, <span class="number">23</span>));</span><br><span class="line">    list.add(<span class="keyword">new</span> Person(<span class="string">&quot;大同&quot;</span>, <span class="number">29</span>));</span><br><span class="line">    list.add(<span class="keyword">new</span> Person(<span class="string">&quot;王五&quot;</span>, <span class="number">34</span>));</span><br><span class="line">    list.add(<span class="keyword">new</span> Person(<span class="string">&quot;小二&quot;</span>, <span class="number">18</span>));</span><br><span class="line">    Predicate&lt;Person&gt; predicate = (person) -&gt; person.getAge() &gt; <span class="number">25</span>;</span><br><span class="line">    list.forEach(person -&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span>(predicate.test(person))&#123;</span><br><span class="line">            System.out.println(person.getName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里的串行流比较类似迭代器，使用 Predicate 创建了一个条件，在迭代时将满足条件的接口打印出来。</p>
-<h5 id="聚合操作"><a href="#聚合操作" class="headerlink" title="聚合操作"></a>聚合操作</h5><h6 id="forEach"><a href="#forEach" class="headerlink" title="forEach"></a>forEach</h6><blockquote>
-<p>forEach() 在上面的例子中已经出现了很多次了，也是我经常用的方法之一，stream 流内部遍历简化了代码，在语法上面更加清晰。</p>
-</blockquote>
-<h6 id="map"><a href="#map" class="headerlink" title="map"></a>map</h6><blockquote>
-<p>map 可以按照规则映射成另一个元素，简单来说就是可以给某个元素设置另外的值。</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>);</span><br><span class="line">    List&lt;Integer&gt; collect = integers.stream().map(i -&gt; i+<span class="number">1</span>).collect(Collectors.toList());</span><br><span class="line">    System.out.println(collect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h6 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h6><blockquote>
-<p>filter 可以对 stream 中元素进行过滤</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">filter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>);</span><br><span class="line">    <span class="keyword">long</span> count = integers.stream().filter(integer -&gt; integer &gt; <span class="number">3</span>).count();</span><br><span class="line">    System.out.println(count);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>集合中数值大于 3 的数量统计。</p>
-<h6 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h6><blockquote>
-<p>此方法可以获取指定数量的流</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testLimit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">34</span>);</span><br><span class="line">    List&lt;Integer&gt; collect = integers.stream().limit(<span class="number">6</span>).collect(Collectors.toList());</span><br><span class="line">    System.out.println(collect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>打印前 6 条记录，这里 limit 指定想要的条数，从 0 开始取。</p>
-<h6 id="sorted"><a href="#sorted" class="headerlink" title="sorted"></a>sorted</h6><blockquote>
-<p>顾名思义，可以利用 sorted 方法对流数据进行排序</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSorted</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">99</span>, <span class="number">22</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">11</span>, <span class="number">9</span>, <span class="number">34</span>);</span><br><span class="line">    List&lt;Integer&gt; collect = integers.stream().sorted().collect(Collectors.toList());</span><br><span class="line">    System.out.println(collect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个使用还是很顺滑的，减少了很多代码就可以优雅进行排序了。</p>
-<h6 id="concat"><a href="#concat" class="headerlink" title="concat"></a>concat</h6><blockquote>
-<p>对流进行合并操作</p>
-</blockquote>
-<p>concat 方法是 Stream 接口的一个静态方法，如果合并时两个流中元素是经过排序的，则得到的元素也是排序的结果。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testConcat</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">11</span>, <span class="number">9</span>, <span class="number">34</span>);</span><br><span class="line">    List&lt;Integer&gt; integerList = Arrays.asList(<span class="number">10</span>,<span class="number">19</span>, <span class="number">2</span>);</span><br><span class="line">    List&lt;Integer&gt; collect = Stream.concat(integers.stream(), integerList.stream()).collect(Collectors.toList());</span><br><span class="line">    System.out.println(collect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h6 id="distinct"><a href="#distinct" class="headerlink" title="distinct"></a>distinct</h6><blockquote>
-<p>对流中元素进行去重操作</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDistinct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">99</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">11</span>, <span class="number">1</span>, <span class="number">34</span>);</span><br><span class="line">    List&lt;Integer&gt; collect = integers.stream().distinct().collect(Collectors.toList());</span><br><span class="line">    System.out.println(collect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里有个坑，就是如果List 是一个对象集合，没有重写 equals() 方法的话，得到的答案是不正确的，因为它是基于 equals() 方法来实现的。</p>
-<h6 id="skip"><a href="#skip" class="headerlink" title="skip"></a>skip</h6><blockquote>
-<p>跳过流中的某几个元素，经常和 limit 配置使用。</p>
-</blockquote>
-<p>使用 skip 配合 limit 可以更好的对流中元素进行分页操作。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSkip</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">99</span>, <span class="number">12</span>, <span class="number">40</span>, <span class="number">8</span>, <span class="number">11</span>);</span><br><span class="line">    List&lt;Integer&gt; collect = integers.stream().skip(<span class="number">2</span>).limit(<span class="number">3</span>).collect(Collectors.toList());</span><br><span class="line">    System.out.println(collect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h6 id="match"><a href="#match" class="headerlink" title="match"></a>match</h6><blockquote>
-<p>匹配指定的元素<br>Stream 提供了 3 个 api 接口，分别是：allMatch()，anyMatch()，noneMatch() 方法的功能基本顾名思义的。</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> <span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testMatch</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">99</span>, <span class="number">12</span>, <span class="number">40</span>, <span class="number">8</span>, <span class="number">11</span>);</span><br><span class="line">    <span class="keyword">boolean</span> b = integers.stream().allMatch(integer -&gt; integer &gt; <span class="number">8</span>);</span><br><span class="line">    System.out.println(b);</span><br><span class="line">    <span class="keyword">boolean</span> anyMatch = integers.stream().anyMatch(integer -&gt; integer &gt; <span class="number">8</span>);</span><br><span class="line">    System.out.println(anyMatch);</span><br><span class="line">    <span class="keyword">boolean</span> noneMatch = integers.stream().noneMatch(integer -&gt; integer &gt; <span class="number">8</span>);</span><br><span class="line">    System.out.println(noneMatch);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="Optional"><a href="#Optional" class="headerlink" title="Optional"></a>Optional</h4><p>代码中空指针异常是一个让人很头疼但是又不得不去检查的操作，在 Java8 之前都是用过 if 来判断的，Java8 则引入了 Optional 来解决，使代码不被空间查污染。<br>Optional 是一个容器，它可以保存任意类型的值，也可以保存 null，通过它提供的方法，就可以不用显式的进行空值判断。书面话的说明看着都是似懂非懂的感觉，还是看代码更有感觉一点。</p>
-<h5 id="Optional-创建"><a href="#Optional-创建" class="headerlink" title="Optional 创建"></a>Optional 创建</h5><ol>
-<li>Optional.empty():创建一个空的 Optional 对象</li>
-<li>Optional.of(T value):传入的 value 值为 null 的话，会抛空指针异常。</li>
-<li>Optional.ofNullable(T value): 传入的 value 值允许为空。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOptional</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// empty()</span></span><br><span class="line">    Optional&lt;Person&gt; empty = Optional.empty();</span><br><span class="line">    <span class="comment">// of(T value)</span></span><br><span class="line">    Optional&lt;Person&gt; optional = Optional.of(<span class="keyword">new</span> Person());</span><br><span class="line">    <span class="comment">// ofNullable(T value)</span></span><br><span class="line">    Optional&lt;Person&gt; ofNullable = Optional.ofNullable(<span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h6 id="orElse"><a href="#orElse" class="headerlink" title="orElse"></a>orElse</h6></li>
-</ol>
-<blockquote>
-<p>有值则返回，没有则返回其他值</p>
-</blockquote>
-<p>如果传入的值是 null 时，返回 orElse 方法中指定的结果，否则返回实例的值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOrElse</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Person p = <span class="keyword">new</span> Person();</span><br><span class="line">    Optional&lt;String&gt; optional = Optional.ofNullable(p.getName());</span><br><span class="line">    String name_is_null = optional.orElse(<span class="string">&quot;name is null&quot;</span>);</span><br><span class="line">    System.out.println(name_is_null);</span><br><span class="line">    p.setName(<span class="string">&quot;jihe&quot;</span>);</span><br><span class="line">    Optional&lt;String&gt; optionalS = Optional.ofNullable(p.getName());</span><br><span class="line">    String name_is_nullS = optionalS.orElse(<span class="string">&quot;name is null&quot;</span>);</span><br><span class="line">    System.out.println(name_is_nullS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h6 id="orElseGet"><a href="#orElseGet" class="headerlink" title="orElseGet"></a>orElseGet</h6><blockquote>
-<p>在功能上和 orElse() 方法类似，只是 orElseGet 指出传入一个 Lambda 表达式生产默认值</p>
-</blockquote>
-<p>如果想要的实例为 null 时，就可以通过 orElseGet 获取一个非空实例</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOrElseGet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Person p = <span class="keyword">null</span>;</span><br><span class="line">    Optional&lt;Person&gt; optional = Optional.ofNullable(p);</span><br><span class="line">    Person person = optional.orElseGet(() -&gt; <span class="keyword">new</span> Person(<span class="string">&quot;jihe&quot;</span>, <span class="number">23</span>));</span><br><span class="line">    System.out.println(person.getName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>以上是一些比较常用的 Java8 新特性，后面会一点点的完善上来。另外 Java8 对时间日期处理也引入了新的 API 来解决让人傻傻分不清的日期类。让日期和时间的处理更加人性化，易于理解。在 JVM 层面，PermGen 空间被移除了，取而代之的是 MetaSpace，与之对应的 -XX:PermSize 和 -XX:MaxPermSize 参数分别被 -XX:MetaSpaceSize 和 -XX:MaxMetaSpaceSize 所代替。[ PermSize 是用来存放 Class 类元数据的内存区域，如果在应用启动时加载的类信息比较的的话，可能会抛出 “java.lang.OutOfMemoryError: PermGen space” 异常，Java8 使用了本地内存来存储这部分信息，将这部分空间全部移除]</p>
-<p>今晚去看了哪吒，超级好看。里面一句台词让人印象深刻。</p>
-<hr>
-<center>人的成见就像一座大山</center>
-
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java对接iOS内购以及各个渠道微信支付</title>
     <url>/2019/05/29/Java%E5%AF%B9%E6%8E%A5iOS%E5%86%85%E8%B4%AD%E4%BB%A5%E5%8F%8A%E5%90%84%E4%B8%AA%E6%B8%A0%E9%81%93%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98/</url>
     <content><![CDATA[<p><img lazyload src="/images/loading.svg" data-src="jvm-Java%E5%AF%B9%E6%8E%A5iOS%E5%86%85%E8%B4%AD%E4%BB%A5%E5%8F%8A%E5%90%84%E4%B8%AA%E6%B8%A0%E9%81%93%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98/pay.png"></p>
@@ -167,88 +62,6 @@
       </categories>
       <tags>
         <tag>pay</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux-shell</title>
-    <url>/2020/01/03/Linux-shell/</url>
-    <content><![CDATA[<p><img lazyload src="/images/loading.svg" data-src="/linux-shell.png" alt="Photo by deleted on wallhaven.cc"></p>
-<p>shell 是用户和 Linux 系统交互的一个应用程序，就像 Windows 操作系统可以用过界面进行交互。shell 脚本就是通过 shell 来执行的，就像 Java 程序执行在 JVM 上类似。类似 Java 虚拟机，Linux 下也有很多的 shell 程序，但是最常用的就是 bash，因为其使用简单，并且是免费的，所以是 Linux 的默认 shell。</p>
-<a id="more"></a>
-
-<h4 id="shell-script"><a href="#shell-script" class="headerlink" title="shell script"></a>shell script</h4><h5 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h5><p>任何语言都离不开一个 hello world ，现在感受下 shell 的第一个脚本。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello world&quot;</span></span><br></pre></td></tr></table></figure>
-<p>一般 shell 脚本命名都是以 .sh 来写的，这是一个约定俗成的写法，这样别人在看到 .sh 结尾的文件就知道是一个 shell 脚本，当然想以其他结尾也是可以的。</p>
-<blockquote>
-<p>#!<br>这个是告诉系统这个脚本使用哪个 shell 来执行。<br>echo<br>向窗口输出文本</p>
-</blockquote>
-<h5 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h5><p>规则</p>
-<blockquote>
-<ol>
-<li>只能使用数字，字母，下划线，且不能以数字开头</li>
-<li>变量名区分大小写</li>
-<li>变量赋值通过（=）号，且不能有空格</li>
-</ol>
-</blockquote>
-<p>使用</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># a=1</span></span><br><span class="line">[root@jihe shell]<span class="comment"># echo $a</span></span><br><span class="line">1</span><br><span class="line">[root@jihe shell]<span class="comment"># echo $&#123;a&#125;</span></span><br><span class="line">1</span><br><span class="line">[root@jihe shell]<span class="comment"># echo $ab</span></span><br><span class="line"></span><br><span class="line">[root@jihe shell]<span class="comment"># echo $&#123;a&#125;b</span></span><br><span class="line">1b</span><br></pre></td></tr></table></figure>
-<h6 id="特殊变量"><a href="#特殊变量" class="headerlink" title="特殊变量"></a>特殊变量</h6><p><strong>$?</strong></p>
-<p>接收上一天命令的返回状态码，上条命令执行成功是 0 ，失败为其他 1-255 之间的值。</p>
-<p><strong>$#</strong></p>
-<p>脚本执行的参数个数</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="variable">$1</span></span><br><span class="line"><span class="variable">$2</span></span><br><span class="line"><span class="variable">$#</span></span><br></pre></td></tr></table></figure>
-<p><code>$*</code></p>
-<p>所有参数</p>
-<p><strong>$$</strong></p>
-<p>获取当前脚本的进程号，可以实现脚本自杀，或者使用 exit 退出。</p>
-<h4 id="循环和判断"><a href="#循环和判断" class="headerlink" title="循环和判断"></a>循环和判断</h4><h5 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h5><p>shell 中也是 for 循环，但是格式区别于 Java 中的 for 循环，而且 shell 中 for 循环有多种写法，下面是比较容易记住的写法。</p>
-<p>打印 0 到 9</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="keyword">for</span>((i=0;i&lt;10;1++))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;i=&quot;</span><span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-<p>这样程序会打印 <code>i=0</code> 到  <code>i=9</code> 输出到窗口。<code>do</code> 作为循环体的开始，<code>done</code> 作为循环体的结束。</p>
-<h5 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h5><p>test EXPR<br>[ EXPR ] : 中括号和表达式之间有空格</p>
-<h6 id="整型"><a href="#整型" class="headerlink" title="整型"></a>整型</h6><p><code>-gt</code> : 大于， [ $1 -gt $2 ] 或者 test $1 -gt $2 判断变量 1 大于 变量 2<br><code>-lt</code>：小于<br><code>-ge</code>：大于等于<br><code>-le</code>：小于等于<br><code>-eq</code>：等于<br><code>-ne</code>：不等于</p>
-<h6 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h6><p><code>=</code>：等于，判断变量是否为空 [ “$str” = “” ] 或者 [ -z $str ]<br><code>!=</code>：不等于</p>
-<h5 id="判断"><a href="#判断" class="headerlink" title="判断"></a>判断</h5><p>类似 Java 中的 if，而且是以 fi 作为判断的结尾</p>
-<p>if [condition 1]<br>then<br>    first tree<br>elif [conditin 2]<br>    second tree<br>else<br>    third tree<br>fi</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">num=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$num</span> -eq 1 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> one</span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$num</span> -eq 2 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> two</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> none</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-<p>执行结果</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># ./if.sh 1</span></span><br><span class="line">one</span><br><span class="line">[root@jihe shell]<span class="comment"># ./if.sh 2</span></span><br><span class="line">two</span><br><span class="line">[root@jihe shell]<span class="comment"># ./if.sh 3</span></span><br><span class="line">none</span><br></pre></td></tr></table></figure>
-
-<h4 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h4><p><code>$&#123;&#125;</code>：获取变量的值<br><code>$()</code>：等于 ``，会执行里面的命令，并且获取命令执行的结果<br><code>$[]</code>：可以对方括号里面的公式进行算术运算<br><code>$(())</code>：可以对双括号里面的公式进行算数运算</p>
-<h4 id="日期"><a href="#日期" class="headerlink" title="日期"></a>日期</h4><h5 id="date"><a href="#date" class="headerlink" title="date"></a>date</h5><p>显示当前时间</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">date</span><br></pre></td></tr></table></figure>
-<h5 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># date +%Y-%m-%d</span></span><br><span class="line">2020-01-05</span><br></pre></td></tr></table></figure>
-<h5 id="获取时间戳"><a href="#获取时间戳" class="headerlink" title="获取时间戳"></a>获取时间戳</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># date +%s</span></span><br><span class="line">1578188573</span><br></pre></td></tr></table></figure>
-<h5 id="指定时间"><a href="#指定时间" class="headerlink" title="指定时间"></a>指定时间</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 获取前一天时间，按照指定格式输出</span></span><br><span class="line">[root@jihe shell]<span class="comment"># date --date=&#x27;1 days ago&#x27; +%Y-%m-%d</span></span><br><span class="line">2020-01-04</span><br><span class="line"><span class="comment"># 获取后一天时间，按照指定格式输出</span></span><br><span class="line">[root@jihe shell]<span class="comment"># date --date=&#x27;-1 days ago&#x27; +%Y-%m-%d</span></span><br><span class="line">2020-01-06</span><br><span class="line"><span class="comment"># 获取指定时间的前一天</span></span><br><span class="line">[root@jihe shell]<span class="comment"># date --date=&#x27;20191111 1 days ago&#x27; +%Y-%m-%d</span></span><br><span class="line">2019-11-10</span><br></pre></td></tr></table></figure>
-<h4 id="后台执行"><a href="#后台执行" class="headerlink" title="后台执行"></a>后台执行</h4><p>在后台执行脚本</p>
-<h5 id="nohup"><a href="#nohup" class="headerlink" title="nohup"></a>nohup</h5><p>不挂断的运行命令，忽略所有挂断（hangup）信号</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nohup for.sh &amp;</span><br></pre></td></tr></table></figure>
-<p>nohup 会忽略进程的挂断信号，也会在当前执行目录生成一个 nohup.out 日志文件。</p>
-<h4 id="标准输入，输出，重定向"><a href="#标准输入，输出，重定向" class="headerlink" title="标准输入，输出，重定向"></a>标准输入，输出，重定向</h4><p>标准输入，输出，错误可以使用文件描述符 0，1，2 引用</p>
-<h5 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># &gt; 将输出结果重定向输出到 file 文件中</span></span><br><span class="line"><span class="comment"># 1&gt; 将输出的正确结果重定向到 file 文件中</span></span><br><span class="line"><span class="comment"># &gt;&gt; 将输出的结果追加到 file 文件中，不做覆盖处理</span></span><br><span class="line">ls &gt;file 或者 ls 1&gt;file (ls &gt;&gt;file)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2&gt; 将错误输出到 file 文件中，haha 是一个错误命令</span></span><br><span class="line">haha 2&gt;file </span><br></pre></td></tr></table></figure>
-<p>特殊</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 把输出信息直接丢失，既不保存也不打印到控制台</span></span><br><span class="line">ls &gt;/dev/null</span><br></pre></td></tr></table></figure>
-<h4 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h4><p>Linux 下有专门执行定时任务的配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/crontab</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下面是 crontab 文件的内容</span></span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line">MAILTO=root</span><br><span class="line"></span><br><span class="line"><span class="comment"># For details see man 4 crontabs</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Example of job definition:</span></span><br><span class="line"><span class="comment"># .---------------- minute (0 - 59)</span></span><br><span class="line"><span class="comment"># |  .------------- hour (0 - 23)</span></span><br><span class="line"><span class="comment"># |  |  .---------- day of month (1 - 31)</span></span><br><span class="line"><span class="comment"># |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span></span><br><span class="line"><span class="comment"># |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span></span><br><span class="line"><span class="comment"># |  |  |  |  |</span></span><br><span class="line"><span class="comment"># *  *  *  *  * user-name  command to be executed</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在这里追加定时任务，都为 * 时为 1 分钟执行一次。root 为执行用户，后面跟脚本绝对路径。</span></span><br><span class="line">* * * * * root /usr/<span class="built_in">local</span>/shell/crontab.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>crontab.sh<br>脚本将文本内容输出到指定文件 cron.txt。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello world&quot;</span> &gt;&gt;/usr/<span class="built_in">local</span>/shell/cron.txt</span><br></pre></td></tr></table></figure>
-<p>查看 cron.txt 文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 实时输出内容</span></span><br><span class="line">tail -f cron.txt</span><br></pre></td></tr></table></figure>
-
-<hr>
-<center>美好的事即将发生</center>
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -376,6 +189,193 @@
       </tags>
   </entry>
   <entry>
+    <title>Java8新特性</title>
+    <url>/2019/07/27/Java8%E6%96%B0%E7%89%B9%E6%80%A7/</url>
+    <content><![CDATA[<p><img lazyload src="/images/loading.svg" data-src="Java8%E6%96%B0%E7%89%B9%E6%80%A7/Java8%E6%96%B0%E7%89%B9%E6%80%A7.png" alt="Photo by Cristofer Jeschke"></p>
+<p>Java8 相对之前版本来说是更新比较大的一个版本，不仅在 Java 语言本身，而且在编译器，类库，jvm 都引入了很多新的特性，工作中虽然偶尔会用到一些简单的特性，比如 forEach,stream,等相关功能，但是没有专门花时间去整理这些特性，最近新版本刚刚发布完成，抽空整理学习下这部分内容。用了 Java8 这么久，新特性面前不能瑟瑟发抖，哈哈哈….  <a id="more"></a></p>
+<h4 id="Lambda-表达式和函数式接口-FunctionInterface"><a href="#Lambda-表达式和函数式接口-FunctionInterface" class="headerlink" title="Lambda 表达式和函数式接口 FunctionInterface"></a>Lambda 表达式和函数式接口 FunctionInterface</h4><p>Lambda 表达式是 Java8 引入的一个新特性，它允许将函数作为参数传递给调用方法，极大程度的简化了 Java 的代码量，这里举个例子：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/// 栗子</span></span><br><span class="line"><span class="comment">// Java8 之前遍历 List 实例</span></span><br><span class="line">List&lt;String&gt; strings = Arrays.asList(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (String s : strings) &#123;</span><br><span class="line">    System.out.println(s);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Java8 </span></span><br><span class="line">List&lt;String&gt; strings = Arrays.asList(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line">strings.forEach(s -&gt; System.out.println(s));</span><br></pre></td></tr></table></figure>
+<p>上面这个例子比较简单，看起来也就省了一行代码，但是代码在整体的简洁程度有了很大的提高，Lambda 表达式主要符号是 <code>-&gt;</code>，在上面的例子中，参数 <code>s</code> 的类型是编译器自动去推断的，当然也可以自己声明参数的类型：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;String&gt; strings = Arrays.asList(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line">strings.forEach((String s )-&gt; System.out.println(s));</span><br></pre></td></tr></table></figure>
+<p>Lambda 表达式引用成员变量或者局部变量时，会被隐式的转成 final 类型</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;String&gt; strings = Arrays.asList(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line">String ext = <span class="string">&quot;,&quot;</span>;</span><br><span class="line">strings.forEach((String s )-&gt; System.out.println(s + ext));</span><br></pre></td></tr></table></figure>
+<p>上面其实等价于</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;String&gt; strings = Arrays.asList(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line"><span class="keyword">final</span> String ext = <span class="string">&quot;,&quot;</span>;</span><br><span class="line">strings.forEach((String s )-&gt; System.out.println(s + ext));</span><br></pre></td></tr></table></figure>
+<h4 id="方法引用"><a href="#方法引用" class="headerlink" title="方法引用"></a>方法引用</h4><p>Java8 提供了方法引用的语法来直接访问类或者已经存在的方法或者构造方法，是语法更加简洁紧凑，一般主要有下面几种形式：</p>
+<h5 id="构造方法引用"><a href="#构造方法引用" class="headerlink" title="构造方法引用"></a>构造方法引用</h5><p>通过构造方法引用，可以实例化一个对象</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Person 类【</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Person <span class="title">newPerson</span><span class="params">(<span class="keyword">final</span> Supplier&lt;Person&gt; supplier)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> supplier.get();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// test</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testNew</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Person person = Person.newPerson(Person::<span class="keyword">new</span>);</span><br><span class="line">    System.out.println(person);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>通过 Class::new 这种语法来创建对象，这里要提供一个无参构造器，否则会编译出错。</p>
+<h5 id="类实例方法引用-amp-静态方法引用"><a href="#类实例方法引用-amp-静态方法引用" class="headerlink" title="类实例方法引用&amp;静态方法引用"></a>类实例方法引用&amp;静态方法引用</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        age = <span class="keyword">new</span> Random().nextInt(<span class="number">10</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Person <span class="title">newPerson</span><span class="params">(<span class="keyword">final</span> Supplier&lt;Person&gt; supplier)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> supplier.get();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(age);</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(Integer age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// test</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testFor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Person&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) &#123;</span><br><span class="line">        list.add(Person.newPerson(Person::<span class="keyword">new</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 类的实例方法引用</span></span><br><span class="line">    list.forEach(Person::getAge);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上面的例子可以看到，每次输出的都是不同的 age 属性，语法上更加简洁明了。<strong>静态方法引用</strong>和类的实例方法引用一样，也是 ClassName::methodName 的方式引用。一般用的最多的也就是这几种引用，后面有机会在补充上来。</p>
+<h4 id="Stream-流"><a href="#Stream-流" class="headerlink" title="Stream 流"></a>Stream 流</h4><p>Java8 提供了一种新的数据处理方式—流。流的处理的概念类似管道处理，结合 Lambda 表达式使得集合等数据处理变得简洁高效，还可以对数据进行筛选、排序、聚合等操作，简直不要太爽。</p>
+<blockquote>
+<p>集合，数组，I/O channel，generator 等。<br>集合中包含串行流和并行流，一般情况下并行流比串行流效率更高。<br>串行流：stream()。<br>并行流：parallelStream()。</p>
+</blockquote>
+<p>下面是一个简单的列子：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// javabean 添加了 name 属性</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        age = <span class="keyword">new</span> Random().nextInt(<span class="number">10</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name,Integer age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Person <span class="title">newPerson</span><span class="params">(<span class="keyword">final</span> Supplier&lt;Person&gt; supplier)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> supplier.get();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(age);</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(Integer age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStream</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Person&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    list.add(<span class="keyword">new</span> Person(<span class="string">&quot;小明&quot;</span>, <span class="number">20</span>));</span><br><span class="line">    list.add(<span class="keyword">new</span> Person(<span class="string">&quot;李四&quot;</span>, <span class="number">25</span>));</span><br><span class="line">    list.add(<span class="keyword">new</span> Person(<span class="string">&quot;二炮&quot;</span>, <span class="number">23</span>));</span><br><span class="line">    list.add(<span class="keyword">new</span> Person(<span class="string">&quot;大同&quot;</span>, <span class="number">29</span>));</span><br><span class="line">    list.add(<span class="keyword">new</span> Person(<span class="string">&quot;王五&quot;</span>, <span class="number">34</span>));</span><br><span class="line">    list.add(<span class="keyword">new</span> Person(<span class="string">&quot;小二&quot;</span>, <span class="number">18</span>));</span><br><span class="line">    Predicate&lt;Person&gt; predicate = (person) -&gt; person.getAge() &gt; <span class="number">25</span>;</span><br><span class="line">    list.forEach(person -&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span>(predicate.test(person))&#123;</span><br><span class="line">            System.out.println(person.getName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的串行流比较类似迭代器，使用 Predicate 创建了一个条件，在迭代时将满足条件的接口打印出来。</p>
+<h5 id="聚合操作"><a href="#聚合操作" class="headerlink" title="聚合操作"></a>聚合操作</h5><h6 id="forEach"><a href="#forEach" class="headerlink" title="forEach"></a>forEach</h6><blockquote>
+<p>forEach() 在上面的例子中已经出现了很多次了，也是我经常用的方法之一，stream 流内部遍历简化了代码，在语法上面更加清晰。</p>
+</blockquote>
+<h6 id="map"><a href="#map" class="headerlink" title="map"></a>map</h6><blockquote>
+<p>map 可以按照规则映射成另一个元素，简单来说就是可以给某个元素设置另外的值。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>);</span><br><span class="line">    List&lt;Integer&gt; collect = integers.stream().map(i -&gt; i+<span class="number">1</span>).collect(Collectors.toList());</span><br><span class="line">    System.out.println(collect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h6><blockquote>
+<p>filter 可以对 stream 中元素进行过滤</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">filter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>);</span><br><span class="line">    <span class="keyword">long</span> count = integers.stream().filter(integer -&gt; integer &gt; <span class="number">3</span>).count();</span><br><span class="line">    System.out.println(count);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>集合中数值大于 3 的数量统计。</p>
+<h6 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h6><blockquote>
+<p>此方法可以获取指定数量的流</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testLimit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">34</span>);</span><br><span class="line">    List&lt;Integer&gt; collect = integers.stream().limit(<span class="number">6</span>).collect(Collectors.toList());</span><br><span class="line">    System.out.println(collect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>打印前 6 条记录，这里 limit 指定想要的条数，从 0 开始取。</p>
+<h6 id="sorted"><a href="#sorted" class="headerlink" title="sorted"></a>sorted</h6><blockquote>
+<p>顾名思义，可以利用 sorted 方法对流数据进行排序</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSorted</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">99</span>, <span class="number">22</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">11</span>, <span class="number">9</span>, <span class="number">34</span>);</span><br><span class="line">    List&lt;Integer&gt; collect = integers.stream().sorted().collect(Collectors.toList());</span><br><span class="line">    System.out.println(collect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个使用还是很顺滑的，减少了很多代码就可以优雅进行排序了。</p>
+<h6 id="concat"><a href="#concat" class="headerlink" title="concat"></a>concat</h6><blockquote>
+<p>对流进行合并操作</p>
+</blockquote>
+<p>concat 方法是 Stream 接口的一个静态方法，如果合并时两个流中元素是经过排序的，则得到的元素也是排序的结果。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testConcat</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">11</span>, <span class="number">9</span>, <span class="number">34</span>);</span><br><span class="line">    List&lt;Integer&gt; integerList = Arrays.asList(<span class="number">10</span>,<span class="number">19</span>, <span class="number">2</span>);</span><br><span class="line">    List&lt;Integer&gt; collect = Stream.concat(integers.stream(), integerList.stream()).collect(Collectors.toList());</span><br><span class="line">    System.out.println(collect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="distinct"><a href="#distinct" class="headerlink" title="distinct"></a>distinct</h6><blockquote>
+<p>对流中元素进行去重操作</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDistinct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">99</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">11</span>, <span class="number">1</span>, <span class="number">34</span>);</span><br><span class="line">    List&lt;Integer&gt; collect = integers.stream().distinct().collect(Collectors.toList());</span><br><span class="line">    System.out.println(collect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里有个坑，就是如果List 是一个对象集合，没有重写 equals() 方法的话，得到的答案是不正确的，因为它是基于 equals() 方法来实现的。</p>
+<h6 id="skip"><a href="#skip" class="headerlink" title="skip"></a>skip</h6><blockquote>
+<p>跳过流中的某几个元素，经常和 limit 配置使用。</p>
+</blockquote>
+<p>使用 skip 配合 limit 可以更好的对流中元素进行分页操作。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSkip</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">99</span>, <span class="number">12</span>, <span class="number">40</span>, <span class="number">8</span>, <span class="number">11</span>);</span><br><span class="line">    List&lt;Integer&gt; collect = integers.stream().skip(<span class="number">2</span>).limit(<span class="number">3</span>).collect(Collectors.toList());</span><br><span class="line">    System.out.println(collect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="match"><a href="#match" class="headerlink" title="match"></a>match</h6><blockquote>
+<p>匹配指定的元素<br>Stream 提供了 3 个 api 接口，分别是：allMatch()，anyMatch()，noneMatch() 方法的功能基本顾名思义的。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> <span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testMatch</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; integers = Arrays.asList(<span class="number">1</span>, <span class="number">99</span>, <span class="number">12</span>, <span class="number">40</span>, <span class="number">8</span>, <span class="number">11</span>);</span><br><span class="line">    <span class="keyword">boolean</span> b = integers.stream().allMatch(integer -&gt; integer &gt; <span class="number">8</span>);</span><br><span class="line">    System.out.println(b);</span><br><span class="line">    <span class="keyword">boolean</span> anyMatch = integers.stream().anyMatch(integer -&gt; integer &gt; <span class="number">8</span>);</span><br><span class="line">    System.out.println(anyMatch);</span><br><span class="line">    <span class="keyword">boolean</span> noneMatch = integers.stream().noneMatch(integer -&gt; integer &gt; <span class="number">8</span>);</span><br><span class="line">    System.out.println(noneMatch);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Optional"><a href="#Optional" class="headerlink" title="Optional"></a>Optional</h4><p>代码中空指针异常是一个让人很头疼但是又不得不去检查的操作，在 Java8 之前都是用过 if 来判断的，Java8 则引入了 Optional 来解决，使代码不被空间查污染。<br>Optional 是一个容器，它可以保存任意类型的值，也可以保存 null，通过它提供的方法，就可以不用显式的进行空值判断。书面话的说明看着都是似懂非懂的感觉，还是看代码更有感觉一点。</p>
+<h5 id="Optional-创建"><a href="#Optional-创建" class="headerlink" title="Optional 创建"></a>Optional 创建</h5><ol>
+<li>Optional.empty():创建一个空的 Optional 对象</li>
+<li>Optional.of(T value):传入的 value 值为 null 的话，会抛空指针异常。</li>
+<li>Optional.ofNullable(T value): 传入的 value 值允许为空。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOptional</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// empty()</span></span><br><span class="line">    Optional&lt;Person&gt; empty = Optional.empty();</span><br><span class="line">    <span class="comment">// of(T value)</span></span><br><span class="line">    Optional&lt;Person&gt; optional = Optional.of(<span class="keyword">new</span> Person());</span><br><span class="line">    <span class="comment">// ofNullable(T value)</span></span><br><span class="line">    Optional&lt;Person&gt; ofNullable = Optional.ofNullable(<span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="orElse"><a href="#orElse" class="headerlink" title="orElse"></a>orElse</h6></li>
+</ol>
+<blockquote>
+<p>有值则返回，没有则返回其他值</p>
+</blockquote>
+<p>如果传入的值是 null 时，返回 orElse 方法中指定的结果，否则返回实例的值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOrElse</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Person p = <span class="keyword">new</span> Person();</span><br><span class="line">    Optional&lt;String&gt; optional = Optional.ofNullable(p.getName());</span><br><span class="line">    String name_is_null = optional.orElse(<span class="string">&quot;name is null&quot;</span>);</span><br><span class="line">    System.out.println(name_is_null);</span><br><span class="line">    p.setName(<span class="string">&quot;jihe&quot;</span>);</span><br><span class="line">    Optional&lt;String&gt; optionalS = Optional.ofNullable(p.getName());</span><br><span class="line">    String name_is_nullS = optionalS.orElse(<span class="string">&quot;name is null&quot;</span>);</span><br><span class="line">    System.out.println(name_is_nullS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="orElseGet"><a href="#orElseGet" class="headerlink" title="orElseGet"></a>orElseGet</h6><blockquote>
+<p>在功能上和 orElse() 方法类似，只是 orElseGet 指出传入一个 Lambda 表达式生产默认值</p>
+</blockquote>
+<p>如果想要的实例为 null 时，就可以通过 orElseGet 获取一个非空实例</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOrElseGet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Person p = <span class="keyword">null</span>;</span><br><span class="line">    Optional&lt;Person&gt; optional = Optional.ofNullable(p);</span><br><span class="line">    Person person = optional.orElseGet(() -&gt; <span class="keyword">new</span> Person(<span class="string">&quot;jihe&quot;</span>, <span class="number">23</span>));</span><br><span class="line">    System.out.println(person.getName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上是一些比较常用的 Java8 新特性，后面会一点点的完善上来。另外 Java8 对时间日期处理也引入了新的 API 来解决让人傻傻分不清的日期类。让日期和时间的处理更加人性化，易于理解。在 JVM 层面，PermGen 空间被移除了，取而代之的是 MetaSpace，与之对应的 -XX:PermSize 和 -XX:MaxPermSize 参数分别被 -XX:MetaSpaceSize 和 -XX:MaxMetaSpaceSize 所代替。[ PermSize 是用来存放 Class 类元数据的内存区域，如果在应用启动时加载的类信息比较的的话，可能会抛出 “java.lang.OutOfMemoryError: PermGen space” 异常，Java8 使用了本地内存来存储这部分信息，将这部分空间全部移除]</p>
+<p>今晚去看了哪吒，超级好看。里面一句台词让人印象深刻。</p>
+<hr>
+<center>人的成见就像一座大山</center>
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux-shell</title>
+    <url>/2020/01/03/Linux-shell/</url>
+    <content><![CDATA[<p><img lazyload src="/images/loading.svg" data-src="/linux-shell.png" alt="Photo by deleted on wallhaven.cc"></p>
+<p>shell 是用户和 Linux 系统交互的一个应用程序，就像 Windows 操作系统可以用过界面进行交互。shell 脚本就是通过 shell 来执行的，就像 Java 程序执行在 JVM 上类似。类似 Java 虚拟机，Linux 下也有很多的 shell 程序，但是最常用的就是 bash，因为其使用简单，并且是免费的，所以是 Linux 的默认 shell。</p>
+<a id="more"></a>
+
+<h4 id="shell-script"><a href="#shell-script" class="headerlink" title="shell script"></a>shell script</h4><h5 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h5><p>任何语言都离不开一个 hello world ，现在感受下 shell 的第一个脚本。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello world&quot;</span></span><br></pre></td></tr></table></figure>
+<p>一般 shell 脚本命名都是以 .sh 来写的，这是一个约定俗成的写法，这样别人在看到 .sh 结尾的文件就知道是一个 shell 脚本，当然想以其他结尾也是可以的。</p>
+<blockquote>
+<p>#!<br>这个是告诉系统这个脚本使用哪个 shell 来执行。<br>echo<br>向窗口输出文本</p>
+</blockquote>
+<h5 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h5><p>规则</p>
+<blockquote>
+<ol>
+<li>只能使用数字，字母，下划线，且不能以数字开头</li>
+<li>变量名区分大小写</li>
+<li>变量赋值通过（=）号，且不能有空格</li>
+</ol>
+</blockquote>
+<p>使用</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># a=1</span></span><br><span class="line">[root@jihe shell]<span class="comment"># echo $a</span></span><br><span class="line">1</span><br><span class="line">[root@jihe shell]<span class="comment"># echo $&#123;a&#125;</span></span><br><span class="line">1</span><br><span class="line">[root@jihe shell]<span class="comment"># echo $ab</span></span><br><span class="line"></span><br><span class="line">[root@jihe shell]<span class="comment"># echo $&#123;a&#125;b</span></span><br><span class="line">1b</span><br></pre></td></tr></table></figure>
+<h6 id="特殊变量"><a href="#特殊变量" class="headerlink" title="特殊变量"></a>特殊变量</h6><p><strong>$?</strong></p>
+<p>接收上一天命令的返回状态码，上条命令执行成功是 0 ，失败为其他 1-255 之间的值。</p>
+<p><strong>$#</strong></p>
+<p>脚本执行的参数个数</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="variable">$1</span></span><br><span class="line"><span class="variable">$2</span></span><br><span class="line"><span class="variable">$#</span></span><br></pre></td></tr></table></figure>
+<p><code>$*</code></p>
+<p>所有参数</p>
+<p><strong>$$</strong></p>
+<p>获取当前脚本的进程号，可以实现脚本自杀，或者使用 exit 退出。</p>
+<h4 id="循环和判断"><a href="#循环和判断" class="headerlink" title="循环和判断"></a>循环和判断</h4><h5 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h5><p>shell 中也是 for 循环，但是格式区别于 Java 中的 for 循环，而且 shell 中 for 循环有多种写法，下面是比较容易记住的写法。</p>
+<p>打印 0 到 9</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="keyword">for</span>((i=0;i&lt;10;1++))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;i=&quot;</span><span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>这样程序会打印 <code>i=0</code> 到  <code>i=9</code> 输出到窗口。<code>do</code> 作为循环体的开始，<code>done</code> 作为循环体的结束。</p>
+<h5 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h5><p>test EXPR<br>[ EXPR ] : 中括号和表达式之间有空格</p>
+<h6 id="整型"><a href="#整型" class="headerlink" title="整型"></a>整型</h6><p><code>-gt</code> : 大于， [ $1 -gt $2 ] 或者 test $1 -gt $2 判断变量 1 大于 变量 2<br><code>-lt</code>：小于<br><code>-ge</code>：大于等于<br><code>-le</code>：小于等于<br><code>-eq</code>：等于<br><code>-ne</code>：不等于</p>
+<h6 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h6><p><code>=</code>：等于，判断变量是否为空 [ “$str” = “” ] 或者 [ -z $str ]<br><code>!=</code>：不等于</p>
+<h5 id="判断"><a href="#判断" class="headerlink" title="判断"></a>判断</h5><p>类似 Java 中的 if，而且是以 fi 作为判断的结尾</p>
+<p>if [condition 1]<br>then<br>    first tree<br>elif [conditin 2]<br>    second tree<br>else<br>    third tree<br>fi</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">num=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$num</span> -eq 1 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> one</span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$num</span> -eq 2 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> two</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> none</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>执行结果</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># ./if.sh 1</span></span><br><span class="line">one</span><br><span class="line">[root@jihe shell]<span class="comment"># ./if.sh 2</span></span><br><span class="line">two</span><br><span class="line">[root@jihe shell]<span class="comment"># ./if.sh 3</span></span><br><span class="line">none</span><br></pre></td></tr></table></figure>
+
+<h4 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h4><p><code>$&#123;&#125;</code>：获取变量的值<br><code>$()</code>：等于 ``，会执行里面的命令，并且获取命令执行的结果<br><code>$[]</code>：可以对方括号里面的公式进行算术运算<br><code>$(())</code>：可以对双括号里面的公式进行算数运算</p>
+<h4 id="日期"><a href="#日期" class="headerlink" title="日期"></a>日期</h4><h5 id="date"><a href="#date" class="headerlink" title="date"></a>date</h5><p>显示当前时间</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">date</span><br></pre></td></tr></table></figure>
+<h5 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># date +%Y-%m-%d</span></span><br><span class="line">2020-01-05</span><br></pre></td></tr></table></figure>
+<h5 id="获取时间戳"><a href="#获取时间戳" class="headerlink" title="获取时间戳"></a>获取时间戳</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># date +%s</span></span><br><span class="line">1578188573</span><br></pre></td></tr></table></figure>
+<h5 id="指定时间"><a href="#指定时间" class="headerlink" title="指定时间"></a>指定时间</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 获取前一天时间，按照指定格式输出</span></span><br><span class="line">[root@jihe shell]<span class="comment"># date --date=&#x27;1 days ago&#x27; +%Y-%m-%d</span></span><br><span class="line">2020-01-04</span><br><span class="line"><span class="comment"># 获取后一天时间，按照指定格式输出</span></span><br><span class="line">[root@jihe shell]<span class="comment"># date --date=&#x27;-1 days ago&#x27; +%Y-%m-%d</span></span><br><span class="line">2020-01-06</span><br><span class="line"><span class="comment"># 获取指定时间的前一天</span></span><br><span class="line">[root@jihe shell]<span class="comment"># date --date=&#x27;20191111 1 days ago&#x27; +%Y-%m-%d</span></span><br><span class="line">2019-11-10</span><br></pre></td></tr></table></figure>
+<h4 id="后台执行"><a href="#后台执行" class="headerlink" title="后台执行"></a>后台执行</h4><p>在后台执行脚本</p>
+<h5 id="nohup"><a href="#nohup" class="headerlink" title="nohup"></a>nohup</h5><p>不挂断的运行命令，忽略所有挂断（hangup）信号</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nohup for.sh &amp;</span><br></pre></td></tr></table></figure>
+<p>nohup 会忽略进程的挂断信号，也会在当前执行目录生成一个 nohup.out 日志文件。</p>
+<h4 id="标准输入，输出，重定向"><a href="#标准输入，输出，重定向" class="headerlink" title="标准输入，输出，重定向"></a>标准输入，输出，重定向</h4><p>标准输入，输出，错误可以使用文件描述符 0，1，2 引用</p>
+<h5 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># &gt; 将输出结果重定向输出到 file 文件中</span></span><br><span class="line"><span class="comment"># 1&gt; 将输出的正确结果重定向到 file 文件中</span></span><br><span class="line"><span class="comment"># &gt;&gt; 将输出的结果追加到 file 文件中，不做覆盖处理</span></span><br><span class="line">ls &gt;file 或者 ls 1&gt;file (ls &gt;&gt;file)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2&gt; 将错误输出到 file 文件中，haha 是一个错误命令</span></span><br><span class="line">haha 2&gt;file </span><br></pre></td></tr></table></figure>
+<p>特殊</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 把输出信息直接丢失，既不保存也不打印到控制台</span></span><br><span class="line">ls &gt;/dev/null</span><br></pre></td></tr></table></figure>
+<h4 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h4><p>Linux 下有专门执行定时任务的配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/crontab</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下面是 crontab 文件的内容</span></span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line">MAILTO=root</span><br><span class="line"></span><br><span class="line"><span class="comment"># For details see man 4 crontabs</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Example of job definition:</span></span><br><span class="line"><span class="comment"># .---------------- minute (0 - 59)</span></span><br><span class="line"><span class="comment"># |  .------------- hour (0 - 23)</span></span><br><span class="line"><span class="comment"># |  |  .---------- day of month (1 - 31)</span></span><br><span class="line"><span class="comment"># |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span></span><br><span class="line"><span class="comment"># |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span></span><br><span class="line"><span class="comment"># |  |  |  |  |</span></span><br><span class="line"><span class="comment"># *  *  *  *  * user-name  command to be executed</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在这里追加定时任务，都为 * 时为 1 分钟执行一次。root 为执行用户，后面跟脚本绝对路径。</span></span><br><span class="line">* * * * * root /usr/<span class="built_in">local</span>/shell/crontab.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>crontab.sh<br>脚本将文本内容输出到指定文件 cron.txt。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello world&quot;</span> &gt;&gt;/usr/<span class="built_in">local</span>/shell/cron.txt</span><br></pre></td></tr></table></figure>
+<p>查看 cron.txt 文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 实时输出内容</span></span><br><span class="line">tail -f cron.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<center>美好的事即将发生</center>
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RabbitMQ安装和使用</title>
     <url>/2019/09/05/RabbitMQ%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<p><img lazyload src="/images/loading.svg" data-src="RabbitMQ%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/rabbitmq.png" alt="Photo by Vadim Sadovski on Unsplash"></p>
@@ -489,35 +489,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
-    <title>docker安装MySQL</title>
-    <url>/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/</url>
-    <content><![CDATA[<p><img lazyload src="/images/loading.svg" data-src="docker%E5%AE%89%E8%A3%85MySQL/mysql.png"></p>
-<p>自从接触到 docker 之后，就想把所有组件都安装在上面，方便后面使用。今天开始折腾安装 MySQL，虽然目前公司项目使用 MySQL 非常少，但是我很喜欢 MySQL，哈哈。</p>
-<a id="more"></a>
-
-<h5 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 拉去最新版的 mysql</span></span><br><span class="line">sudo docker pull mysql</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>使用以上命令拉取最新版 MySQL</p>
-<h5 id="启动-MySQL"><a href="#启动-MySQL" class="headerlink" title="启动 MySQL"></a>启动 MySQL</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3306:3306 --name mysql-ck -v /usr/<span class="built_in">local</span>/mysql/conf:/etc/mysql/conf.d -v /usr/<span class="built_in">local</span>/mysql/logs:/logs -v /usr/<span class="built_in">local</span>/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.7</span><br><span class="line"></span><br><span class="line"><span class="comment"># -p 将 3306 端口映射到本机 3306 端口</span></span><br><span class="line"><span class="comment"># --name 后面跟 MySQL 别名</span></span><br><span class="line"><span class="comment"># -v MySQL 数据保存路径：/usr/local/mysql/conf:/etc/mysql/conf.d   将本机 /usr/local/mysql/conf 映射到 docker 的 /etc/mysql/conf.d 目录</span></span><br><span class="line"><span class="comment"># -e 设置初始密码</span></span><br><span class="line"><span class="comment"># -d 后台运行</span></span><br></pre></td></tr></table></figure>
-<p>启动 MySQL 成功之后，容器会返回一个 id 类似 <code>6d2b3575b78f67481300d01cd65ca47a2a1868f448f2a53bb68d7b056f7ef23d</code></p>
-<h5 id="进入-MySQL"><a href="#进入-MySQL" class="headerlink" title="进入 MySQL"></a>进入 MySQL</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> -it mysql bash</span><br><span class="line"><span class="comment"># 登录</span></span><br><span class="line">root@6d2b3575b78f:/<span class="comment"># mysql -uroot -proot</span></span><br><span class="line">mysql: [Warning] Using a password on the <span class="built_in">command</span> line interface can be insecure.</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 8</span><br><span class="line">Server version: 8.0.15 MySQL Community Server - GPL</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type <span class="string">&#x27;help;&#x27;</span> or <span class="string">&#x27;\h&#x27;</span> <span class="keyword">for</span> <span class="built_in">help</span>. Type <span class="string">&#x27;\c&#x27;</span> to clear the current input statement.</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="客户端安装"><a href="#客户端安装" class="headerlink" title="客户端安装"></a>客户端安装</h5><p>建议到<a class="link" href="https://www.navicat.com.cn/products/">官网<i class="fas fa-external-link-alt"></i></a>下载 navicat 客户端，当然条件允许的建议购买正版产品，实在不行就先下载下来，有半个月的试用期，体验一般，个人觉得他们家的产品用起来很不错。下载后解压，直接启动即可使用。</p>
-<p>此时就进入到我们熟悉的客户端了，接下来的操作就和在物理机上的操作是一样的了。虽然公司项目可能接触 MySQL 会很少，但是 MySQL 依然是很多公司数据存储不可替代的部分，所以嘛，好好学习，天天向上。</p>
-<p>今天没有加班，下班早早就溜了，最近加班比较多，希望程序狗们都能天天没 bug ,天天早下班。</p>
-<hr>
-<center>道理都懂，但做不到</center>
-
-
-]]></content>
-      <categories>
-        <category>docker</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-        <tag>mysql</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>docker安装mongodb</title>
     <url>/2019/03/19/docker%E5%AE%89%E8%A3%85mongodb/</url>
     <content><![CDATA[<p><img lazyload src="/images/loading.svg" data-src="docker%E5%AE%89%E8%A3%85mongodb/mongo.png"></p>
@@ -579,6 +550,35 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       <tags>
         <tag>docker</tag>
         <tag>mongo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker安装MySQL</title>
+    <url>/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/</url>
+    <content><![CDATA[<p><img lazyload src="/images/loading.svg" data-src="docker%E5%AE%89%E8%A3%85MySQL/mysql.png"></p>
+<p>自从接触到 docker 之后，就想把所有组件都安装在上面，方便后面使用。今天开始折腾安装 MySQL，虽然目前公司项目使用 MySQL 非常少，但是我很喜欢 MySQL，哈哈。</p>
+<a id="more"></a>
+
+<h5 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 拉去最新版的 mysql</span></span><br><span class="line">sudo docker pull mysql</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>使用以上命令拉取最新版 MySQL</p>
+<h5 id="启动-MySQL"><a href="#启动-MySQL" class="headerlink" title="启动 MySQL"></a>启动 MySQL</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3306:3306 --name mysql-ck -v /usr/<span class="built_in">local</span>/mysql/conf:/etc/mysql/conf.d -v /usr/<span class="built_in">local</span>/mysql/logs:/logs -v /usr/<span class="built_in">local</span>/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.7</span><br><span class="line"></span><br><span class="line"><span class="comment"># -p 将 3306 端口映射到本机 3306 端口</span></span><br><span class="line"><span class="comment"># --name 后面跟 MySQL 别名</span></span><br><span class="line"><span class="comment"># -v MySQL 数据保存路径：/usr/local/mysql/conf:/etc/mysql/conf.d   将本机 /usr/local/mysql/conf 映射到 docker 的 /etc/mysql/conf.d 目录</span></span><br><span class="line"><span class="comment"># -e 设置初始密码</span></span><br><span class="line"><span class="comment"># -d 后台运行</span></span><br></pre></td></tr></table></figure>
+<p>启动 MySQL 成功之后，容器会返回一个 id 类似 <code>6d2b3575b78f67481300d01cd65ca47a2a1868f448f2a53bb68d7b056f7ef23d</code></p>
+<h5 id="进入-MySQL"><a href="#进入-MySQL" class="headerlink" title="进入 MySQL"></a>进入 MySQL</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> -it mysql bash</span><br><span class="line"><span class="comment"># 登录</span></span><br><span class="line">root@6d2b3575b78f:/<span class="comment"># mysql -uroot -proot</span></span><br><span class="line">mysql: [Warning] Using a password on the <span class="built_in">command</span> line interface can be insecure.</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 8</span><br><span class="line">Server version: 8.0.15 MySQL Community Server - GPL</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type <span class="string">&#x27;help;&#x27;</span> or <span class="string">&#x27;\h&#x27;</span> <span class="keyword">for</span> <span class="built_in">help</span>. Type <span class="string">&#x27;\c&#x27;</span> to clear the current input statement.</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="客户端安装"><a href="#客户端安装" class="headerlink" title="客户端安装"></a>客户端安装</h5><p>建议到<a class="link" href="https://www.navicat.com.cn/products/">官网<i class="fas fa-external-link-alt"></i></a>下载 navicat 客户端，当然条件允许的建议购买正版产品，实在不行就先下载下来，有半个月的试用期，体验一般，个人觉得他们家的产品用起来很不错。下载后解压，直接启动即可使用。</p>
+<p>此时就进入到我们熟悉的客户端了，接下来的操作就和在物理机上的操作是一样的了。虽然公司项目可能接触 MySQL 会很少，但是 MySQL 依然是很多公司数据存储不可替代的部分，所以嘛，好好学习，天天向上。</p>
+<p>今天没有加班，下班早早就溜了，最近加班比较多，希望程序狗们都能天天没 bug ,天天早下班。</p>
+<hr>
+<center>道理都懂，但做不到</center>
+
+
+]]></content>
+      <categories>
+        <category>docker</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>mysql</tag>
       </tags>
   </entry>
   <entry>
@@ -746,6 +746,58 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
+    <title>manjaro输入密码卡死问题</title>
+    <url>/2019/04/24/manjaro%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><img lazyload src="/images/loading.svg" data-src="manjaro%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98/%E5%AF%86%E7%A0%81%E5%8D%A1%E6%AD%BB.png" alt="年轻才不怕"></p>
+<p>最近玩 manjaro 还是听开心的，该有的软件都有了，用起来也挺方便的。事故发生在一次更新之后，我第二天晚上打开电脑输入密码，卡死在输密码的界面…（嗯…小问题，开启重启。我太天真了，还是没有解决问题）因为最近比较忙，手头也没有多余的电脑，就搁置了几天。最近查了各种资料，问了一些大佬，终于解决了问题。</p>
+<a id="more"></a>
+
+<h4 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h4><table>
+<thead>
+<tr>
+<th>ev</th>
+<th>version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>os</td>
+<td>Mangaro 18.0.4</td>
+</tr>
+<tr>
+<td>Kernel</td>
+<td>x86_64 Linux 4.19.34-1-MANJARO</td>
+</tr>
+<tr>
+<td>DE</td>
+<td>KDE 5.56.0 / Plasma 5.15.4</td>
+</tr>
+<tr>
+<td>GPU</td>
+<td>Mesa DRI Intel(R) Haswell Mobile</td>
+</tr>
+</tbody></table>
+<h4 id="问题定位"><a href="#问题定位" class="headerlink" title="问题定位"></a>问题定位</h4><p>Google 了很多同学碰到的问题，说卡死是双显卡导致的，因为我也是双显卡，所以准备先在这里排除问题。首先 CTRL + ALT + F3 进入到 tty3 终端。使用 root 登录之后就有问题了，所有的命令都报错</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">## 报错信息</span></span><br><span class="line"><span class="comment"># ll</span></span><br><span class="line">-bash: 口口口口口</span><br></pre></td></tr></table></figure>
+<p>基本所有命令都不能使用，很难受。后面请教了一些大佬说应该是环境变量的问题，后面的<code>口口口口</code> 应该是中文不支持原因，实际应该是下面的情况</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">## 报错信息</span></span><br><span class="line">-bash: 未找到命令</span><br></pre></td></tr></table></figure>
+<h4 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h4><p>上面的问题终于有了眉目，命令不存在应该是环境变量导致的，所以先要设置环境变量</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 编辑环境变量</span></span><br><span class="line">$ /usr/bin/vim /etc/profile</span><br><span class="line"><span class="comment"># 添加下面的值</span></span><br><span class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/sbin:/usr/<span class="built_in">local</span>/bin:/bin</span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+<p>到这里所有的命令应该就可以使用了。</p>
+<h4 id="更新显卡依赖"><a href="#更新显卡依赖" class="headerlink" title="更新显卡依赖"></a>更新显卡依赖</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pacman -S virtualgl lib32-virtualgl lib32-primus primus</span><br></pre></td></tr></table></figure>
+<p>更新完成之后</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
+<p>重启之后，终于进去了…切还是那样熟悉 。</p>
+<hr>
+<center>白马非马</center>
+]]></content>
+      <categories>
+        <category>manjaro</category>
+      </categories>
+      <tags>
+        <tag>manjaro</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>manjaro编译openjdk</title>
     <url>/2019/04/09/manjaro%E7%BC%96%E8%AF%91openjdk/</url>
     <content><![CDATA[<p><img lazyload src="/images/loading.svg" data-src="manjaro%E7%BC%96%E8%AF%91openjdk/openjdk.png"></p>
@@ -809,58 +861,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </categories>
       <tags>
         <tag>openjdk</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>manjaro输入密码卡死问题</title>
-    <url>/2019/04/24/manjaro%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img lazyload src="/images/loading.svg" data-src="manjaro%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98/%E5%AF%86%E7%A0%81%E5%8D%A1%E6%AD%BB.png" alt="年轻才不怕"></p>
-<p>最近玩 manjaro 还是听开心的，该有的软件都有了，用起来也挺方便的。事故发生在一次更新之后，我第二天晚上打开电脑输入密码，卡死在输密码的界面…（嗯…小问题，开启重启。我太天真了，还是没有解决问题）因为最近比较忙，手头也没有多余的电脑，就搁置了几天。最近查了各种资料，问了一些大佬，终于解决了问题。</p>
-<a id="more"></a>
-
-<h4 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h4><table>
-<thead>
-<tr>
-<th>ev</th>
-<th>version</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>os</td>
-<td>Mangaro 18.0.4</td>
-</tr>
-<tr>
-<td>Kernel</td>
-<td>x86_64 Linux 4.19.34-1-MANJARO</td>
-</tr>
-<tr>
-<td>DE</td>
-<td>KDE 5.56.0 / Plasma 5.15.4</td>
-</tr>
-<tr>
-<td>GPU</td>
-<td>Mesa DRI Intel(R) Haswell Mobile</td>
-</tr>
-</tbody></table>
-<h4 id="问题定位"><a href="#问题定位" class="headerlink" title="问题定位"></a>问题定位</h4><p>Google 了很多同学碰到的问题，说卡死是双显卡导致的，因为我也是双显卡，所以准备先在这里排除问题。首先 CTRL + ALT + F3 进入到 tty3 终端。使用 root 登录之后就有问题了，所有的命令都报错</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">## 报错信息</span></span><br><span class="line"><span class="comment"># ll</span></span><br><span class="line">-bash: 口口口口口</span><br></pre></td></tr></table></figure>
-<p>基本所有命令都不能使用，很难受。后面请教了一些大佬说应该是环境变量的问题，后面的<code>口口口口</code> 应该是中文不支持原因，实际应该是下面的情况</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">## 报错信息</span></span><br><span class="line">-bash: 未找到命令</span><br></pre></td></tr></table></figure>
-<h4 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h4><p>上面的问题终于有了眉目，命令不存在应该是环境变量导致的，所以先要设置环境变量</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 编辑环境变量</span></span><br><span class="line">$ /usr/bin/vim /etc/profile</span><br><span class="line"><span class="comment"># 添加下面的值</span></span><br><span class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/sbin:/usr/<span class="built_in">local</span>/bin:/bin</span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
-<p>到这里所有的命令应该就可以使用了。</p>
-<h4 id="更新显卡依赖"><a href="#更新显卡依赖" class="headerlink" title="更新显卡依赖"></a>更新显卡依赖</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pacman -S virtualgl lib32-virtualgl lib32-primus primus</span><br></pre></td></tr></table></figure>
-<p>更新完成之后</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
-<p>重启之后，终于进去了…切还是那样熟悉 。</p>
-<hr>
-<center>白马非马</center>
-]]></content>
-      <categories>
-        <category>manjaro</category>
-      </categories>
-      <tags>
-        <tag>manjaro</tag>
       </tags>
   </entry>
   <entry>

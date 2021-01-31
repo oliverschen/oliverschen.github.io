@@ -1651,6 +1651,25 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
+    <title>tomcat</title>
+    <url>/2020/01/08/tomcat-un/</url>
+    <content><![CDATA[<p><img src="/2020/01/08/tomcat-un/tomcat.png" alt="Photo by MatrizenDesign on wallhaven.cc"></p>
+<ol>
+<li>ClassLoader,tomcat 里面怎么利用自定义 Classloader</li>
+</ol>
+<p>2.SecurityManager</p>
+<p>3.spring boot + embedTomcat + servlet</p>
+<p>socket 编程</p>
+<p>bio 和 nio 区别</p>
+]]></content>
+      <categories>
+        <category>tomcat</category>
+      </categories>
+      <tags>
+        <tag>tomcat</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>tomcat一键启动脚本</title>
     <url>/2020/02/24/tomcat%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC/</url>
     <content><![CDATA[<p><img src="/2020/02/24/tomcat%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC/start-sh.png" alt="Photo by SamUerto on wallhaven.cc"></p>
@@ -1671,25 +1690,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
 <h5 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h5><p>脚本名称 <code>start.sh</code> 因为里面有个地方写死了脚本名称（这里可以优化下）。</p>
 <hr>
 <center>做一个温暖的人</center>]]></content>
-      <categories>
-        <category>tomcat</category>
-      </categories>
-      <tags>
-        <tag>tomcat</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>tomcat</title>
-    <url>/2020/01/08/tomcat-un/</url>
-    <content><![CDATA[<p><img src="/2020/01/08/tomcat-un/tomcat.png" alt="Photo by MatrizenDesign on wallhaven.cc"></p>
-<ol>
-<li>ClassLoader,tomcat 里面怎么利用自定义 Classloader</li>
-</ol>
-<p>2.SecurityManager</p>
-<p>3.spring boot + embedTomcat + servlet</p>
-<p>socket 编程</p>
-<p>bio 和 nio 区别</p>
-]]></content>
       <categories>
         <category>tomcat</category>
       </categories>

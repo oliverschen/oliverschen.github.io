@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="海贼王">
+    <meta name="description" content="一直在路上">
+    <meta name="author" content="jihe">
+    
+    <title>
+        
+            manjaro编译openjdk |
+        
+        jihe
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/logo.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"oliverschen.github.io","root":"/","language":"zh-Hans","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.0"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days age","week":"%s weeks age","month":"%s months age","year":"%s years age"};
+  </script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                jihe
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">manjaro编译openjdk</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">jihe</span>
+                        
+                            <span class="author-label">Engineer</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2019-04-09 23:01:53
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/openjdk/">openjdk</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/openjdk/">openjdk</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.7k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>8 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p><img lazyload src="/images/loading.svg" data-src="manjaro%E7%BC%96%E8%AF%91openjdk/openjdk.png"></p>
+<p>刚接触到 Java 时就被一些陌生的英文缩写吓到了，什么 jdk,jre,jvm 等等。但是随着后面对它的了解越多，对这些基础的概念越来越清晰，对这些概念也有了一些认识。 jdk 就是我们经常使用的开发工具包，它不仅包含 jre,还包含了编译器等其他基础包，而 jre 则是 Java 代码运行的最小环境。而 jvm 则是 Java 虚拟机， “一处编译，到处运行” 就是因为这位大佬的存在。从学习开始到现在一直都和它们间接接触，但是对它们的了解还是有很大的局限，今天拉了 openjdk 的源码准备好好研究一下。</p>
+<a id="more"></a>
+<h4 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h4><table>
+<thead>
+<tr>
+<th>ev</th>
+<th>version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>os</td>
+<td>Mangaro 18.0.1</td>
+</tr>
+<tr>
+<td>openjdk</td>
+<td>jdk8u</td>
+</tr>
+<tr>
+<td>boot jdk</td>
+<td>1.8.0_202</td>
+</tr>
+</tbody></table>
+<h4 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h4><p>下载 mercurial 来克隆 jdk 代码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S mercurial</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>克隆代码到指定目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先进入到要放目标目录</span></span><br><span class="line">sudo hg <span class="built_in">clone</span> http://hg.openjdk.java.net/jdk8u/jdk8u/</span><br></pre></td></tr></table></figure>
+<p>当然也可以在官网下载代码，官网<a class="link" target="_blank" rel="noopener" href="http://hg.openjdk.java.net/jdk8u/jdk8u/">地址<i class="fas fa-external-link-alt"></i></a>在这里，进去之后左侧有 gz 的包，直接下载。我选择的是第一种方式，直接在仓库克隆代码到本地。</p>
+<h4 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h4><h5 id="README"><a href="#README" class="headerlink" title="README"></a>README</h5><p>先看下 README 文件，这个里面已经有详细的说明</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">cat ./README</span><br><span class="line"></span><br><span class="line">README:</span><br><span class="line">  This file should be located at the top of the OpenJDK Mercurial root</span><br><span class="line">  repository. A full OpenJDK repository <span class="built_in">set</span> (forest) should also include</span><br><span class="line">  the following 6 nested repositories:</span><br><span class="line">    <span class="string">&quot;jdk&quot;</span>, <span class="string">&quot;hotspot&quot;</span>, <span class="string">&quot;langtools&quot;</span>, <span class="string">&quot;corba&quot;</span>, <span class="string">&quot;jaxws&quot;</span>  and <span class="string">&quot;jaxp&quot;</span>.</span><br><span class="line"></span><br><span class="line">  The root repository can be obtained with something like:</span><br><span class="line">    hg <span class="built_in">clone</span> http://hg.openjdk.java.net/jdk8/jdk8 openjdk8</span><br><span class="line">  </span><br><span class="line">  You can run the get_source.sh script located <span class="keyword">in</span> the root repository to get</span><br><span class="line">  the other needed repositories:</span><br><span class="line">    <span class="built_in">cd</span> openjdk8 &amp;&amp; sh ./get_source.sh</span><br><span class="line"></span><br><span class="line">  People unfamiliar with Mercurial should <span class="built_in">read</span> the first few chapters of</span><br><span class="line">  the Mercurial book: http://hgbook.red-bean.com/<span class="built_in">read</span>/</span><br><span class="line"></span><br><span class="line">  See http://openjdk.java.net/ <span class="keyword">for</span> more information about OpenJDK.</span><br><span class="line"></span><br><span class="line">Simple Build Instructions:</span><br><span class="line">  </span><br><span class="line">  0. Get the necessary system software/packages installed on your system, see</span><br><span class="line">     http://hg.openjdk.java.net/jdk8/jdk8/raw-file/tip/README-builds.html</span><br><span class="line"></span><br><span class="line">  1. If you don<span class="string">&#x27;t have a jdk7u7 or newer jdk, download and install it from</span></span><br><span class="line"><span class="string">     http://java.sun.com/javase/downloads/index.jsp</span></span><br><span class="line"><span class="string">     Add the /bin directory of this installation to your PATH environment</span></span><br><span class="line"><span class="string">     variable.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  2. Configure the build:</span></span><br><span class="line"><span class="string">       bash ./configure</span></span><br><span class="line"><span class="string">  </span></span><br><span class="line"><span class="string">  3. Build the OpenJDK:</span></span><br><span class="line"><span class="string">       make all</span></span><br><span class="line"><span class="string">     The resulting JDK image should be found in build/*/images/j2sdk-image</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">where make is GNU make 3.81 or newer, /usr/bin/make on Linux usually</span></span><br><span class="line"><span class="string">is 3.81 or newer. Note that on Solaris, GNU make is called &quot;gmake&quot;.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Complete details are available in the file:</span></span><br><span class="line"><span class="string">     http://hg.openjdk.java.net/jdk8/jdk8/raw-file/tip/README-builds.html</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+<p>那就按照 README 文件的步骤来执行编译</p>
+<h5 id="Getting-the-Source"><a href="#Getting-the-Source" class="headerlink" title="Getting the Source"></a>Getting the Source</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入目录</span></span><br><span class="line"><span class="built_in">cd</span> jdk8u</span><br><span class="line"><span class="comment"># 执行脚本,拉取所有代码</span></span><br><span class="line">bash ./get_source.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>下载完成之后目录结构是这样</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--  1 root root   1522  4月 14 17:11 ASSEMBLY_EXCEPTION</span><br><span class="line">drwxr-xr-x  6 root root   4096  4月 14 17:11 common</span><br><span class="line">-rw-r--r--  1 root root   1588  4月 14 17:11 configure</span><br><span class="line">drwxr-xr-x  6 root root   4096  4月 14 17:56 corba</span><br><span class="line">-rw-r--r--  1 root root   3107  4月 14 17:11 get_source.sh</span><br><span class="line">drwxr-xr-x  8 root root   4096  4月 14 18:06 hotspot</span><br><span class="line">drwxr-xr-x  7 root root   4096  4月 14 17:15 jaxp</span><br><span class="line">drwxr-xr-x  7 root root   4096  4月 14 17:15 jaxws</span><br><span class="line">drwxr-xr-x  7 root root   4096  4月 14 18:46 jdk</span><br><span class="line">drwxr-xr-x  7 root root   4096  4月 14 18:04 langtools</span><br><span class="line">-rw-r--r--  1 root root  19274  4月 14 17:11 LICENSE</span><br><span class="line">drwxr-xr-x  6 root root   4096  4月 14 17:11 make</span><br><span class="line">-rw-r--r--  1 root root   6232  4月 14 17:11 Makefile</span><br><span class="line">drwxr-xr-x 13 root root   4096  4月 14 17:27 nashorn</span><br><span class="line">-rw-r--r--  1 root root   1549  4月 14 17:11 README</span><br><span class="line">-rw-r--r--  1 root root 129333  4月 14 17:11 README-builds.html</span><br><span class="line">drwxr-xr-x  3 root root   4096  4月 14 17:11 <span class="built_in">test</span></span><br><span class="line">-rw-r--r--  1 root root 152511  4月 14 17:11 THIRD_PARTY_README</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>不过下载代码的时候我遇到了多次中断回滚，如果发生中断，会有警告在终端提醒， <strong>上面的脚本可以重复拉取。如果有更新的话会自动拉取最新代码</strong>。</p>
+<h5 id="Building"><a href="#Building" class="headerlink" title="Building"></a>Building</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这一步会检查你的 /usr/bin 下的的命令是否齐全，如果缺少会抛错误出来，提示缺少某个命令，只需要安装再次执行就好</span></span><br><span class="line">bash ./configure</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果有以下信息打印出来，说明第一步已经执行完成</span></span><br><span class="line">A new configuration has been successfully created <span class="keyword">in</span></span><br><span class="line">/usr/<span class="built_in">local</span>/jdk8u/build/linux-x86_64-normal-server-release</span><br><span class="line">using default settings.</span><br><span class="line"></span><br><span class="line">Configuration summary:</span><br><span class="line">* Debug level:    release</span><br><span class="line">* JDK variant:    normal</span><br><span class="line">* JVM variants:   server</span><br><span class="line">* OpenJDK target: OS: linux, CPU architecture: x86, address length: 64</span><br><span class="line"></span><br><span class="line">Tools summary:</span><br><span class="line">* Boot JDK:       java version <span class="string">&quot;1.8.0_202&quot;</span> Java(TM) SE Runtime Environment (build 1.8.0_202-b08) Java HotSpot(TM) 64-Bit Server VM (build 25.202-b08, mixed mode)  (at /usr/lib/jvm/default)</span><br><span class="line">* Toolchain:      gcc (GNU Compiler Collection)</span><br><span class="line">* C Compiler:     Version 8.2.1 (at /usr/bin/gcc)</span><br><span class="line">* C++ Compiler:   Version 8.2.1 (at /usr/bin/g++)</span><br><span class="line"></span><br><span class="line">Build performance summary:</span><br><span class="line">* Cores to use:   7</span><br><span class="line">* Memory <span class="built_in">limit</span>:   7859 MB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>编译</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make all</span><br></pre></td></tr></table></figure>
+<h5 id="完成"><a href="#完成" class="headerlink" title="完成"></a>完成</h5><p>编译完成之后会打印下面的信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">----- Build <span class="built_in">times</span> -------</span><br><span class="line">Start 2019-04-14 22:26:22</span><br><span class="line">End   2019-04-14 22:36:39</span><br><span class="line">00:00:18 corba</span><br><span class="line">00:00:14 demos</span><br><span class="line">00:02:26 docs</span><br><span class="line">00:03:32 hotspot</span><br><span class="line">00:00:18 images</span><br><span class="line">00:00:13 jaxp</span><br><span class="line">00:00:17 jaxws</span><br><span class="line">00:02:16 jdk</span><br><span class="line">00:00:25 langtools</span><br><span class="line">00:00:17 nashorn</span><br><span class="line">00:10:17 TOTAL</span><br><span class="line">-------------------------</span><br><span class="line">Finished building OpenJDK <span class="keyword">for</span> target <span class="string">&#x27;all&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>编译时会出现各种问题，可能是依赖版本，或者是包下载不下来导致问题，还有写是因为配置文件设置的问题。下面是我碰到的几个问题</p>
+<h5 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h5><p>现在已经拥有一个自己的 jdk 了，设置环境变量使用起来。</p>
+<p>先在 jdk8u/build/linux-x86_64-normal-server-release/images 下找到 j2sdk-image 目录，这个就是编译好的 jdk，把它复制到自己的 java 目录下，然后设置环境变量。 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先卸载之前配置的 bootjdk 之后然后设置新的</span></span><br><span class="line"><span class="comment"># 设置环境变量</span></span><br><span class="line">sudo vim /etc/profile</span><br><span class="line"><span class="comment"># JDK</span></span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/<span class="built_in">local</span>/java</span><br><span class="line"><span class="built_in">export</span> JRE_HOME=<span class="variable">$&#123;JAVA_HOEM&#125;</span>/jre</span><br><span class="line"><span class="built_in">export</span> CLASSPATH=.:<span class="variable">$&#123;JAVA_HOME&#125;</span>/lib:<span class="variable">$&#123;JRE_HOME&#125;</span>/lib </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>重启配置文件<br> source /etc/profile</p>
+<p>现在 java 环境变量已经设置好了，输入 java -version 可以查看到环境下面信息，而且还有<strong>自己的机器名</strong>在上面，开心一分钟</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ java -version</span><br><span class="line">openjdk version <span class="string">&quot;1.8.0-internal&quot;</span></span><br><span class="line">OpenJDK Runtime Environment (build 1.8.0-internal-chenkui_2019_04_14_22_21-b00)</span><br><span class="line">OpenJDK 64-Bit Server VM (build 25.71-b00, mixed mode)</span><br></pre></td></tr></table></figure>
+<h5 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h5><p>在编译时出现的 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Warning: ××× ‘int readdir_r(DIR*, dirent*, dirent**)’ is deprecated (declared at &#x2F;usr&#x2F;include&#x2F;dirent.h:183) [-Wdeprecated-declarations] ×××</span><br></pre></td></tr></table></figure>
+<p>解决方案</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/jdk8u/hotspot/make/linux/makefiles</span><br><span class="line">vim ./gcc.make</span><br><span class="line"><span class="comment"># 编辑 gcc.make</span></span><br><span class="line"><span class="comment"># 找到 WARNINGS_ARE_ERRORS = -Werror 修改为</span></span><br><span class="line">WARNINGS_ARE_ERRORS = -Wno-all</span><br><span class="line"></span><br><span class="line"><span class="comment"># WARNING_FLAGS = -Wno-deprecated-declarations -Wno-unused-parameter -Wno-sign-compare -Wno-error 修改为</span></span><br><span class="line"></span><br><span class="line">WARNING_FLAGS = -w</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>参考<a class="link" target="_blank" rel="noopener" href="https://blog.csdn.net/desiyonan/article/details/80802066">链接<i class="fas fa-external-link-alt"></i></a> 这个问题是解决最没有头绪的一个，不过在编译的过程中要仔细看报错信息，这样方便 Google 时能准确的找到问题所在。现在就可以愉快的调试源码来玩一下了。</p>
+<h4 id="the-end"><a href="#the-end" class="headerlink" title="the end"></a>the end</h4><p>记得第一次接触 Java 时，在命令行打印出 <code>hello world</code> 时真的很疑惑，就这么一个东西，能有什么用。但是随着一点一点的了解，慢慢发现它的强大之处。每天能进步一点，一年后看今天碰到的问题，其实也不难解决，不积跬步无以至千里，要加油啊！！！  ∩▂∩</p>
+<p>官网提供的编译<a class="link" target="_blank" rel="noopener" href="http://hg.openjdk.java.net/jdk8/jdk8/raw-file/tip/README-builds.html">文档<i class="fas fa-external-link-alt"></i></a></p>
+<hr>
+<center>我最爱海南，每个地方都有挥之不去的记忆</center>
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：manjaro编译openjdk</li>
+        <li>本文作者：jihe</li>
+        <li>创建时间：2019-04-09 23:01:53</li>
+        <li>
+            本文链接：https://oliverschen.github.io/2019/04/09/manjaro编译openjdk/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/04/18/springcloud-eureka/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">springcloud-eureka</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">docker安装MySQL</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">jihe</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

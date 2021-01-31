@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="海贼王">
+    <meta name="description" content="一直在路上">
+    <meta name="author" content="jihe">
+    
+    <title>
+        
+            mysql |
+        
+        jihe
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/logo.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"oliverschen.github.io","root":"/","language":"zh-Hans","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.0"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days age","week":"%s weeks age","month":"%s months age","year":"%s years age"};
+  </script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                jihe
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">mysql</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">jihe</span>
+                        
+                            <span class="author-label">Engineer</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2020-01-18 22:16:51
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/mysql/">mysql</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/mysql/">mysql</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.1k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>3 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p><img lazyload src="/images/loading.svg" data-src="/mysql.png" alt="Photo by WoshWosh on wallhaven.cc"></p>
+<p>趁着放假，准备系统的在理一理 MySQL 的知识，所以报名了极客时间上丁奇老师的课程，跟着大神又重新学习了一遍。现在学习东西喜欢记录下来，这样才有种确实学习了知识的感觉。^_^</p>
+<a id="more"></a>
+
+<h4 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h4><p>MySQL 是由两大部分 server 部分和存储引擎构成的。而 server 部分主要由 连接器，分析器，优化器和执行器组成的，server 部分主要负责客户端的连接，SQL 语句的解析，优化以及执行。 存储引擎主要负责数存储，并且提供数据的读写接口。</p>
+<h5 id="server"><a href="#server" class="headerlink" title="server"></a>server</h5><p>MySQL 前置操作都在这里执行。</p>
+<h6 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h6><p>负责管理客户端连接，权限的验证等操作。当验证通过一个用户名和密码之后，此后的操作都是依赖当前权限，也就是说当一个用户连接成功之后，即使管理员修改密码，但是他还是能完成操作。</p>
+<h6 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h6><p>当用户通过连接器，SQL 到达之后，一般会先查询缓存（8.0 之前）。如果缓存中存在的话直接返回。没有的话则对 SQL 语句进行语法分析等动作。对于缓存不建议使用，因为当有表涉及到更新时，所有关于当前表的缓存会失效。除非是数据不经常变更的数据表。</p>
+<h6 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h6><p>优化器主要是分析 SQL 语句怎样执行最优，然后生成执行方案。</p>
+<h6 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h6><p>执行 SQL 语句，返回结果集。</p>
+<h4 id="日志系统"><a href="#日志系统" class="headerlink" title="日志系统"></a>日志系统</h4><h5 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h5><p>在 MySQL 语句更新过程中，如果每次都在磁盘找到相应记录，并且修改记录，写入磁盘的话，效率会很低。所以在执行过程中一些会将修改结果先保存在内存中，然后在 redo log 中记录当前的修改，当事务提交之后。服务在空闲的时候，或者日志空间不够时，在刷新 redo log 中 commit 的数据到磁盘中去。WAL （write-ahead logging）技术, 先写日志，在写磁盘。redo log 是存储引擎 InnoDB 独有的日志记录系统，它保证了在 MySQL 服务宕机之后保证数据不丢失。 可以通过设置参数 <code>innodb_flush_log_at_trx_commit=1</code> 保证每次 redo lod 都写在磁盘上，保证重启之后数据不丢失。</p>
+<h5 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h5><p>MySQL server 层提供的日志系统，支持所有引擎。bin log 是追加的形式写入的，不像 redo log 有大小限制。binlog有两种记录模式，statement格式的话是记sql语句， row格式会记录行的内容，记两条，更新前和更新后都有。</p>
+<h4 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h4><p>在网上购物从确认商品，下订单，扣减库存，到付款成功。这是一个整体的操作。对于这个操作来说，如果有其中一步操作失败，那意味着在它之前的操作都要回滚。这就是一个事务。在这一系列操作中，要么都成功。要么都失败。</p>
+<p>事务特性：ACID，原子性（atomictity），一致性（consistency），隔离性（isolation），持久性（durablity）</p>
+<h5 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h5><p>隔离级别越高，效率越低。</p>
+<h6 id="读未提交（read-uncommitted）"><a href="#读未提交（read-uncommitted）" class="headerlink" title="读未提交（read uncommitted）"></a>读未提交（read uncommitted）</h6><blockquote>
+<p>一个事务还没有提交，它的变更能别其他事务看到</p>
+</blockquote>
+<h6 id="读提交（read-commit）"><a href="#读提交（read-commit）" class="headerlink" title="读提交（read commit）"></a>读提交（read commit）</h6><blockquote>
+<p>事务提交之后，变更才能被其他事务看到</p>
+</blockquote>
+<h6 id="可重复读（repeatable-read）"><a href="#可重复读（repeatable-read）" class="headerlink" title="可重复读（repeatable read）"></a>可重复读（repeatable read）</h6><blockquote>
+<p>事务启动之后，在事务提交之前，看到的数据和启动之前一致。没有提交的事务对其他事务不可见。</p>
+</blockquote>
+<h6 id="串行化（serialiable）"><a href="#串行化（serialiable）" class="headerlink" title="串行化（serialiable）"></a>串行化（serialiable）</h6><blockquote>
+<p>对于同一行记录，写会加写锁，读会加读锁，当出现读写锁冲突时，必须等上个事务完成之后才能执行下一个事务。</p>
+</blockquote>
+<h5 id="开启"><a href="#开启" class="headerlink" title="开启"></a>开启</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 开启</span></span><br><span class="line"><span class="keyword">begin</span> (<span class="keyword">start</span>) transaction;</span><br><span class="line"><span class="comment">-- 提交</span></span><br><span class="line"><span class="keyword">commit</span>;</span><br><span class="line"><span class="comment">-- 回滚</span></span><br><span class="line"><span class="keyword">rollback</span>;</span><br></pre></td></tr></table></figure>
+<p>或者设置参数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 0 关闭自动提交，查询也会自动开启，并且不会自动提交。一直持续到commit/rollback，或者断开连接。</span></span><br><span class="line"><span class="keyword">set</span> autocommit<span class="operator">=</span><span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>由于 MySQL MVCC 多版本并发控制，每个操作都会有相应的回滚操作保存下来，每个事务都会记录。当设置为自动提交时，连接成功就会执行 set autocommit=0 的操作，每个操作都会在事务中，如果时长连接就会导致意外长事务。<strong>所以一般 set autocommit=1,显示开启事务</strong></p>
+<hr>
+<center></center>
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：mysql</li>
+        <li>本文作者：jihe</li>
+        <li>创建时间：2020-01-18 22:16:51</li>
+        <li>
+            本文链接：https://oliverschen.github.io/2020/01/18/mysql/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/02/04/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">多线程</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2020/01/14/netty-un/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">netty</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">jihe</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

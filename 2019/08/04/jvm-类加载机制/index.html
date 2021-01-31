@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="海贼王">
+    <meta name="description" content="一直在路上">
+    <meta name="author" content="jihe">
+    
+    <title>
+        
+            jvm-类加载 |
+        
+        jihe
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/logo.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"oliverschen.github.io","root":"/","language":"zh-Hans","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.0"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days age","week":"%s weeks age","month":"%s months age","year":"%s years age"};
+  </script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                jihe
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">jvm-类加载</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">jihe</span>
+                        
+                            <span class="author-label">Engineer</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2019-08-04 00:57:25
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Java/">Java</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Java/">Java</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>4.5k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>15 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p><img lazyload src="/images/loading.svg" data-src="jvm-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/load-class.png" alt="photo by https://unsplash.com/photos/ISVm7Rzhy8s"></p>
+<p>关于 JVM 涉及的知识比较深，并且比较难理解。每次看到不懂的地方，我习惯了解之后记下来。相信了解多了也就会变成自己的知识了。今天周六，准备换地方和朋友一起合租住，想想还是美滋滋。</p>
+<a id="more"></a>
+
+<h4 id="类生命周期"><a href="#类生命周期" class="headerlink" title="类生命周期"></a>类生命周期</h4><p>一个静态的类从被加载到内存，变成动态类，在到被卸载为止，它的生命周期是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">加载--&gt; 链接--&gt; 初始化--&gt; 使用--&gt; 卸载</span><br><span class="line"></span><br><span class="line">链接包含：</span><br><span class="line">验证--&gt; 准备--&gt; 解析</span><br></pre></td></tr></table></figure>
+<p>类的加载必须按照这个过程来加载，除了解析阶段，有可能发生在初始化阶段之后。</p>
+<h4 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h4><p>JDK 包含类 3 中类加载器。分别是 BootStrap ClassLoader 启动类加载器，Extension ClassLoader 扩展类加载器和 Application ClassLoader 应用程序类加载器，启动类类加载器是用 C++ 实现的，作为 JVM 的一部分，而其他类加载器是用 Java 来实现的，都继承自 java.lang.ClassLoader。</p>
+<h5 id="双亲委任"><a href="#双亲委任" class="headerlink" title="双亲委任"></a>双亲委任</h5><h6 id="类加载器层级"><a href="#类加载器层级" class="headerlink" title="类加载器层级"></a>类加载器层级</h6><p>自定义类加载器 &gt; 应用程序类加载器 &gt; 扩展类加载器 &gt; 启动类加载器</p>
+<p>除了启动类加载器之外，每个类都有父类加载器。</p>
+<p>双亲委任大致可以理解为：当一个加载器加载一个类时，首先交给它的父类加载器加载此类路径下的类，如果父类找不到，在交给它自己的父类进行加载，如果找到了，则加载此类，如果没有找到，则会告知子类信息，子类才会尝试自己加载。也就是说，如果想自己写一个 <code>java.lang.String</code> 类来代替 jdk 本身的 <code>String</code> 类是不可以的，就算自己写了类加载器也是不能被加载成功的。</p>
+<h5 id="运行时数据区"><a href="#运行时数据区" class="headerlink" title="运行时数据区"></a>运行时数据区</h5><p>简单来说，运行时数据区就是 Java 程序运行时的数据在内存中的存放空间。主要包含 方法区、堆、虚拟机栈、本地方法栈、程序计数器。</p>
+<p>其中方法区和堆是所有线程共享的，而虚拟机栈、本地方法栈和程序计数器是线程私有的。</p>
+<h6 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h6><p> <code>.java</code> 文件被编译为  <code>.class</code> 文件后，被类加载器加载到内存需要存放到一个内存区域，这个区域就是方法区，方法区主要存放一些不经常改变的数据，常量，静态变量等都存放在这个区域。就像数据表的建表语句，规定了这张表就应该有哪些属性，这些属性应该是什么类型。当我们 new 一个对象时，就像给这张表添加一条数据，内容可以不一样，当时必须要遵循这些属性的格式。当方法区没有足够的空间时会抛 OutOfMemoryError 异常。</p>
+<h6 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h6><p>堆是 Java 虚拟机管理的内存中最大的一块，这块区域被所有线程共享，这块区域主要用来存放对象，在内存不足的情况下会抛出 OutOfMemoryError 异常。</p>
+<blockquote>
+<p>堆是所有线程共享的，用来存放共有的资源</p>
+</blockquote>
+<h6 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h6><p>这块区域主要记录当前线程的运行指令的记录。在 cpu 发生线程切换时，程序计数器可以记录当前线程执行的位置，等切回来时可以正确执行。程序计数器是线程私有的，每个线程都拥有一个自己的计数器。</p>
+<h6 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h6><p>每当一个线程被启动时，Java 虚拟机会创建一个 Java 栈，栈的单位为栈帧，栈可以分为基本类型变量区，执行环境上下文，操作指令几部分。栈的数据是当前栈私有的，其他栈不能访问。</p>
+<blockquote>
+<p>栈是线程私有的，简单来说就是用来执行逻辑的地方</p>
+</blockquote>
+<h6 id="JIT"><a href="#JIT" class="headerlink" title="JIT"></a>JIT</h6><blockquote>
+<p>即时编译，指将一些经常使用的字节码（循环等） 编译成机器本身的字节码来提高运行速度。</p>
+</blockquote>
+<h6 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">toWork</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;how interesting&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        User user = <span class="keyword">new</span> User();</span><br><span class="line">        user.toWork();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里大致描述下 jvm 执行流程：</p>
+<ol>
+<li>首先在方法区寻找 User 类信息。</li>
+<li>如果没有找到的话，通过类加载器加载 User 类到方法区。</li>
+<li>在堆上 new 一个User 实例，并把此实例的引用添加到主线程的调用栈中。</li>
+<li>执行 user.work() 时，jvm 先根据 user 引用找到堆上对应的对象</li>
+<li>根据堆上实例对象持有的方法区引用，获取到方法区 User 类信息，获取到 work() 方法的字节码，执行此方法的代码。</li>
+</ol>
+<h4 id="Java-垃圾回收"><a href="#Java-垃圾回收" class="headerlink" title="Java 垃圾回收"></a>Java 垃圾回收</h4><h5 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h5><ol>
+<li>标记-清除</li>
+</ol>
+<p>顾名思义，先标记在清除，第一个阶段，先标记需要清除的对象，在讲它们全部清除。这种算法存在 2 种不足，标记和清除的效率都不是很高，而且标记和清除之后很容易产生大量的不连续空间碎片。</p>
+<ol start="2">
+<li>复制算法</li>
+</ol>
+<p>复制算法会把内存分成2块，一块真正投入使用，当这块内存空间不足时，将还在存活的对象复制到另外一块内存中。标记清除算法最大的缺点是回收之后会产生大量空间碎片，而复制算法则不。但是这样在真正使用时只能使用一般的内存，对内存的使用率很低。</p>
+<ol start="3">
+<li>标记整理算法</li>
+</ol>
+<p>标记整理算法也是有2个阶段，先将还在存活的对象标记出来，然后将存活的对象复制到一端连续的空间，然后直接将边缘外的空间释放掉。</p>
+<h5 id="jvm-参数"><a href="#jvm-参数" class="headerlink" title="jvm 参数"></a>jvm 参数</h5><ol>
+<li>-Xms</li>
+</ol>
+<blockquote>
+<p>设置堆的最小空间大小</p>
+</blockquote>
+<ol start="2">
+<li>-Xmx</li>
+</ol>
+<blockquote>
+<p>设置堆的最大空间大小</p>
+</blockquote>
+<ol start="3">
+<li>-Xss</li>
+</ol>
+<blockquote>
+<p>设置每个线程栈大小</p>
+</blockquote>
+<ol start="4">
+<li>-XX:NewSize </li>
+</ol>
+<blockquote>
+<p>设置新生代最小空间大小</p>
+</blockquote>
+<ol start="5">
+<li>-XX:MaxNewSize</li>
+</ol>
+<blockquote>
+<p>设置新生代最大空间大小</p>
+</blockquote>
+<ol start="6">
+<li>-XX:PermSize</li>
+</ol>
+<blockquote>
+<p>设置永久代大小</p>
+</blockquote>
+<ol start="7">
+<li>-XX:MaxPermSize</li>
+</ol>
+<blockquote>
+<p>设置永久代最大空间大小</p>
+</blockquote>
+<p><strong>老年代空间大小=堆空间大小-年轻代最大空间大小</strong></p>
+<h5 id="垃圾回收器"><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h5><p>使用指定的垃圾回收器</p>
+<blockquote>
+<p>-XX:+Use&lt;垃圾回收器名字&gt;GC<br>-XX:+UseSerialGC</p>
+</blockquote>
+<h6 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h6><ol>
+<li><p>配置</p>
+<blockquote>
+<p>-XX:+UseSerialGC</p>
+</blockquote>
+</li>
+<li><p>工作方式</p>
+<blockquote>
+<p>它不仅在收集时使用单线程来完成工作，并且在新生代和老年代收集时都会出现 STW (stop the world)现象。</p>
+</blockquote>
+</li>
+<li><p>适用场景</p>
+<blockquote>
+<p>桌面应用</p>
+</blockquote>
+</li>
+</ol>
+<h6 id="ParNew-ParalleNew"><a href="#ParNew-ParalleNew" class="headerlink" title="ParNew (ParalleNew)"></a>ParNew (ParalleNew)</h6><ol>
+<li><p>配置</p>
+<blockquote>
+<p>-XX:+UseParNewGc</p>
+</blockquote>
+</li>
+<li><p>工作方式</p>
+<blockquote>
+<p>只针对新生代使用多线程，老年代还是单线程，收集过程中会出现 STW</p>
+</blockquote>
+</li>
+<li><p>使用场景</p>
+<blockquote>
+<p>server 新生代收集器</p>
+</blockquote>
+</li>
+</ol>
+<h6 id="Parallel-Scavenge-PS"><a href="#Parallel-Scavenge-PS" class="headerlink" title="Parallel Scavenge(PS)"></a>Parallel Scavenge(PS)</h6><ol>
+<li><p>配置</p>
+<blockquote>
+<p>-XX:+UseParallelGC</p>
+</blockquote>
+</li>
+<li><p>工作方式</p>
+<blockquote>
+<p>可控制吞吐量，所谓吞吐量 = 运行用户代码时间/（运行用户代码时间 + 垃圾收集时间）<br>高吞吐量可以提高 cpu 利用率，提高运算速度。</p>
+</blockquote>
+</li>
+<li><p>使用场景</p>
+<blockquote>
+<p>计算量比较小，用户交互不多的场景</p>
+</blockquote>
+</li>
+<li><p>参数</p>
+<blockquote>
+<p>-XX:MaxGCPauseMilis          最大垃圾收集停顿时间（大于0毫秒）<br>-XX:GCTimeRatio              吞吐量大小（0-100%）<br>-XX:+UseAdaptiveSizePolicy   内存调优委托虚拟机管理</p>
+</blockquote>
+</li>
+</ol>
+<h6 id="Parallel-Old"><a href="#Parallel-Old" class="headerlink" title="Parallel Old"></a>Parallel Old</h6><ol>
+<li><p>配置</p>
+<blockquote>
+<p>-XX:+UseParallelOldGC</p>
+</blockquote>
+</li>
+<li><p>工作方式</p>
+<blockquote>
+<p>Parallel Scavenge 收集器老年代收集版本。多线程完成工作，采用了“标记-整理” 算法。</p>
+</blockquote>
+</li>
+<li><p>使用场景</p>
+</li>
+</ol>
+<blockquote>
+<p>桌面应用场景</p>
+</blockquote>
+<h6 id="Concurrent-Mark-Sweep（CMS）"><a href="#Concurrent-Mark-Sweep（CMS）" class="headerlink" title="Concurrent Mark Sweep（CMS）"></a>Concurrent Mark Sweep（CMS）</h6><ol>
+<li><p>配置</p>
+<blockquote>
+<p>-XX:UseConcMarkSweepGC</p>
+</blockquote>
+</li>
+<li><p>工作方式</p>
+<blockquote>
+<p>基于“标记-清除”算法，在整个过程中都是并发进行的，以获取最短回收停顿时间为目标，整个过程分为4步：初始标记，并发标记，重新标记，并发清除。</p>
+</blockquote>
+</li>
+<li><p>使用场景</p>
+<blockquote>
+<p>互联网应用服务端</p>
+</blockquote>
+</li>
+</ol>
+<h6 id="G1"><a href="#G1" class="headerlink" title="G1"></a>G1</h6><ol>
+<li>配置<blockquote>
+<p>-XX:+UseG1GC</p>
+</blockquote>
+</li>
+<li>工作方式</li>
+</ol>
+<blockquote>
+<p>G1算法将堆划分为若干和区域，但它仍然属于分代收集器，这些区域一部分包含新生代，新生代垃圾收集依然采用暂停所有线程的方式，将存货对象拷贝到老年代或者 Survivor 空间。<br>老年代也分成很多区域，G1 收集器通过将对象从一个区域复制到另外一个区域，完成了清理工作，这就意味着在正常处理过程中，G1完成了堆的压缩（至少是部分堆的压缩） ，这样就不会存在 CMS 内存碎片问题了。<br>G1 有两种 GC 模式（都是 STW）<br>Yong GC 和 Mixed GC</p>
+</blockquote>
+<h5 id="JVM-内存分配与回收策略"><a href="#JVM-内存分配与回收策略" class="headerlink" title="JVM 内存分配与回收策略"></a>JVM 内存分配与回收策略</h5><ol>
+<li><p>大对象直接进入老年代</p>
+<blockquote>
+<p>大对象是指需要大量连续内存空间的 Java 对象，典型的是很长的字符串或者大数组。<br>-XX:PretenureSizeThreshold 可以使大于这个值的对象直接在老年代分配。这样会避免在 Eden 区以及两个 Survivor 区之间发生大量内存复制。</p>
+</blockquote>
+</li>
+<li><p>长期存货的对象将进入老年代</p>
+<blockquote>
+<p>对象在 Survivor 区中撑过一次 MinorGC，年龄就增加 1 岁，当它的年龄增加到一定值（默认 15），就会将它复制到老年代中。</p>
+</blockquote>
+</li>
+<li><p>动态对象年龄判定</p>
+<blockquote>
+<p>如果在 Survivor 空间中相同年龄所有对象的大小总和大于 Survivor 空间的一半，年龄大于或等于该年龄的对象就可以直接进入老年代，不需要等到 MaxTenuringThreshold 中要求的年龄。</p>
+</blockquote>
+</li>
+<li><p>空间分配担保</p>
+<blockquote>
+<p>HandlePromotionFailure 检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小，如果大于该值，将尝试进行一次 Minor GC，如果小于，或者设置不允许冒险，这是就会改为进行一次 FullGC.</p>
+</blockquote>
+</li>
+</ol>
+<h5 id="字节码执行引擎"><a href="#字节码执行引擎" class="headerlink" title="字节码执行引擎"></a>字节码执行引擎</h5><ol>
+<li>输入字节码文件</li>
+<li>处理过程是字节码解析的过程</li>
+<li>输出的是执行结果</li>
+</ol>
+<p>虚拟机的执行引擎则是由自己实现的，因此可以自行指定指令集与执行引擎的结构体系，并且能够执行哪些不被硬件直接支持的指令集格式。</p>
+<h6 id="栈帧"><a href="#栈帧" class="headerlink" title="栈帧"></a>栈帧</h6><p>每个方法从调用开始至执行完成都会对应从入栈到出栈的过程，栈帧中包含：</p>
+<ol>
+<li>局部变量表</li>
+<li>操作数栈</li>
+<li>动态链接</li>
+<li>返回地址</li>
+<li>…</li>
+</ol>
+<p>一个栈帧需要分配多少内存，在编译的时候已经确定，不会受到程序运行期变量数据的影响，而仅仅取决于具体的虚拟机实现。</p>
+<p>局部变量表</p>
+<p>局部变量表是一组变量存储空间，用于存放方法参数和方法内部定义的局部变量，在 Java 程序编译为 class 文件时，就在 code 属性的 max_local 数据项中确定了该方法所需要分配的局部变量表最大容量。</p>
+<blockquote>
+<p>一个 Slot 可以存放一个 32 位以内的数据类型，对于 64 位的数据类型，虚拟机会以高位对齐的方式为其分配两个连续的 Slot 空间。</p>
+</blockquote>
+<p>操作数栈</p>
+<p>操作数栈是一个后入先出栈，和局部变量一样，操作数栈最大深度也在编译的时候写入到 code 属性的 max_stacks 数据项中。</p>
+<p>方法返回地址</p>
+<p>当一个方法开始执行后，只有两种方式可以推出这个方法。</p>
+<ol>
+<li>执行引擎遇到任意一个方法返回的字节码指令。</li>
+<li>在方法执行过程中遇到了异常，并没有在方法体内得到处理。</li>
+</ol>
+<p>方法退出的过程实际上就是等同于把当前栈帧出栈</p>
+<ol>
+<li>恢复上层方法的局部变量表和操作数栈</li>
+<li>把返回值（若存在）压入调用者栈帧的操作数栈中</li>
+<li>调正 PC 计数器的值以指向方法调用指令后面的一条指令等</li>
+</ol>
+<p>方法调用</p>
+<p>方法调用并不等于方法执行，该阶段唯一的任务就是确定哪一个方法，方法在实际运行时内存中的入口地址需要在类加载期间，甚至到运行期间才能确定。</p>
+<p>虚方法</p>
+<p>可以被复写的方法都可以称作虚方法，虚方法不需要做特殊声明，可以理解为除了 static，final，private 修饰的都是虚方法。</p>
+<p>虚拟机动态分派机制</p>
+<p>虚方法表（vtable，invokeinterface 执行时调用到 itable）使用虚方法表索引来代替元数据查找来提高性能，虚方法表中存放着各个方法的实际入口地址。</p>
+<ol>
+<li>如果方法在子类中没有被重写，那子类虚方法表里面的地址入口和父类相同方法的地址入口是一致的，都是指向父类的实现入口。</li>
+<li>如果子类中重写了这个方法，子类方法表中的地址将会替换为指向子类实现版本的入口地址。</li>
+</ol>
+<h5 id="JDK-性能监控与故障处理工具"><a href="#JDK-性能监控与故障处理工具" class="headerlink" title="JDK 性能监控与故障处理工具"></a>JDK 性能监控与故障处理工具</h5><p>jdk 中自带的用于监视虚拟机和故障处理工具</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>作用描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>jps</td>
+<td>JVM 进程状态工具（JVM Process Status Tool），用于显示目标系统上 JVM 的 Java 进程信息</td>
+</tr>
+<tr>
+<td>jstat</td>
+<td>JVM 统计监测工具（JVM Statistics Monitoring Tool），用于监控并显示 JVM 性能统计信息</td>
+</tr>
+<tr>
+<td>jinfo</td>
+<td>Java 配置信息工具（Java Configuration Information），用于打印指定 Java 进程，核心文件或远程调试服务器的配置信息。</td>
+</tr>
+<tr>
+<td>jhat</td>
+<td>Java 堆分析工具（Java Heap Analysis Tool），用于分析 Java 堆内存中的对象信息</td>
+</tr>
+<tr>
+<td>jmap</td>
+<td>Java 内存映射工具（Java Memory Map），用于打印指定 Java 进程，核心文件或远程调试服务器共享对象内存映射或堆内存细节</td>
+</tr>
+<tr>
+<td>jstack</td>
+<td>Java 堆栈跟踪工具，主要用于打印指定 Java 进程，核心文件或远程调试服务器的 Java 线程的堆栈跟踪信息</td>
+</tr>
+<tr>
+<td>jmc</td>
+<td>Java 任务控制工具（Java Misson Control），主要用于 JVM 的生产时间监测，分析，诊断</td>
+</tr>
+<tr>
+<td>jvisualvm</td>
+<td>JVM 监测，故障排除，分析工具，主要以图形化界面的方式梯控与指定虚拟机的 Java 应用程序的详细信息</td>
+</tr>
+<tr>
+<td>jconsole</td>
+<td>图形化用户界面监控工具，主要用于监测并显示运行于 Java 平台上的应用程序的性能和资源占用等信息</td>
+</tr>
+</tbody></table>
+<h6 id="jps"><a href="#jps" class="headerlink" title="jps"></a>jps</h6><ol>
+<li>功能</li>
+</ol>
+<blockquote>
+<p>显示正在运行的虚拟机进程</p>
+</blockquote>
+<ol start="2">
+<li>参数</li>
+</ol>
+<blockquote>
+<p>-q    只显示 LVMID，省略主类信息（LVMID: 本地虚拟机进程唯一编号）<br>-l    显示虚拟机启动进程时传递给 main() 的参数<br>-m    显示类全面，如果是 jar 包显示 jar 路径<br>-v    显示虚拟机启动时候的 JVM 参数<br>3. 用法</p>
+</blockquote>
+<blockquote>
+<p>jps -l</p>
+</blockquote>
+<h6 id="jstat"><a href="#jstat" class="headerlink" title="jstat"></a>jstat</h6><ol>
+<li><p>功能</p>
+<blockquote>
+<p>显示本地或者远程虚拟机进程中的类装载，内存，垃圾收集，JIT 编译等运行数据，是定位虚拟机性能问题的首选工具。</p>
+</blockquote>
+</li>
+<li><p>参数</p>
+</li>
+</ol>
+<blockquote>
+<p>-class：类加载，卸载数量，总空间及类装载所耗费时间<br>-compiler：显示 JIT 编译器编译过的方法，耗时等信息<br>-gc：统计 Java 堆，包括 Eden,Survior,老年代，永久代的容量，已用空间，GC时间等信息。<br>-gccapacity：显示 Java 堆各个区域使用到的最大，最小空间<br>-gcutil：显示已使用空间占总空间的百分比<br>-gccause：垃圾收集统计概述，和 -gcutil 相同，附件最近两次垃圾回收时间的原因<br>-gcnew：新生代行为统计<br>-gcnewcapacity：兴盛带使用到的最大，最小空间统计<br>-gcold：统计老年代 GC 状况<br>-gcoldcapacity：年老代行为统计，主要关注使用最大，最小空间<br>-gcpermcapacity：显示永久代使用到的最大，最小空间（-gcmetacapacity）<br>printcompilation：显示已经被 JIT 编译的方法</p>
+</blockquote>
+<ol start="3">
+<li>用法</li>
+</ol>
+<blockquote>
+<p>jstat -gccause vmid  [时间间隔/毫秒]</p>
+</blockquote>
+<h6 id="jinfo"><a href="#jinfo" class="headerlink" title="jinfo"></a>jinfo</h6><ol>
+<li><p>功能</p>
+<blockquote>
+<p>可以用来查看正在运行的 Java 应用程序的扩展参数，甚至支持在运行时，修改部分参数</p>
+</blockquote>
+</li>
+<li><p>参数</p>
+</li>
+</ol>
+<blockquote>
+<p>-flag <name> pid:打印指定 JVM 的参数值。<br>-flag [+|-]<name> pid：设置指定 JVM 参数值<br>-flag <name> =<value> pid :设置指定 JVM 参数值</value></name></name></name></p>
+</blockquote>
+<ol start="3">
+<li>用法</li>
+</ol>
+<blockquote>
+<p>jinfo -flag +PrintGC pid<br>jinfo -flag +PrintGCDetails pid<br>jinfo -flag +PrintGCTimestamp pid</p>
+</blockquote>
+<blockquote>
+<p>jinfo -flag -PrintGC pid<br>jinfo -flag -PrintGCDetails pid<br>jinfo -flag -PrintGCTimestamp pid</p>
+</blockquote>
+<h6 id="jmap"><a href="#jmap" class="headerlink" title="jmap"></a>jmap</h6><ol>
+<li>功能</li>
+</ol>
+<blockquote>
+<p>用于生产 heap dump 文件，如果不适用这个命令，还可以使用 -XX:+HeapDumpOnOutOfMemoryError 参数来让虚拟机出现 OOM 的时候自动生产 dump 文件。jmap 不仅能生成 dump 文件，还可以查询 finalize 执行队列，Java 堆和永久带的详细信息，如当前使用率，当前使用的是那种收集器。</p>
+</blockquote>
+<ol start="2">
+<li>参数</li>
+</ol>
+<blockquote>
+<p>-dump：生成 Java 堆快照。格式：-dump:[live,]format=b,file=<filename>,live 为是否只生成存活的对象<br>-histo：显示堆中对象的统计信息，包括类，有都少个实例，合计容量等<br>-permstat：显示永久代内存状态。在 Linux 下有效<br>-heap：显示堆详细信息，如使用哪种回收器，参数配置，分代状况等。在 Linux 下有效<br>-finalizerinfo：显示在 F-Queue 中等待 Finalizer 线程执行 finalize 方法对象。 在 Linux 下有效。<br>-F：当虚拟机进程多 -dump 没有响应时，可以使用这个选项强制生成 dump 快照。在 Linux 下有效。</filename></p>
+</blockquote>
+<ol start="3">
+<li>用法<blockquote>
+<p>jmap -dump vmid</p>
+</blockquote>
+</li>
+</ol>
+<h6 id="jstack"><a href="#jstack" class="headerlink" title="jstack"></a>jstack</h6><ol>
+<li><p>功能</p>
+<blockquote>
+<p>用于生成虚拟机当前时刻的线程快照，一边可以进一步定位线程出现长时间停顿原因，如线程间死锁，死循环，清酒外部资源导致的长时间等待等。</p>
+</blockquote>
+</li>
+<li><p>参数</p>
+</li>
+</ol>
+<blockquote>
+<p>-F：输出请求不被响应时，强制输出线程堆栈信息<br>-l：除堆栈信息外，附加显示关于锁 的信息<br>-m：如果涉及本地方法调用，则显示C/C++ 的堆栈</p>
+</blockquote>
+<ol start="3">
+<li>用法</li>
+</ol>
+<blockquote>
+<p>jstack -l vmid<br>查看堆情况：jmap -heap pid </p>
+</blockquote>
+<hr>
+<center>很平凡，很认真</center>
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：jvm-类加载</li>
+        <li>本文作者：jihe</li>
+        <li>创建时间：2019-08-04 00:57:25</li>
+        <li>
+            本文链接：https://oliverschen.github.io/2019/08/04/jvm-类加载机制/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/09/05/RabbitMQ%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">RabbitMQ安装和使用</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/07/27/Java8%E6%96%B0%E7%89%B9%E6%80%A7/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Java8新特性</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">jihe</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

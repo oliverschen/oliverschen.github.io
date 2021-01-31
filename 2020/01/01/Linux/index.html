@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="海贼王">
+    <meta name="description" content="一直在路上">
+    <meta name="author" content="jihe">
+    
+    <title>
+        
+            Linux-常用命令 |
+        
+        jihe
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/logo.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"oliverschen.github.io","root":"/","language":"zh-Hans","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.0"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days age","week":"%s weeks age","month":"%s months age","year":"%s years age"};
+  </script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                jihe
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Linux-常用命令</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">jihe</span>
+                        
+                            <span class="author-label">Engineer</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2020-01-01 23:17:14
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Linux/">Linux</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Linux/">Linux</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.1k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>4 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p><img lazyload src="/images/loading.svg" data-src="/linux.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
+<p>Linux 是服务端最常用的操作系统，也是范围最广的，都是通过命令来交互的，记录些常用命令，这里会一直追加，年底了，回家的诱惑越来越强。</p>
+<a id="more"></a>
+
+<h4 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h4><ol>
+<li>远程复制</li>
+</ol>
+<p> <strong>scp</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 复制文件到远程</span></span><br><span class="line">scp 文件 192.168.31.107:/usr/<span class="built_in">local</span>/</span><br></pre></td></tr></table></figure>
+<p>静默复制目录到远程主机</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -r 表示目录，-q 静默复制</span></span><br><span class="line">scp -rq /目录名 192.168.31.107:/usr/<span class="built_in">local</span>/</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>权限</li>
+</ol>
+<p>说明</p>
+<blockquote>
+<p>使用命令 ll 就可以清晰的查看 Linux 文件目录权限。</p>
+</blockquote>
+<p><img lazyload src="/images/loading.svg" data-src="/Linux-%E6%9D%83%E9%99%90.png" alt="文件目录权限"></p>
+<p>具体的命令执行后：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">drwxr-xr-x. 2 root root  4096 May 11  2019 bin</span><br><span class="line">drwxr-xr-x. 2 root root  4096 May 11  2019 etc</span><br><span class="line">drwxr-xr-x. 2 root root  4096 May 11  2019 games</span><br><span class="line">-rw-r--r--. 1 root root 13871 Dec 16 11:38 jihe.sh</span><br><span class="line">drwxr-xr-x. 2 root root  4096 May 11  2019 include</span><br><span class="line">drwxr-xr-x. 2 root root  4096 May 11  2019 lib</span><br></pre></td></tr></table></figure>
+<p>比较有意思的是，以上 <code>rwx</code> 表示的权限也可以用数字来描述：<br>r=4,w=2,x=1；如果想设置可读可执行：r + x = 5</p>
+<p>设置权限</p>
+<p><strong>chmod</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给当前用户设置可执行权限</span></span><br><span class="line">chmod +x jihe.sh</span><br><span class="line"><span class="comment"># 给所有用户最大权限（可读可写可执行）</span></span><br><span class="line">chmod 777 jihe.sh</span><br><span class="line"><span class="comment"># 递归添加权限</span></span><br><span class="line">chmod -R 777 bin</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>查看文件</li>
+</ol>
+<p><strong>cat</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 文件合并 - 把 file1 和 file2 合并输出到 file3</span></span><br><span class="line">cat file1 file2 &gt; file3</span><br><span class="line"><span class="comment"># 显示行号</span></span><br><span class="line">cat -b file1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>more</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 分页显示大文件 - 空格下一页</span></span><br><span class="line">more jihe.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>解压</li>
+</ol>
+<p><strong>tar</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 压缩 - 把目录下所有 txt 文件打包</span></span><br><span class="line">tar -zcvf jihe.tar.gz *.txt</span><br><span class="line"><span class="comment"># 解压</span></span><br><span class="line">tar -zxvf jihe.tar.gz</span><br></pre></td></tr></table></figure>
+<p>参数说明</p>
+<blockquote>
+<p>-z 是否使用 gzip 解压缩<br>-c 创建压缩文件（create）<br>-x 解压压缩文件<br>-v 压缩过程显示文件<br>-f 使用档案名，此参数为最后一个参数，后面只能接档案名</p>
+</blockquote>
+<ol start="4">
+<li>文件大小</li>
+</ol>
+<p><strong>du</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 全部目录及其子目录每个档案所占磁盘空间</span></span><br><span class="line">du -a </span><br><span class="line"><span class="comment"># 全部目录及其子目录所占磁盘空间</span></span><br><span class="line">du -h </span><br><span class="line"><span class="comment"># 对应目录及其子目录所占空间</span></span><br><span class="line">du -ch 目录</span><br><span class="line"><span class="comment"># 总大小</span></span><br><span class="line">du -sh</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>管道</li>
+</ol>
+<p><strong>|</strong></p>
+<p>管道命令使用 <code>|</code> 作为界定符号，管道命令需要结合其他命令一块使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输出 jihe.txt 中包含 abc 的行。（区分大小写，包含空格必须加引号 &quot;a bc&quot;）</span></span><br><span class="line">cat jihe.txt | grep abc</span><br><span class="line"><span class="comment"># 输出 jihe.txt 文件中包含 abc 的行（忽略大小写）</span></span><br><span class="line">cat jihe.txt | grep -i abc</span><br><span class="line"><span class="comment"># 输出 jihe.txt 文件中不包含 abc 的行</span></span><br><span class="line">cat jihe.txt | grep -v abc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>查看</li>
+</ol>
+<p><strong>which</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查找 $PATH 设置命令及安装文件目录所在位置</span></span><br><span class="line"><span class="built_in">which</span> ll</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>输出及显示</li>
+</ol>
+<p><strong>echo</strong><br>输出内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输出文本，一般有特殊字符建议加双引号</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello world&quot;</span></span><br><span class="line"><span class="comment"># 输出环境变量</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$JAVA_HOME</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>export</strong></p>
+<p>设置或者显示环境变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出当前黄静变量值</span></span><br><span class="line"><span class="built_in">export</span> -p</span><br><span class="line"><span class="comment"># 设置临时环境变量</span></span><br><span class="line"><span class="built_in">export</span>  变量（<span class="variable">$JAVA_HOME</span>）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>yum<br>应用包管理，类似安卓平台上的安卓应用市场，iOS 平台 AppStore 等应用中心</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装软件 -y 忽略在安装中确认的操作，直接默认 yes</span></span><br><span class="line">yum install `-y` 包名</span><br><span class="line"><span class="comment"># 升级</span></span><br><span class="line">yum update 报名</span><br><span class="line"><span class="comment"># 删除</span></span><br><span class="line">yum remove 报名</span><br><span class="line"><span class="comment"># 清除缓存</span></span><br><span class="line">yum clean all</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="9">
+<li>操作历史</li>
+</ol>
+<p><strong>history</strong><br>保留了最近执行的命令记录，默认保留 1000 条<br>历史清单从 0 开始编号到最大值</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示最近 n 条命令</span></span><br><span class="line"><span class="built_in">history</span> 10</span><br><span class="line"><span class="comment"># 清除所有的历史记录</span></span><br><span class="line"><span class="built_in">history</span> -c</span><br><span class="line"><span class="comment"># 保存历史记录到文本</span></span><br><span class="line"><span class="built_in">history</span> -w jihe.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="高级功能"><a href="#高级功能" class="headerlink" title="高级功能"></a>高级功能</h4><ol>
+<li>系统状态</li>
+</ol>
+<p><strong>ps</strong></p>
+<p>查看处于活动状态的服务进程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep 进程名[tomcat]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看端口</span></span><br><span class="line">ss -ntl</span><br></pre></td></tr></table></figure>
+<p><strong>netstat</strong></p>
+<p>查看端口号等信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -anp | grep 端口号[8080]</span><br></pre></td></tr></table></figure>
+<p><strong>top</strong><br>动态显示当前系统运行情况，类似 windows 中任务管理器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示命令执行的全路径</span></span><br><span class="line">top -c </span><br><span class="line"><span class="comment"># 指定用户名</span></span><br><span class="line">top -u</span><br><span class="line"><span class="comment"># 指定进程</span></span><br><span class="line">top -p </span><br><span class="line"><span class="comment"># 按进程的 CPU 使用率排序</span></span><br><span class="line">top P</span><br><span class="line"><span class="comment"># 按进程的内存使用率排序</span></span><br><span class="line">top M</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>df</strong><br>显示磁盘使用率</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h</span><br></pre></td></tr></table></figure>
+<p><strong>who</strong><br>显示当前登录用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">who</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>uname</strong><br>查看系统信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -a</span><br></pre></td></tr></table></figure>
+<p><strong>free</strong><br>查看内存和交换空间使用情况</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 单个命令显示的是字节，以 M/G 为单位显示</span></span><br><span class="line">free -m/g</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>关机重启</li>
+</ol>
+<p><strong>reboot</strong><br>重启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 立刻重启</span></span><br><span class="line">reboot -h now </span><br></pre></td></tr></table></figure>
+<p><strong>poweroff</strong></p>
+<p>关机</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">poweroff</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>查看系统</li>
+</ol>
+<p><strong>lscpu</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看系统 cpu 信息</span></span><br><span class="line">lscpu</span><br></pre></td></tr></table></figure>
+<hr>
+<center>越来越好</center>
+
+
+
+
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：Linux-常用命令</li>
+        <li>本文作者：jihe</li>
+        <li>创建时间：2020-01-01 23:17:14</li>
+        <li>
+            本文链接：https://oliverschen.github.io/2020/01/01/Linux/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/01/03/Linux-shell/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Linux-shell</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/12/20/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1-un/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">分布式事务</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">jihe</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

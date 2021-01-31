@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="海贼王">
+    <meta name="description" content="一直在路上">
+    <meta name="author" content="jihe">
+    
+    <title>
+        
+            jvm-class文件结构 |
+        
+        jihe
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/logo.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"oliverschen.github.io","root":"/","language":"zh-Hans","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.0"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days age","week":"%s weeks age","month":"%s months age","year":"%s years age"};
+  </script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                jihe
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">jvm-class文件结构</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">jihe</span>
+                        
+                            <span class="author-label">Engineer</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2019-05-05 20:36:37
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Java/">Java</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Java/">Java</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.8k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>7 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p><img lazyload src="/images/loading.svg" data-src="jvm-class%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/class.png"></p>
+<p>最近 manjaro 又更新挂了，算了，不折腾了，考虑真香 windows 了。（如果不忙的话还是很喜欢折腾的，但是最近手头也比较忙就先不换回去了）今年是准备偏向底层的学习，现在新技术层出不穷，让人眼花缭乱。有时候会很浮躁，担心学到的东西过不了多久就会被抛弃。也是瑟瑟发抖。不过看了很多大佬写的东西，都会有一个结论，就是偏底层技术永远是新技术的支撑，那些枯燥乏味的知识才是生命力最强的技术。</p>
+<a id="more"></a>
+
+<p>我们都知道 Java 程序要运行的话，需要编译然后才能运行。Java 文件经过编译器编译之后会生产 class 文件，一般打开都是乱码的，建议使用 notepad++ 插件 HEX-editor 来进行查看字节码文件，打开文件就会看到一堆十六进制的代码，不过这样一堆代码也是有规可循的。</p>
+<h4 id="文件基本组成"><a href="#文件基本组成" class="headerlink" title="文件基本组成"></a>文件基本组成</h4><h5 id="Java-魔数"><a href="#Java-魔数" class="headerlink" title="Java 魔数"></a>Java 魔数</h5><p>这个相信学习 Java 的都会知道，JVM 如何知道这个文件是 class 文件呢，就是根据文件最开头的 4 个字节来判断的，这 4 个字节很有意思，分别是 <code>ca fe ba be</code> 咖啡贝比，都是十六进制数组成的，不知道当年 Java 之父想到这个时是多开心的…。当然，验证完是一个字节码文件之后还会验证很多东西，比如版本，全限定名，常量等等。否则会抛异常。</p>
+<h5 id="主次版本号"><a href="#主次版本号" class="headerlink" title="主次版本号"></a>主次版本号</h5><p>跟在魔数后面的就是 Java 的 主次版本号，Java 语言都是向下兼容的，如果低版本跑在高版本的 JVM 就会抛错处出来。</p>
+<h5 id="常量池计数器"><a href="#常量池计数器" class="headerlink" title="常量池计数器"></a>常量池计数器</h5><p>在版本号后面会有 2 个字节的计数器，顾名思义，是用来记录当前 class 常量池大小计数器。</p>
+<h5 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h5><p>常量池可以理解为整个文件的 <code>元数据</code>，就像是一个文件，文件名叫什么，什么时候创建的，文件多大，文件类型是什么。常量池包含了类的属性，方法，接口等一些类的描述信息。</p>
+<hr>
+<p>以上就是对 class 文件基础信息的简单总结，这个会持续更新，我也在学习中，希望大家能在使用 Java 时，可以知其然，并知其所以然。（如果有问题，大佬们请多多指正）</p>
+<hr>
+<h4 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h4><h5 id="java-文件"><a href="#java-文件" class="headerlink" title=".java 文件"></a>.java 文件</h5><p>我写了一个很简单的类，来大概分析下 class 文件的对应关系。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassStructure</span> <span class="keyword">extends</span> <span class="title">Thread</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> a = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> i + a;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            i = <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            a = <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先使用 <code>javac ClassStructure.java</code> 编译文件，正常情况下会生成一个 ClassStructure.class 文件，然后使用  <code>javap -v ClassStructure.class</code> 命令查看文件信息，会生成下面的内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">G:\jvm\src\main\java\com\jihe\jvm\<span class="built_in">test</span>&gt;javap -v ClassStructure.class</span><br><span class="line">Classfile /G:/jvm/src/main/java/com/jihe/jvm/<span class="built_in">test</span>/ClassStructure.class</span><br><span class="line">  Last modified 2019-5-21; size 617 bytes</span><br><span class="line">  MD5 checksum e664b24bf12decb3e4ff2dbcf2857a55</span><br><span class="line">  Compiled from <span class="string">&quot;ClassStructure.java&quot;</span></span><br><span class="line">public class com.jihe.jvm.test.ClassStructure extends java.lang.Thread implements java.io.Serializable</span><br><span class="line">  minor version: 0</span><br><span class="line">  major version: 52</span><br><span class="line">  flags: ACC_PUBLIC, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">   <span class="comment">#1 = Methodref          #6.#24         // java/lang/Thread.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">   <span class="comment">#2 = Fieldref           #5.#25         // com/jihe/jvm/test/ClassStructure.i:I</span></span><br><span class="line">   <span class="comment">#3 = Fieldref           #5.#26         // com/jihe/jvm/test/ClassStructure.a:I</span></span><br><span class="line">   <span class="comment">#4 = Class              #27            // java/lang/Exception</span></span><br><span class="line">   <span class="comment">#5 = Class              #28            // com/jihe/jvm/test/ClassStructure</span></span><br><span class="line">   <span class="comment">#6 = Class              #29            // java/lang/Thread</span></span><br><span class="line">   <span class="comment">#7 = Class              #30            // java/io/Serializable</span></span><br><span class="line">   <span class="comment">#8 = Utf8               i</span></span><br><span class="line">   <span class="comment">#9 = Utf8               I</span></span><br><span class="line">  <span class="comment">#10 = Utf8               a</span></span><br><span class="line">  <span class="comment">#11 = Utf8               &lt;init&gt;</span></span><br><span class="line">  <span class="comment">#12 = Utf8               ()V</span></span><br><span class="line">  <span class="comment">#13 = Utf8               Code</span></span><br><span class="line">  <span class="comment">#14 = Utf8               LineNumberTable</span></span><br><span class="line">  <span class="comment">#15 = Utf8               inc</span></span><br><span class="line">  <span class="comment">#16 = Utf8               add</span></span><br><span class="line">  <span class="comment">#17 = Utf8               ()I</span></span><br><span class="line">  <span class="comment">#18 = Utf8               test</span></span><br><span class="line">  <span class="comment">#19 = Utf8               StackMapTable</span></span><br><span class="line">  <span class="comment">#20 = Class              #27            // java/lang/Exception</span></span><br><span class="line">  <span class="comment">#21 = Utf8               &lt;clinit&gt;</span></span><br><span class="line">  <span class="comment">#22 = Utf8               SourceFile</span></span><br><span class="line">  <span class="comment">#23 = Utf8               ClassStructure.java</span></span><br><span class="line">  <span class="comment">#24 = NameAndType        #11:#12        // &quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">  <span class="comment">#25 = NameAndType        #8:#9          // i:I</span></span><br><span class="line">  <span class="comment">#26 = NameAndType        #10:#9         // a:I</span></span><br><span class="line">  <span class="comment">#27 = Utf8               java/lang/Exception</span></span><br><span class="line">  <span class="comment">#28 = Utf8               com/jihe/jvm/test/ClassStructure</span></span><br><span class="line">  <span class="comment">#29 = Utf8               java/lang/Thread</span></span><br><span class="line">  <span class="comment">#30 = Utf8               java/io/Serializable</span></span><br><span class="line">&#123;</span><br><span class="line">  public com.jihe.jvm.test.ClassStructure();                   // 构造器</span><br><span class="line">    descriptor: ()                                             // 方法参数等描述</span><br><span class="line">    flags: ACC_PUBLIC                                          // 访问标志</span><br><span class="line">    Code:                                                         </span><br><span class="line">      stack=2, locals=1, args_size=1                         </span><br><span class="line">         0: aload_0</span><br><span class="line">         1: invokespecial <span class="comment">#1                  // Method java/lang/Thread.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">         4: aload_0</span><br><span class="line">         5: iconst_0</span><br><span class="line">         6: putfield      <span class="comment">#2                  // Field i:I</span></span><br><span class="line">         9: <span class="built_in">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 10: 0</span><br><span class="line">        line 12: 4</span><br><span class="line"></span><br><span class="line">  public void inc();</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=3, locals=1, args_size=1</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: dup</span><br><span class="line">         2: getfield      <span class="comment">#2                  // Field i:I</span></span><br><span class="line">         5: iconst_1</span><br><span class="line">         6: iadd</span><br><span class="line">         7: putfield      <span class="comment">#2                  // Field i:I</span></span><br><span class="line">        10: <span class="built_in">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 16: 0</span><br><span class="line">        line 17: 10</span><br><span class="line"></span><br><span class="line">  public int add();</span><br><span class="line">    descriptor: ()I</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=2, locals=1, args_size=1</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: getfield      <span class="comment">#2                  // Field i:I</span></span><br><span class="line">         4: getstatic     <span class="comment">#3                  // Field a:I</span></span><br><span class="line">         7: iadd</span><br><span class="line">         8: ireturn</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 20: 0</span><br><span class="line"></span><br><span class="line">  public void <span class="built_in">test</span>();</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=2, locals=2, args_size=1</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: iconst_1</span><br><span class="line">         2: putfield      <span class="comment">#2                  // Field i:I</span></span><br><span class="line">         5: goto          13</span><br><span class="line">         8: astore_1</span><br><span class="line">         9: iconst_2</span><br><span class="line">        10: putstatic     <span class="comment">#3                  // Field a:I</span></span><br><span class="line">        13: <span class="built_in">return</span></span><br><span class="line">      Exception table:</span><br><span class="line">         from    to  target <span class="built_in">type</span></span><br><span class="line">             0     5     8   Class java/lang/Exception</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 25: 0</span><br><span class="line">        line 28: 5</span><br><span class="line">        line 26: 8</span><br><span class="line">        line 27: 9</span><br><span class="line">        line 29: 13</span><br><span class="line">      StackMapTable: number_of_entries = 2</span><br><span class="line">        frame_type = 72 /* same_locals_1_stack_item */</span><br><span class="line">          stack = [ class java/lang/Exception ]</span><br><span class="line">        frame_type = 4 /* same */</span><br><span class="line"></span><br><span class="line">  static &#123;&#125;;                                 // 静态变量初始化方法</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_STATIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=1, locals=0, args_size=0</span><br><span class="line">         0: iconst_1</span><br><span class="line">         1: putstatic     <span class="comment">#3                  // Field a:I</span></span><br><span class="line">         4: <span class="built_in">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 13: 0</span><br><span class="line">&#125;</span><br><span class="line">SourceFile: <span class="string">&quot;ClassStructure.java&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>其实在这里看的话已经很明了了，在一些代码后面还有相应的注释，我们都知道一个类对象创建是在调用其构造方法的时候，那先从构造器开始看起。<br>在我注释构造器的地方就是这个类的构造方法，入口从 <code>invokespecial #1</code> 开始，它后面指向了 <code>#1</code>， 在常量池 <code>Constant pool</code> 中找到 <code>#1</code>：</p>
+<table>
+<thead>
+<tr>
+<th>编号说明</th>
+<th>编号</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>#1 = Methodref</td>
+<td>#6.#24</td>
+<td>// java/lang/Thread.”<init>“:()V</init></td>
+</tr>
+<tr>
+<td>Methodref 方法的符号引用</td>
+<td>指向的常量池编号</td>
+<td>注释，#6 号和 #24 注释</td>
+</tr>
+</tbody></table>
+<p>在 class 中是按照编号的形式查找的，一级指向一级，常量池中保存了整个类的一些结构定义，相当于一个 <code>元数据</code> 部分。今年准备好好回归到底层部分，对 Java 底层部分进行比较深入的了解，字节码文件是熟悉的陌生人之一，所以 class 也是我学习的开始。</p>
+<h5 id="异常表"><a href="#异常表" class="headerlink" title="异常表"></a>异常表</h5><p>上面的类中 test 方法有一个异常处理。下面是代码部分</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">23</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">24</span>       <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">25</span>           i = <span class="number">1</span>;</span><br><span class="line"><span class="number">26</span>       &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"><span class="number">27</span>           a = <span class="number">2</span>;</span><br><span class="line"><span class="number">28</span>       &#125;</span><br><span class="line"><span class="number">29</span>   &#125;</span><br></pre></td></tr></table></figure>
+<p>使用 javap -v 命令可以看到如下异常表</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Exception table:</span><br><span class="line">         from    to  target type</span><br><span class="line">             <span class="number">0</span>     <span class="number">5</span>     <span class="number">8</span>   Class java/lang/Exception</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">25</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">28</span>: <span class="number">5</span></span><br><span class="line">        line <span class="number">26</span>: <span class="number">8</span></span><br><span class="line">        line <span class="number">27</span>: <span class="number">9</span></span><br><span class="line">        line <span class="number">29</span>: <span class="number">13</span></span><br></pre></td></tr></table></figure>
+<p>这个异常表对应到具体的代码大概是这样的：</p>
+<ol>
+<li>from 0: 对应下面的 LineNumberTable(LNT) ，<code>line 25: 0 </code> 0 对应的是源代码第 25 行，回到上面 Java 源代码可以看到我原本代码行数 <code>25           i = 1;</code> 行，就是异常开始。</li>
+<li>to 5: 这里和上面也是一样的，对应到 LNT 是 28 行，异常从 28 行出结束。</li>
+<li>target 8: 对应到具体源代码行是第 26 行，也就是具体的目标类型， Exception<br>上面就是异常表大概的对应关系。如果没有异常表将会导致 debug 断点时会出现问题，打印错误日志不会有行号。</li>
+</ol>
+<p>看到一句很有意思的话：you are my exception.</p>
+<hr>
+<center>不忘初心，方得始终</center>
+                
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：jvm-class文件结构</li>
+        <li>本文作者：jihe</li>
+        <li>创建时间：2019-05-05 20:36:37</li>
+        <li>
+            本文链接：https://oliverschen.github.io/2019/05/05/jvm-class文件结构/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/05/29/Java%E5%AF%B9%E6%8E%A5iOS%E5%86%85%E8%B4%AD%E4%BB%A5%E5%8F%8A%E5%90%84%E4%B8%AA%E6%B8%A0%E9%81%93%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Java对接iOS内购以及各个渠道微信支付</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/04/25/springcloud-hystrix/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">springcloud-hystrix(二)</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">jihe</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

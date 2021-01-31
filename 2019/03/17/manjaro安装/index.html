@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="海贼王">
+    <meta name="description" content="一直在路上">
+    <meta name="author" content="jihe">
+    
+    <title>
+        
+            manjaro安装 |
+        
+        jihe
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/logo.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"oliverschen.github.io","root":"/","language":"zh-Hans","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.0"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days age","week":"%s weeks age","month":"%s months age","year":"%s years age"};
+  </script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                jihe
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">manjaro安装</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">jihe</span>
+                        
+                            <span class="author-label">Engineer</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2019-03-17 17:52:15
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/OS/">OS</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/manjaro/">manjaro</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>971 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>4 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p><img lazyload src="/images/loading.svg" data-src="manjaro%E5%AE%89%E8%A3%85/manjaro.png"></p>
+<h3 id="manjaro-配置和软件安装"><a href="#manjaro-配置和软件安装" class="headerlink" title="manjaro 配置和软件安装"></a>manjaro 配置和软件安装</h3><p>一般做开发的话使用 Linux 是躲不开的，在学校的时候挺喜欢折腾，但也是局限于在虚拟机安装各种版本的 Linux 系统，但是有些 win 上必须应用软件在 Linux 找不到代替版，就一直只是当做服务器的角色，没有用在实际使用中，直到去年碰到 manjaro，就把常驻多年的 win 换成了 manjaro，使用起来很方便，应用软件基本都有了，安装过程也很简单，类 win 操作，这里也只是记录下配置和一些必要软件的安装命令，以防我哪天作死搞挂重装….o‿≖✧</p>
+<a id="more"></a>
+
+<blockquote>
+<p>manjaro 安装比较简单，建议使用 <a class="link" target="_blank" rel="noopener" href="https://rufus.ie/">rufus<i class="fas fa-external-link-alt"></i></a>，还有 <a class="link" target="_blank" rel="noopener" href="https://manjaro.org/">manjaro<i class="fas fa-external-link-alt"></i></a> 官网地址。</p>
+</blockquote>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p><strong>更新中国源</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman-mirrors -i -c China -m rank</span><br><span class="line">## 弹出后选择清华或者中科大源</span><br></pre></td></tr></table></figure>
+<p><strong>配置 AUR 源</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[archlinuxcn]</span><br><span class="line"># SigLevel &#x3D; Optional TrustedOnly</span><br><span class="line">SigLevel &#x3D; Never</span><br><span class="line">Server &#x3D; https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;archlinuxcn&#x2F;$arch</span><br><span class="line"></span><br><span class="line">[arch4edu]</span><br><span class="line">SigLevel &#x3D; Never</span><br><span class="line">Server &#x3D; https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;arch4edu&#x2F;$arch</span><br></pre></td></tr></table></figure>
+<p><strong>更新并选择最快的源列表</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman-mirrors -g </span><br></pre></td></tr></table></figure>
+<p><strong>更新数据源</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -Syy &amp;&amp; sudo pacman -S archlinuxcn-keyring</span><br></pre></td></tr></table></figure>
+<h4 id="安装常用软件"><a href="#安装常用软件" class="headerlink" title="安装常用软件"></a>安装常用软件</h4><p><strong>安装 yaourt</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S yaourt</span><br></pre></td></tr></table></figure>
+<p><strong>安装 拼音</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">##### 安装搜狗输入法</span><br><span class="line">sudo pacman -S fcitx-im</span><br><span class="line">sudo pacman -S fcitx-configtool</span><br><span class="line">sudo pacman -S fcitx-sogoupinyin</span><br><span class="line"></span><br><span class="line">添加输入法配置文件 sudo vim ~&#x2F;.xprofile</span><br><span class="line"></span><br><span class="line">export GTK_IM_MODULE&#x3D;fcitx</span><br><span class="line">export QT_IM_MODULE&#x3D;fcitx</span><br><span class="line">export XMODIFIERS&#x3D;&quot;@im&#x3D;fcitx&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">如果安装失败的话执行下面的方式安装</span><br><span class="line">sudo yaourt sogou</span><br></pre></td></tr></table></figure>
+<p><strong>安装 chrome</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S google-chrome</span><br></pre></td></tr></table></figure>
+<p><strong>安装深度截图</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S deepin-screenshot</span><br></pre></td></tr></table></figure>
+<p><strong>安装 TIM</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S deepin-wine-tim</span><br></pre></td></tr></table></figure>
+<p><strong>安装网易云音乐</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S netease-cloud-music</span><br></pre></td></tr></table></figure>
+<p><strong>安装 pdf 阅读器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yaourt foxit</span><br></pre></td></tr></table></figure>
+<p><strong>安装下载工具</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yaourt -S uget </span><br></pre></td></tr></table></figure>
+<p><strong>安装 zsh</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#最新版本已经默认安装了。</span><br><span class="line">sudo pacman -S zsh</span><br><span class="line"># 安装oh-my-zsh</span><br><span class="line">sh -c &quot;$(curl -fsSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;robbyrussell&#x2F;oh-my-zsh&#x2F;master&#x2F;tools&#x2F;install.sh)&quot;</span><br><span class="line"># 更换默认的shell</span><br><span class="line">chsh -s &#x2F;bin&#x2F;zsh</span><br></pre></td></tr></table></figure>
+<p><strong>安装 wechat</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S electronic-wechat	</span><br></pre></td></tr></table></figure>
+<p><strong>安装 git</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S git</span><br></pre></td></tr></table></figure>
+<p><strong>安装 wps</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S wps-office</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>安装护眼软件</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S xflux-gui-git</span><br></pre></td></tr></table></figure>
+<p><strong>安装 vscode</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S visual-studio-code-bin</span><br></pre></td></tr></table></figure>
+<p><strong>安装 JDK</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S jdk8</span><br><span class="line">### 配置环境变量</span><br><span class="line">export JAVA_HOME&#x3D;&#x2F;usr&#x2F;lib&#x2F;jvm&#x2F;default</span><br><span class="line">export JRE_HOME&#x3D;$&#123;JAVA_HOEM&#125;&#x2F;jre</span><br><span class="line">export CLASSPATH&#x3D;.:$&#123;JAVA_HOME&#125;&#x2F;lib:$&#123;JRE_HOME&#125;&#x2F;lib </span><br></pre></td></tr></table></figure>
+<p><strong>卸载 JDK</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -R jdk8</span><br></pre></td></tr></table></figure>
+<p><strong>安装　idea</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">在官网下载安装包解压</span><br><span class="line">tar　-zxcf　ideaxxx.tar.gz</span><br><span class="line">进到　.&#x2F;bin　目录执行文件</span><br><span class="line">.&#x2F;idea.sh</span><br><span class="line">完成安装</span><br></pre></td></tr></table></figure>
+<p><strong>安装 svn 客户端 kdesvn</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S kdesvn</span><br></pre></td></tr></table></figure>
+<p><strong>安装 mongodb</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ yay -S mongodb</span><br><span class="line"><span class="comment">## 配置</span></span><br><span class="line">$ sudo vim /etc/mongodb.conf <span class="comment"># 编辑 mongodb 数据库路径</span></span><br><span class="line"></span><br><span class="line">sudo chmod  u=rw /home/mj/mongodb  <span class="comment">#  设置读写权限</span></span><br><span class="line">sudo chown -R mongodb:  /home/mj/mongodb  <span class="comment"># 更改用户</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>安装 docker</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S docker</span><br><span class="line"></span><br><span class="line">sudo systemctl start docker.service <span class="comment"># 启动服务 </span></span><br><span class="line"></span><br><span class="line">sudo systemctl <span class="built_in">enable</span> docker.service <span class="comment"># 设置 docker 自启动</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>安装 ss</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S shadowsocks-qt5</span><br></pre></td></tr></table></figure>
+<p><strong>配置 switchyomega</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">### 下载</span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;FelisCatus&#x2F;SwitchyOmega&#x2F;releases </span><br><span class="line">配置方式网上有很多博客</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>pacman 命令</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pacman -S  软件名   #安装</span><br><span class="line">pacman -Syu    #更新</span><br><span class="line">pacman -R 软件名    #移除</span><br></pre></td></tr></table></figure>
+<h4 id="other"><a href="#other" class="headerlink" title="other"></a>other</h4><p><strong>设置　ll 命令</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">编辑　~/.bashrc</span><br><span class="line">$ vim ~/.bashrc</span><br><span class="line"><span class="built_in">alias</span> rm=<span class="string">&#x27;rm -i&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> cp=<span class="string">&#x27;cp -i&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> mv=<span class="string">&#x27;mv -i&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> ll=<span class="string">&#x27;ls -i&#x27;</span></span><br><span class="line">保存生效　</span><br><span class="line">$ <span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p><strong>设置主目录为英文</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S xdg-user-dirs-gtk</span><br><span class="line">$ <span class="built_in">export</span> LANG=en_US</span><br><span class="line">$ xdg-user-dirs-gtk-update</span><br><span class="line">$ <span class="comment">#然后会有个窗口提示语言更改，更新名称即可</span></span><br><span class="line">$ <span class="built_in">export</span> LANG=zh_CN.UTF-8</span><br><span class="line">$ <span class="comment">#然后重启电脑如果提示语言更改，保留旧的名称即可</span></span><br></pre></td></tr></table></figure>
+<p><strong>设置环境变量</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/...</span><br></pre></td></tr></table></figure>
+<p><strong>安装 flash player</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装好之后重启浏览器就可以正常访问了</span></span><br><span class="line">yaourt -S flashplugin pepper-flash</span><br></pre></td></tr></table></figure>
+<p><strong>远程连接服务器</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 ssh 连接</span></span><br><span class="line">ssh username@hostaddress</span><br></pre></td></tr></table></figure>
+<p>补充 ing…</p>
+<hr>
+<center>秋天来了，老家落叶的样子又错过了。最怕提及的是，深秋早晨的白霜更有奶奶的背影</center>
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：manjaro安装</li>
+        <li>本文作者：jihe</li>
+        <li>创建时间：2019-03-17 17:52:15</li>
+        <li>
+            本文链接：https://oliverschen.github.io/2019/03/17/manjaro安装/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/03/19/docker%E5%AE%89%E8%A3%85mongodb/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">docker安装mongodb</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">jihe</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

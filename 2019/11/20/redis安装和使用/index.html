@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="海贼王">
+    <meta name="description" content="一直在路上">
+    <meta name="author" content="jihe">
+    
+    <title>
+        
+            redis安装和使用 |
+        
+        jihe
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/logo.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"oliverschen.github.io","root":"/","language":"zh-Hans","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.0"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days age","week":"%s weeks age","month":"%s months age","year":"%s years age"};
+  </script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                jihe
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">redis安装和使用</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">jihe</span>
+                        
+                            <span class="author-label">Engineer</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2019-11-20 00:53:22
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E7%BC%93%E5%AD%98/">缓存</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/redis/">redis</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>3.8k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>16 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p><img lazyload src="/images/loading.svg" data-src="/redis.png" alt="Photo by Richs on wallhaven.cc"></p>
+<p>在互联网项目中，缓存中间件是一个必不可少的组件。由于磁盘 IO 和 内存 IO 在性能上的差异，通常一些热点数据都会放在缓存中，既提高了用户访问速度，缓存也在很大程度上减轻了数据库的压力，提高了系统整体的吞吐量，redis 是很成熟的一款 NoSql 数据库，是目前使用最多的缓存中间件，当然它的作用不仅仅可以用来做缓存，可以做分布式锁，简单消息队列等。性能稳定且高效，是居家必备用品。┑(￣▽ ￣)┍ </p>
+<a id="more"></a>
+
+<h5 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h5><ol>
+<li>解压</li>
+</ol>
+<p>目标路径</p>
+<blockquote>
+<p>/usr/local</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf ./redis-4.0.6.tar.gz </span><br></pre></td></tr></table></figure>
+<p>redis 压缩包是一个源码包，需要编译安装，<a class="link" target="_blank" rel="noopener" href="https://redis.io/">redis官网<i class="fas fa-external-link-alt"></i></a>有下载地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装依赖</span></span><br><span class="line">yum -y install gcc gcc-c++ kernel-devel</span><br><span class="line"><span class="comment"># 编译</span></span><br><span class="line">make</span><br><span class="line"><span class="comment"># 安装到指定目录</span></span><br><span class="line">make PERFIX=/usr/<span class="built_in">local</span>/redis  install</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>若在编译过程中出现错，可以尝试删除掉解压的 redis 包重新解压在编译一次。</p>
+</blockquote>
+<ol start="2">
+<li>启动</li>
+</ol>
+<p>将编译包中的 redis.conf 和 sentinel.conf 文件复制到 redis/conf 目录下，方便配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 指定配置文件启动</span></span><br><span class="line">redis/bin/redis-server redis/conf/redis.conf</span><br></pre></td></tr></table></figure>
+<p>启动之后会看到 redis 的logo:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">              _._                                                  </span><br><span class="line">          _.-&#96;&#96;__ &#39;&#39;-._                                             </span><br><span class="line">     _.-&#96;&#96;    &#96;.  &#96;_.  &#39;&#39;-._           Redis 4.0.6 (00000000&#x2F;0) 64 bit</span><br><span class="line"> .-&#96;&#96; .-&#96;&#96;&#96;.  &#96;&#96;&#96;\&#x2F;    _.,_ &#39;&#39;-._                                   </span><br><span class="line">(    &#39;      ,       .-&#96;  | &#96;,    )     Running in standalone mode</span><br><span class="line">|&#96;-._&#96;-...-&#96; __...-.&#96;&#96;-._|&#39;&#96; _.-&#39;|     Port: 6379</span><br><span class="line">|    &#96;-._   &#96;._    &#x2F;     _.-&#39;    |     PID: 24482</span><br><span class="line"> &#96;-._    &#96;-._  &#96;-.&#x2F;  _.-&#39;    _.-&#39;                                   </span><br><span class="line">|&#96;-._&#96;-._    &#96;-.__.-&#39;    _.-&#39;_.-&#39;|                                  </span><br><span class="line">|    &#96;-._&#96;-._        _.-&#39;_.-&#39;    |           http:&#x2F;&#x2F;redis.io        </span><br><span class="line"> &#96;-._    &#96;-._&#96;-.__.-&#39;_.-&#39;    _.-&#39;                                   </span><br><span class="line">     &#96;-._    &#96;-.__.-&#39;    _.-&#39;                                   </span><br><span class="line">         &#96;-._        _.-&#39;                                </span><br><span class="line">             &#96;-.__.-&#39;                                   </span><br><span class="line">                   </span><br></pre></td></tr></table></figure>
+<p>使用 redis-cli 连接测试</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 客户端连接</span></span><br><span class="line">redis/bin/redis-cli</span><br></pre></td></tr></table></figure>
+<p>测试</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; ping</span><br><span class="line">PONG</span><br></pre></td></tr></table></figure>
+<p>完成以上步骤，redis 就使用默认配置启动成功了。</p>
+<h6 id="redis-可视化工具"><a href="#redis-可视化工具" class="headerlink" title="redis 可视化工具"></a>redis 可视化工具</h6><p>推荐一款免费的 windows 下 redis 可视化工具<a class="link" target="_blank" rel="noopener" href="http://electronjs.org/apps/anotherredisdesktopmanager">Anotherredisdesktopmanager<i class="fas fa-external-link-alt"></i></a></p>
+<h5 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h5><p>redis 在配置文件中提供了很多可供修改的参数，在实际使用中需要对这些参数进行配置在使用。</p>
+<h6 id="bind"><a href="#bind" class="headerlink" title="bind"></a>bind</h6><p>绑定地址，0.0.0.0(默认) 允许任何互联网上的机器访问，这种配置方式很不安全，127.0.0.1 只允许本机客户端连接，这种是最安全的。配置多个主机访问为 <code>bind 127.0.0.1 192.268.31.108</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">bind</span> 127.0.0.1</span><br></pre></td></tr></table></figure>
+<h6 id="protected-mode"><a href="#protected-mode" class="headerlink" title="protected-mode"></a>protected-mode</h6><p>保护模式，可选参数 yes/on，yes 为开启状态。在开启状态时，当没有指定 bind 等参数时，默认 <code>bind 127.0.0.1</code>，如果设置为 no 时，则默认指定 bind 为 <code>bind 0.0.0.0</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protected-mode</span><br></pre></td></tr></table></figure>
+<h6 id="port"><a href="#port" class="headerlink" title="port"></a>port</h6><p>访问端口，默认 6379</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">port 6379</span><br></pre></td></tr></table></figure>
+<h6 id="timeout"><a href="#timeout" class="headerlink" title="timeout"></a>timeout</h6><p>连接断开时间（秒），当客户端连续空闲指定 timeout 时间后，就断开该连接，为 0 时为禁止该功能。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">timeout 0</span><br></pre></td></tr></table></figure>
+<h6 id="daemonize"><a href="#daemonize" class="headerlink" title="daemonize"></a>daemonize</h6><p>守护进程模式，可选参数 yes/on，yes 时 redis 服务以守护进程在后台执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">daemonize yes</span><br></pre></td></tr></table></figure>
+<h6 id="pidfile"><a href="#pidfile" class="headerlink" title="pidfile"></a>pidfile</h6><p>当指定守护进程方式启动时，会在 pidfile 参数指定的目录下生成 PID 文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pidfile /var/run/redis_6379.pid</span><br></pre></td></tr></table></figure>
+<h6 id="databases"><a href="#databases" class="headerlink" title="databases"></a>databases</h6><p>redis 数据库数量，默认 16</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">databases 16</span><br></pre></td></tr></table></figure>
+<h6 id="requirepass"><a href="#requirepass" class="headerlink" title="requirepass"></a>requirepass</h6><p>在客户端连接后设置密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置</span></span><br><span class="line">config <span class="built_in">set</span> requirepass <span class="string">&quot;password&quot;</span></span><br><span class="line"><span class="comment"># 验证</span></span><br><span class="line">auth <span class="string">&quot;password&quot;</span></span><br></pre></td></tr></table></figure>
+<h5 id="redis-数据结构"><a href="#redis-数据结构" class="headerlink" title="redis 数据结构"></a>redis 数据结构</h5><p>redis 支持很多数据结构，String，List，Hash，Set，ZSet等，简单理解它每种数据结构，都是它的 value 对应的数据结构。</p>
+<h6 id="String"><a href="#String" class="headerlink" title="String"></a>String</h6><ol>
+<li>命令</li>
+</ol>
+<p><strong>GET</strong>,<strong>SET</strong><br>存入/获取字符串键值对 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SET key value</span><br><span class="line">GET key  </span><br></pre></td></tr></table></figure>
+<p><strong>MSET</strong>,<strong>MGET</strong><br>批量存入/获取字符串键值对 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MSET key value [key value]</span><br><span class="line">MGET key [key]</span><br></pre></td></tr></table></figure>
+<p>将用户对象使用批量字符串的方式保存在 redis</p>
+<table>
+<thead>
+<tr>
+<th>userId</th>
+<th>userName</th>
+<th>age</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1001</td>
+<td>zhangsan</td>
+<td>20</td>
+</tr>
+<tr>
+<td>1002</td>
+<td>lisi</td>
+<td>21</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MSET user:1001:name zhangsan user:1001:age 20</span><br><span class="line">127.0.0.1:6379&gt; MGET user:1001:name user:1001:age</span><br><span class="line">1) <span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">2) <span class="string">&quot;20&quot;</span></span><br></pre></td></tr></table></figure>
+<p>以上命令将用户表记录按照批量字符的方式设置到了redis，如果将对象序列化成 json 格式保存一般字符串格式，这样在用户对象年龄或者其他单个字段有改变时会涉及到 JSON 格式转化设置之后在保存的操作，加重了代码量，代码可读性降低。如果用这种方式保存的话可以直接进行针对字段的修改。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; MSET user:1001:name zhangsanMOD</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; MGET user:1001:name</span><br><span class="line">1) <span class="string">&quot;zhangsanMOD&quot;</span></span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>SETNX</strong><br>存入不存在的键值对<br>当设置的 key 存在时，则设置不成功，当不存在时，设置成功。因为 redis 是单线程模型，此命令可以用来实现<strong>分布式锁功能</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置送出15001礼物价值1000元</span></span><br><span class="line">SETNX gift:15001 1000</span><br></pre></td></tr></table></figure>
+<p><strong>DEL</strong><br>删除一个键值对 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEL gift:15001</span><br></pre></td></tr></table></figure>
+<p><strong>INCR</strong><br>计数器<br>这个命令可以很方便的对 key 的 value 加 1 操作，而且不用考虑并发等问题，在实际场景中<strong>文章阅读量可以使用此功能来实现</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 111111 文章对应的阅读量</span></span><br><span class="line">INCR article:readcount:111111</span><br></pre></td></tr></table></figure>
+<p><strong>INCRBY</strong><br>增量添加<br>将 key 中储存的数字加上指定的增量值。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 键不存在时初始化为 0 之后在加 50</span></span><br><span class="line">INCRBY gift:15001:count 50</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>应用</li>
+</ol>
+<blockquote>
+<p>分布式锁功能简单实现<br>文章阅读量<br>分布式 session 保存，用于权限认证。</p>
+</blockquote>
+<h6 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h6><ol>
+<li>命令</li>
+</ol>
+<p><strong>HSET</strong>,<strong>HGET</strong><br>存储/获取键值对</p>
+<p>Hash 结构的 key 对应的值类似于 Java 中的 HashMap 结构。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HSET key field value</span><br><span class="line">HGET key field</span><br></pre></td></tr></table></figure>
+<p>上面将用户信息用 <code>MSET</code> 以批量字符串的形式存储，现在将用户表中用户信息用 Hash 结构存储：</p>
+<table>
+<thead>
+<tr>
+<th>userId</th>
+<th>userName</th>
+<th>age</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1001</td>
+<td>zhangsan</td>
+<td>20</td>
+</tr>
+<tr>
+<td>1002</td>
+<td>lisi</td>
+<td>21</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HSET user 1001:name zhangsan</span><br><span class="line">HSET user 1001:age 20</span><br><span class="line"><span class="comment"># 获取 key 中的属性对应的值</span></span><br><span class="line">127.0.0.1:6379&gt; HGET user 1001:name</span><br><span class="line"><span class="string">&quot;zhangsan&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>HMSET</strong>,<strong>HMGET</strong><br>存储多个键值对（批量）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HMSET key field value [key field valye]</span><br><span class="line">HMGET key field [field]</span><br></pre></td></tr></table></figure>
+<p>使用批量的方式存储用户 <code>lisi</code> 的信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">HMSET user 1002:name lisi 1002:age 21</span><br><span class="line">HMGET user 1002:name 1002:age</span><br><span class="line"><span class="comment"># 批量获取</span></span><br><span class="line">127.0.0.1:6379&gt; HMGET user 1002:name 1002:age</span><br><span class="line">1) <span class="string">&quot;lisi&quot;</span></span><br><span class="line">2) <span class="string">&quot;21&quot;</span></span><br><span class="line"><span class="comment"># 获取多个</span></span><br><span class="line">127.0.0.1:6379&gt; HMGET user 1001:name 1001:age 1002:name 1002:age</span><br><span class="line">1) <span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">2) <span class="string">&quot;20&quot;</span></span><br><span class="line">3) <span class="string">&quot;lisi&quot;</span></span><br><span class="line">4) <span class="string">&quot;21&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>HSETNX</strong><br>存储一个不存在的键值对 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HSETNX key field value</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; HSET gift 15000:count 1</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line"><span class="comment">#第二次设置不成功</span></span><br><span class="line">127.0.0.1:6379&gt; HSET gift 15000:count 1</span><br><span class="line">(<span class="built_in">integer</span>) 0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>HDEL</strong><br>删除键对应的属性 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HDEL key field [field]</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HDEL gift 15000:count</span><br><span class="line"><span class="comment"># 删除之后重新设置成功</span></span><br><span class="line">127.0.0.1:6379&gt; HSET gift 15000:count 1</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br></pre></td></tr></table></figure>
+<p><strong>HLEN</strong><br>Hash 表大小</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HLEN key</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HLEN user</span><br><span class="line"><span class="comment"># 用户 Hash 表大小 4 </span></span><br><span class="line">127.0.0.1:6379&gt; HLEN user</span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br></pre></td></tr></table></figure>
+<p><strong>HGETALL</strong><br>Hash 表所有的键值对 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HGETALL key</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">HGETALL user</span><br><span class="line"><span class="comment"># 用户表中所有键值对</span></span><br><span class="line">127.0.0.1:6379&gt; HGETALL user</span><br><span class="line">1) <span class="string">&quot;1001:name&quot;</span></span><br><span class="line">2) <span class="string">&quot;zhangsan&quot;</span></span><br><span class="line">3) <span class="string">&quot;1001:age&quot;</span></span><br><span class="line">4) <span class="string">&quot;20&quot;</span></span><br><span class="line">5) <span class="string">&quot;1002:name&quot;</span></span><br><span class="line">6) <span class="string">&quot;lisi&quot;</span></span><br><span class="line">7) <span class="string">&quot;1002:age&quot;</span></span><br><span class="line">8) <span class="string">&quot;21&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>HINCRBY</strong><br>Hash 表 key 中属性的键的值设置增量（increment）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HINCRBY key field increament</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用户 1001 年龄 +1</span></span><br><span class="line">127.0.0.1:6379&gt; HINCRBY user 1001:age 1</span><br><span class="line">(<span class="built_in">integer</span>) 21</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>应用</li>
+</ol>
+<p>购物车</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1. 用户 ID 为 key</span><br><span class="line">2. 商品 ID 为 field</span><br><span class="line">3. 商品数量为 value</span><br><span class="line"><span class="comment"># 购物车操作</span></span><br><span class="line">1. 添加：                 HSET cart:1001 2001 1</span><br><span class="line">2. 增加数量：             HINCRBY cart:1001 2001 1</span><br><span class="line">3. 商品总数：             HLEN cart:1001</span><br><span class="line">4. 删除商品：             HDEL cart:1001 2001</span><br><span class="line">5. 获取购物车所有商品：    HGETALL cart:1001</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ol>
+<li>用户 1001 添加 了 1 个 2001 商品到购物车</li>
+<li>用户 1001 又新增了 1 个商品 2001</li>
+<li>用户 1001 购物车商品总数</li>
+<li>用户 1001 删除购物车商品 2001 </li>
+<li>用户 1001 获取购物车所有商品 </li>
+</ol>
+</blockquote>
+<h6 id="List"><a href="#List" class="headerlink" title="List"></a>List</h6><p>List 结构中 key 对应的 value 是一个链表结构，<strong>实现常用数据结构</strong></p>
+<blockquote>
+<p>Stack(栈) = LPUSH + LPOP -&gt; FILO（先进后出）<br>Queue(队列) = LPUSH + RPOP<br>Blocking MQ(阻塞队列) = LPUSH + BRPOP 在阻塞队列中，LPUSH 一条数据之后，使用 BRPOP 获取数据，区别于 RPOP 的是，当 List 中没有数据时 BRPOP 会一直监听这个 List，有值被 push 进来它会立马获取</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 结构</span></span><br><span class="line">           LPUSH                   RPUSH</span><br><span class="line">key  ---&gt; |   a   |   b   |   c   |   d   |</span><br><span class="line">           LPOP                    RPOP</span><br></pre></td></tr></table></figure>
+<ol>
+<li>命令</li>
+</ol>
+<p><strong>LPUSH</strong>,<strong>LPOP</strong><br>插入/取出一个或者多个值插入列表头部（最左边） </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LPUSH key value [value]</span><br><span class="line">LPOP key</span><br></pre></td></tr></table></figure>
+<p>将礼物按照分类存入列表中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 普通礼物列表存入 4 个礼物</span></span><br><span class="line">LPUSH ordinary 4001 4002 4003 4004</span><br><span class="line">LPOP ordinary</span><br><span class="line"><span class="comment"># 4001 在最右边，第一次取出最左边的 4004</span></span><br><span class="line">127.0.0.1:6379&gt; LPOP ordinary</span><br><span class="line"><span class="string">&quot;4004&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; LPOP ordinary</span><br></pre></td></tr></table></figure>
+<p><strong>RPUSH</strong>,<strong>RPOP</strong><br>插入/取出一个或者多个值插入列表头部（最右边）<br>这个命令和上面的命令是相同的结果，只是取出的位置不一样。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RPUSH key value [value]</span><br><span class="line">RPOP key</span><br></pre></td></tr></table></figure>
+<p><strong>BLPOP</strong>,<strong>BRPOP</strong><br>列表头/尾取出一个元素，如果没有则阻塞等待，timeout = 0 时一直阻塞等待（timeout/s） </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BLPOP key [key] timeout</span><br><span class="line">BRPOP key [key] timeout</span><br></pre></td></tr></table></figure>
+<p>监听礼物列表是否有商品，有则在右边阻塞取出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">LPUSH ordinary 4001 4002 4003 4004</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行 BRPOP 每次取出一条，如果没有，则一直等待</span></span><br><span class="line">127.0.0.1:6379&gt; BRPOP ordinary 0</span><br><span class="line">1) <span class="string">&quot;ordinary&quot;</span></span><br><span class="line">2) <span class="string">&quot;4001&quot;</span></span><br></pre></td></tr></table></figure>
+<p>等待时添加一个元素，等待中的 BRPOP 立马输出新添加的元素</p>
+<p><strong>LRANGE</strong><br>获取指定 key 列表区间的元素 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LRANGE key start stop</span><br></pre></td></tr></table></figure>
+<p>获取 0-2 区间的值</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; LPUSH ordinary 4001 4002 4003 4004</span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br><span class="line"><span class="comment"># </span></span><br><span class="line">127.0.0.1:6379&gt; LRANGE ordinary 0 2</span><br><span class="line">1) <span class="string">&quot;4004&quot;</span></span><br><span class="line">2) <span class="string">&quot;4003&quot;</span></span><br><span class="line">3) <span class="string">&quot;4002&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>应用</li>
+</ol>
+<p>微信公众号的推送信息可以使用 List 结构，用户关注的公众号每推送一个消息，在用户对应的列表增加一个文章ID</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用户 1001 有 5001，5002 两个推送文章消息</span></span><br><span class="line">LPUSH 1001:msg 5001,5002</span><br></pre></td></tr></table></figure>
+<h6 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h6><p>Set 键值对中的值数据结构类似 Java 中 Set 集合中的 key 值结构，元素不能重复。</p>
+<ol>
+<li>命令</li>
+</ol>
+<p> <strong>SADD</strong>,<strong>SREM</strong><br>添加/删除集合中元素，添加时如果存在则忽略</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SADD key member [member]</span><br><span class="line">SREM key member</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用户 6001,6002 关注用户 1001</span></span><br><span class="line">SADD user:1001:fans 6001 6002</span><br><span class="line"><span class="comment"># 用户 6002 取消关注用户 1001</span></span><br><span class="line">SREM user:1001:fans 6002</span><br></pre></td></tr></table></figure>
+<p><strong>SMEMBERS</strong><br>获取集合所有元素 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SMEMBERS key</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用户 1001 粉丝</span></span><br><span class="line">127.0.0.1:6379&gt; SMEMBERS user:1001:fans</span><br><span class="line">1) <span class="string">&quot;6001&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>SISMEMBER</strong><br>判断元素是否存在 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SISMEMBER key member</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 判断 6002 是否在集合 user:1001:fans 中</span></span><br><span class="line">127.0.0.1:6379&gt; SISMEMBER user:1001:fans 6002</span><br><span class="line">(<span class="built_in">integer</span>) 0</span><br></pre></td></tr></table></figure>
+<p><strong>SCARD</strong><br>获取集合元素个数 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SCARD key</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取用户 1001 的粉丝数</span></span><br><span class="line">127.0.0.1:6379&gt; SCARD user:1001:fans</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br></pre></td></tr></table></figure>
+<p><strong>SRANDMEMBER</strong><br>从集合随机获取 count 个元素，默认获取 1 个，元素不删除 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SRANDMEMBER key [count]</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给用户 1001 添加粉丝</span></span><br><span class="line">SADD user:1001:fans 6002 6003 6004 6005 6006</span><br><span class="line"><span class="comment"># 随机获取 2 个粉丝 ID</span></span><br><span class="line">127.0.0.1:6379&gt; SRANDMEMBER user:1001:fans 2</span><br><span class="line">1) <span class="string">&quot;6002&quot;</span></span><br><span class="line">2) <span class="string">&quot;6006&quot;</span></span><br><span class="line"><span class="comment"># 查看用户 1001 的粉丝，刚刚查看的还在集合中</span></span><br><span class="line">127.0.0.1:6379&gt; SMEMBERS user:1001:fans</span><br><span class="line">1) <span class="string">&quot;6001&quot;</span></span><br><span class="line">2) <span class="string">&quot;6002&quot;</span></span><br><span class="line">3) <span class="string">&quot;6003&quot;</span></span><br><span class="line">4) <span class="string">&quot;6004&quot;</span></span><br><span class="line">5) <span class="string">&quot;6005&quot;</span></span><br><span class="line">6) <span class="string">&quot;6006&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>SPOP</strong><br>从集合随机获取 count 个元素，默认获取 1 个，删除元素 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SPOP key [count]</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 随机获取用户 1001 的 2 个粉丝</span></span><br><span class="line">127.0.0.1:6379&gt; SPOP user:1001:fans 2</span><br><span class="line">1) <span class="string">&quot;6003&quot;</span></span><br><span class="line">2) <span class="string">&quot;6004&quot;</span></span><br><span class="line"><span class="comment"># 查看用户 1001 的粉丝，刚刚取出的已经被移除</span></span><br><span class="line">127.0.0.1:6379&gt; SMEMBERS user:1001:fans</span><br><span class="line">1) <span class="string">&quot;6001&quot;</span></span><br><span class="line">2) <span class="string">&quot;6002&quot;</span></span><br><span class="line">3) <span class="string">&quot;6005&quot;</span></span><br><span class="line">4) <span class="string">&quot;6006&quot;</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>应用<br>微信小程序抽奖活动<blockquote>
+<ol>
+<li>用户 1001,1002,1003,1004 参与活动 7001 —-&gt; SADD act:7001 1001 1002 1003 1004</li>
+<li>查看参与 7001 活动的全部用户 —-&gt; SMEMBERS act:7001</li>
+<li>随机抽奖 2 名用户 —-&gt; SRANDMEMBER act:7001 2</li>
+<li>抽取 1 等奖 1 名，2 等奖 2 名(去除一等奖用户) —-&gt; SPOP act:7001 1 ,SPOP act:7001 2</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+<p>微信点赞，收藏，标签</p>
+<blockquote>
+<ol>
+<li>用户 1002 点赞用户 1001 的朋友圈消息 8001 —-&gt; SADD like:1001:8001 1002</li>
+<li>取消点赞 —-&gt; SREM like:1001:8001 1002</li>
+<li>查看用户 1003 是否点赞 —-&gt; SISMEMBER like:1001:8001 1003</li>
+<li>获取点赞朋友列表 —-&gt; SMEMBERS like:1001:8001</li>
+<li>获取点赞用户数 —-&gt; SCARD like:1001:8001</li>
+</ol>
+</blockquote>
+<ol start="3">
+<li>Set 集合运算操作</li>
+</ol>
+<p>集合 set1:{a,b,e,f},set2:{c,d,e},set3:{a,b,e,g}</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 交集：多个集合中共有的元素</span></span><br><span class="line">set1 set2 set3 ----&gt; &#123;e&#125;</span><br><span class="line"><span class="comment"># 并集：去重多个集合中所有元素</span></span><br><span class="line">set1 set2 set3 ----&gt; &#123;a,b,c,d,e,f,g&#125;</span><br><span class="line"><span class="comment"># 差集：第一个集合和其他集合不一样的元素</span></span><br><span class="line">set1 set2 set3 ----&gt; &#123;f&#125;</span><br></pre></td></tr></table></figure>
+<p>Set 中对应的集合运算<br><strong>SINTER</strong><br>交集运算</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SINTER set1 set2 set3</span><br></pre></td></tr></table></figure>
+<p><strong>SUNION</strong><br>并集运算</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SUNION set1 set2 set3</span><br></pre></td></tr></table></figure>
+<p><strong>SDIFF</strong><br>差集运算</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SDIFF set1 set2 set3</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>运算应用<br>关注模型<blockquote>
+<ol>
+<li>zhangsan/lisi 关注的人：zhangsan/lisi 粉丝 set 集合</li>
+<li>zhangsan 和 list 共同关注：集合求并集 SINTER zhangsan lisi</li>
+<li>我关注的人也关注了他（wangwu）：遍历 zhangsan 关注列表用户是否关注 wangwu SISMEMBER</li>
+<li>可能认识的人：求差集 SDIFF zhangsan lisi</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+<h6 id="ZSet"><a href="#ZSet" class="headerlink" title="ZSet"></a>ZSet</h6><p>有序集合，且不允许有重复的元素，通过 score 对集合中元素排序<br><strong>ZADD</strong>,<strong>ZREM</strong><br>添加/移除集合中的元素</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ZADD key score member [score member]</span><br><span class="line">ZREM key member [member]</span><br></pre></td></tr></table></figure>
+<p>通过热度值对直播房间排序</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 房间 1100 的热度值 90000</span></span><br><span class="line">ZADD room:sort 90000 1100 80000 2200 70000 3300</span><br><span class="line"><span class="comment"># 移除 3300 这个房间</span></span><br><span class="line">ZREM room:sort 3300 </span><br></pre></td></tr></table></figure>
+<p><strong>ZCARD</strong><br>获取有序集合的元素个数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ZCARD key</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; ZCARD room:sort</span><br><span class="line">(<span class="built_in">integer</span>) 2</span><br></pre></td></tr></table></figure>
+<p><strong>ZCOUNT</strong><br>获取有序集合 [min,max] 区间 score 元素数量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ZCOUNT key min max</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取 热度在80000-85000 之间的房间</span></span><br><span class="line">127.0.0.1:6379&gt; ZCOUNT room:sort 80000 85000</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br></pre></td></tr></table></figure>
+<p><strong>ZINCRBY</strong><br>有序集合中指定成员 score 增加 increment</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ZINCRBY key increment member</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1100 房间热度增加 1000</span></span><br><span class="line">127.0.0.1:6379&gt; ZINCRBY room:sort 1000 1100</span><br><span class="line"><span class="string">&quot;91000&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>ZRANGE</strong>,<strong>ZREVRANGE</strong><br>有序集合 [start,stop] 区间元素，通过 score，递增/递减<br>start 和 stop 都是以 0 开始，0 表示第一个元素，1 表示第二个，以此类推<br>负数下标 -1 表示倒数第一个元素，-2 表示倒数第二个元素，以此类推</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ZRANGE key start stop [WITHSCORES]</span><br><span class="line">ZREVRANGE key start stop [WITHSCORES]</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 递增排序 room:sort 下所有元素</span></span><br><span class="line">127.0.0.1:6379&gt; ZRANGE room:sort 0 -1 WITHSCORES</span><br><span class="line">1) <span class="string">&quot;2200&quot;</span></span><br><span class="line">2) <span class="string">&quot;80000&quot;</span></span><br><span class="line">3) <span class="string">&quot;1100&quot;</span></span><br><span class="line">4) <span class="string">&quot;91000&quot;</span></span><br><span class="line"><span class="comment"># 递减排序 room:sort 下所有元素</span></span><br><span class="line">127.0.0.1:6379&gt; ZREVRANGE room:sort 0 -1 WITHSCORES</span><br><span class="line">1) <span class="string">&quot;1100&quot;</span></span><br><span class="line">2) <span class="string">&quot;91000&quot;</span></span><br><span class="line">3) <span class="string">&quot;2200&quot;</span></span><br><span class="line">4) <span class="string">&quot;80000&quot;</span></span><br></pre></td></tr></table></figure>
+<p><strong>ZUNIONSTORE</strong><br>运算多个有序集合并集，并存储在新 key 中, <code>destination</code>新集合 key 值，<code>numkeys</code>合并的集合个数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ZUNIONSTORE destination numkeys key [key]</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加房间在线人数集合</span></span><br><span class="line">ZADD room:onlinenum 800 3300 1000 4400</span><br><span class="line"><span class="comment"># 合并房间在线人数集合和房间热度集合为房间信息集合 room:info</span></span><br><span class="line">ZUNIONSTORE room:info 2 room:sort room:onlinenum</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>应用<br>各类排行榜实现</li>
+</ol>
+<blockquote>
+<ol>
+<li>用户点击新闻 —-&gt; ZINCRBY hotnews:20191125 1 学好redis</li>
+<li>展示当日排行榜前十 —-&gt; ZREVRANGE hotnews:20191125 0 10 WITHSORES</li>
+<li>七日搜索榜统计 —-&gt; ZUNIONSTROE hotnews:20191119-20191125 7 hotnews:20191119 … hotnews:20191125</li>
+<li>七日排行前十 —-&gt; ZREVRANGE hotnews:20191119-20191125 0 10 WITHSCORES</li>
+</ol>
+</blockquote>
+<p>参考 <a class="link" target="_blank" rel="noopener" href="https://testerhome.com/topics/16402">testerhome<i class="fas fa-external-link-alt"></i></a>,<a class="link" target="_blank" rel="noopener" href="http://redis.io/">redis<i class="fas fa-external-link-alt"></i></a> 官网，<a class="link" target="_blank" rel="noopener" href="http://redisdoc.com/">redisdoc<i class="fas fa-external-link-alt"></i></a></p>
+<hr>
+<center>拥有每一天</center>
+
+
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：redis安装和使用</li>
+        <li>本文作者：jihe</li>
+        <li>创建时间：2019-11-20 00:53:22</li>
+        <li>
+            本文链接：https://oliverschen.github.io/2019/11/20/redis安装和使用/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2019/11/23/springboot%E9%9B%86%E6%88%90jedis%E5%92%8Credisson/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">springboot集成jedis和redisson</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/11/12/mongo%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">mongo分片集群</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">jihe</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

@@ -19,7 +19,7 @@
     <script id="hexo-configurations">
     let KEEP = window.KEEP || {};
     KEEP.hexo_config = {"hostname":"oliverschen.github.io","root":"/","language":"zh-Hans","path":"search.xml"};
-    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.0"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.0"};
     KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days age","week":"%s weeks age","month":"%s months age","year":"%s years age"};
   </script>
 <meta name="generator" content="Hexo 5.3.0"></head>
@@ -214,7 +214,7 @@
         
 
         <div class="article-content markdown-body">
-            <p><img lazyload src="/images/loading.svg" data-src="manjaro%E7%BC%96%E8%AF%91openjdk/openjdk.png"></p>
+            <p><img src="/2019/04/09/manjaro%E7%BC%96%E8%AF%91openjdk/openjdk.png"></p>
 <p>刚接触到 Java 时就被一些陌生的英文缩写吓到了，什么 jdk,jre,jvm 等等。但是随着后面对它的了解越多，对这些基础的概念越来越清晰，对这些概念也有了一些认识。 jdk 就是我们经常使用的开发工具包，它不仅包含 jre,还包含了编译器等其他基础包，而 jre 则是 Java 代码运行的最小环境。而 jvm 则是 Java 虚拟机， “一处编译，到处运行” 就是因为这位大佬的存在。从学习开始到现在一直都和它们间接接触，但是对它们的了解还是有很大的局限，今天拉了 openjdk 的源码准备好好研究一下。</p>
 <a id="more"></a>
 <h4 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h4><table>
@@ -483,8 +483,6 @@
     <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
 
 
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/lazyload.js"></script>
 
 
 <div class="post-scripts">

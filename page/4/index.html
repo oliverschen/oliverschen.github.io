@@ -17,7 +17,7 @@
     <script id="hexo-configurations">
     let KEEP = window.KEEP || {};
     KEEP.hexo_config = {"hostname":"oliverschen.github.io","root":"/","language":"zh-Hans","path":"search.xml"};
-    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.0"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.0"};
     KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days age","week":"%s weeks age","month":"%s months age","year":"%s years age"};
   </script>
 <meta name="generator" content="Hexo 5.3.0"></head>
@@ -154,7 +154,7 @@
 
                 <div class="home-article-content markdown-body">
                     
-                        <p><img lazyload src="/images/loading.svg" data-src="/redisLock.png" alt="Photo by lumberjacck on wallhaven.cc"></p>
+                        <p><img src="/2019/11/23/springboot%E9%9B%86%E6%88%90jedis%E5%92%8Credisson/redisLock.png" alt="Photo by lumberjacck on wallhaven.cc"></p>
 <p>redis 最常见的场景就是分布式缓存，分布式锁的场景。它本身提供的数据结构在实现一些功能时要比关系型数据库方便很多，比如点赞，好友关系等功能，并且不用担心并发以及性能问题。这里记录下springboot整合jedis和redisson框架 ヽ(ˋ▽ˊ)ノ</p>
                     
                 </div>
@@ -207,7 +207,7 @@
 
                 <div class="home-article-content markdown-body">
                     
-                        <p><img lazyload src="/images/loading.svg" data-src="/redis.png" alt="Photo by Richs on wallhaven.cc"></p>
+                        <p><img src="/2019/11/20/redis%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/redis.png" alt="Photo by Richs on wallhaven.cc"></p>
 <p>在互联网项目中，缓存中间件是一个必不可少的组件。由于磁盘 IO 和 内存 IO 在性能上的差异，通常一些热点数据都会放在缓存中，既提高了用户访问速度，缓存也在很大程度上减轻了数据库的压力，提高了系统整体的吞吐量，redis 是很成熟的一款 NoSql 数据库，是目前使用最多的缓存中间件，当然它的作用不仅仅可以用来做缓存，可以做分布式锁，简单消息队列等。性能稳定且高效，是居家必备用品。┑(￣▽ ￣)┍ </p>
                     
                 </div>
@@ -260,7 +260,7 @@
 
                 <div class="home-article-content markdown-body">
                     
-                        <p><img lazyload src="/images/loading.svg" data-src="/replicaSet.png" alt="Photo by Unsplash"></p>
+                        <p><img src="/2019/11/12/mongo%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/replicaSet.png" alt="Photo by Unsplash"></p>
 <p>mongdb 通过分片机制将数据分布在多台机器上面，实现了横向扩展。也支持了非常大数集和高吞吐量操作。mongodb 可以很好的利用机器的内存资源，内存越大，查询就会越快。mongo 对数据的结构没有其他限制，对开发者很友好，很适合迭代很快，表字段变化很多的场景。</p>
                     
                 </div>
@@ -313,7 +313,7 @@
 
                 <div class="home-article-content markdown-body">
                     
-                        <p><img lazyload src="/images/loading.svg" data-src="/rabbitMqDelayQueue.png" alt="Photo by on Unsplash"></p>
+                        <p><img src="/2019/11/02/rabbitMQ%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/rabbitMqDelayQueue.png" alt="Photo by on Unsplash"></p>
 <p>在一些业务场景中，会有延迟这种场景出现，比如常见的订单提交之后付款计时，还有一些针对特定用户，比如会员的一些定时优惠的发放，都会在一个时间点去执行，这种一般定时器也是可以实现的，但是如果涉及数据量大，使用定时器处理不是很优的解决方案。这时候就需要了解下 mq 的延迟队列，来更好的实现这个问题。</p>
                     
                 </div>
@@ -366,7 +366,7 @@
 
                 <div class="home-article-content markdown-body">
                     
-                        <p><img lazyload src="/images/loading.svg" data-src="RabbitMQ%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/rabbitmq.png" alt="Photo by Vadim Sadovski on Unsplash"></p>
+                        <p><img src="/2019/09/05/RabbitMQ%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/rabbitmq.png" alt="Photo by Vadim Sadovski on Unsplash"></p>
 <p>作为消息中间件，MQ （Message Queue） 在系统中有至关重要的作用，在高并发场景下，MQ 异步处理请求，缓解系统高峰期压力。在系统之间的调用中解耦，降低各个系统之间的依赖，提交系统的可扩展性。在一写复杂业务处理时，进行异步处理，类似乐观锁，及时返回给用户操作状态，至于业务逻辑通知 MQ 之后在进行处理，提高用户体验，也提高了服务器的处理能力。</p>
                     
                 </div>
@@ -566,8 +566,6 @@
     <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
 
 
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/lazyload.js"></script>
 
 
 <div class="post-scripts">

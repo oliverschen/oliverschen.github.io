@@ -19,7 +19,7 @@
     <script id="hexo-configurations">
     let KEEP = window.KEEP || {};
     KEEP.hexo_config = {"hostname":"oliverschen.github.io","root":"/","language":"zh-Hans","path":"search.xml"};
-    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.0"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.0"};
     KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days age","week":"%s weeks age","month":"%s months age","year":"%s years age"};
   </script>
 <meta name="generator" content="Hexo 5.3.0"></head>
@@ -214,7 +214,7 @@
         
 
         <div class="article-content markdown-body">
-            <p><img lazyload src="/images/loading.svg" data-src="Java8%E6%96%B0%E7%89%B9%E6%80%A7/Java8%E6%96%B0%E7%89%B9%E6%80%A7.png" alt="Photo by Cristofer Jeschke"></p>
+            <p><img src="/2019/07/27/Java8%E6%96%B0%E7%89%B9%E6%80%A7/Java8%E6%96%B0%E7%89%B9%E6%80%A7.png" alt="Photo by Cristofer Jeschke"></p>
 <p>Java8 相对之前版本来说是更新比较大的一个版本，不仅在 Java 语言本身，而且在编译器，类库，jvm 都引入了很多新的特性，工作中虽然偶尔会用到一些简单的特性，比如 forEach,stream,等相关功能，但是没有专门花时间去整理这些特性，最近新版本刚刚发布完成，抽空整理学习下这部分内容。用了 Java8 这么久，新特性面前不能瑟瑟发抖，哈哈哈….  <a id="more"></a></p>
 <h4 id="Lambda-表达式和函数式接口-FunctionInterface"><a href="#Lambda-表达式和函数式接口-FunctionInterface" class="headerlink" title="Lambda 表达式和函数式接口 FunctionInterface"></a>Lambda 表达式和函数式接口 FunctionInterface</h4><p>Lambda 表达式是 Java8 引入的一个新特性，它允许将函数作为参数传递给调用方法，极大程度的简化了 Java 的代码量，这里举个例子：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// 栗子</span></span><br><span class="line"><span class="comment">// Java8 之前遍历 List 实例</span></span><br><span class="line">List&lt;String&gt; strings = Arrays.asList(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (String s : strings) &#123;</span><br><span class="line">    System.out.println(s);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Java8 </span></span><br><span class="line">List&lt;String&gt; strings = Arrays.asList(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>);</span><br><span class="line">strings.forEach(s -&gt; System.out.println(s));</span><br></pre></td></tr></table></figure>
@@ -522,8 +522,6 @@
     <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
 
 
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/lazyload.js"></script>
 
 
 <div class="post-scripts">

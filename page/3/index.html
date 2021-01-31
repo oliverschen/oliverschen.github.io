@@ -17,7 +17,7 @@
     <script id="hexo-configurations">
     let KEEP = window.KEEP || {};
     KEEP.hexo_config = {"hostname":"oliverschen.github.io","root":"/","language":"zh-Hans","path":"search.xml"};
-    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.0"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.0"};
     KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days age","week":"%s weeks age","month":"%s months age","year":"%s years age"};
   </script>
 <meta name="generator" content="Hexo 5.3.0"></head>
@@ -154,7 +154,7 @@
 
                 <div class="home-article-content markdown-body">
                     
-                        <p><img lazyload src="/images/loading.svg" data-src="/java-konwlege.png" alt="Photo by vinc on wallhaven.cc"></p>
+                        <p><img src="/2019/12/15/java-fragment-knowledge/java-konwlege.png" alt="Photo by vinc on wallhaven.cc"></p>
 <p>记录 Java 中一些有趣但是容易忽略的碎片知识。</p>
                     
                 </div>
@@ -207,7 +207,7 @@
 
                 <div class="home-article-content markdown-body">
                     
-                        <p><img lazyload src="/images/loading.svg" data-src="/springcloud-feign.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
+                        <p><img src="/2019/12/15/springcloud-feign/springcloud-feign.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
 <p>在远程调用时，Java 提供了 UrlConnection 来进行远程调用，也有 Apace 封装的 HttpClient 库进行调用。 在<a class="link" target="_blank" rel="noopener" href="https://fengzhu.top/2019/04/18/springcloud-eureka/">eureka<i class="fas fa-external-link-alt"></i></a>中的例子使用了 RestTemplate 来进行服务调用，feign 也一样，是一个远程调用组件，它是以接口的方式来进行调用，时调用姿势更加优雅，使用起来更加方便。<a class="link" target="_blank" rel="noopener" href="https://spring.io/projects/spring-cloud-openfeign#overview">官网地址<i class="fas fa-external-link-alt"></i></a></p>
                     
                 </div>
@@ -260,7 +260,7 @@
 
                 <div class="home-article-content markdown-body">
                     
-                        <p><img lazyload src="/images/loading.svg" data-src="/springcloud-ribbon.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
+                        <p><img src="/2019/12/15/springcloud-ribbon/springcloud-ribbon.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
 <p>一般负载均衡指的是服务端的负载均衡，硬件有 F5 等设备，软件方面有 nginx 等。负载均衡是系统在高可用和容灾性等方面的重要的解决方案之一。而 Ribbon 是一款基于客户端的负载均衡应用。<br>我的理解是，请求没有到达应用之前，是由 nginx 来进行请求分发，决定进入到那个服务，当请求进入到服务之后，在服务调用时由 Ribbon 来进行服务之间请求分发，实现内网应用的负载均衡。</p>
                     
                 </div>
@@ -313,7 +313,7 @@
 
                 <div class="home-article-content markdown-body">
                     
-                        <p><img lazyload src="/images/loading.svg" data-src="/alipay-wechatpay-qr.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
+                        <p><img src="/2019/12/01/%E6%94%AF%E4%BB%98%E5%AE%9D%E5%BE%AE%E4%BF%A1%E4%B8%80%E7%A0%81%E6%94%AF%E4%BB%98/alipay-wechatpay-qr.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
 <p>前几天有个需求要将支付宝和微信扫码集中在同一个二维码上面。当时已经上线了微信各种渠道支付（Native，公众号，H5）,支付宝上线了 Native，H5 支付，于是开始了一码多付的开发。在开发过程中也碰到了一些问题，好在快速解决了问题。</p>
                     
                 </div>
@@ -366,7 +366,7 @@
 
                 <div class="home-article-content markdown-body">
                     
-                        <p><img lazyload src="/images/loading.svg" data-src="/nginx.png" alt="Photo by deleted on wallhaven.cc"></p>
+                        <p><img src="/2019/11/25/nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/nginx.png" alt="Photo by deleted on wallhaven.cc"></p>
 <p>nginx 是互联网公司必不可少的一个中间件。它不仅性能好，而且资源占用极低。nginx (<a class="link" target="_blank" rel="noopener" href="http://www.nginx.cn/doc/)[%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3]%EF%BC%8C(http://nginx.org/en/download.html)[%E5%AE%98%E6%96%B9%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80]">http://www.nginx.cn/doc/)[中文文档]，(http://nginx.org/en/download.html)[官方下载地址]<i class="fas fa-external-link-alt"></i></a></p>
                     
                 </div>
@@ -566,8 +566,6 @@
     <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
 
 
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/lazyload.js"></script>
 
 
 <div class="post-scripts">

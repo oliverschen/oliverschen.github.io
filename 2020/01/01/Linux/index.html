@@ -19,7 +19,7 @@
     <script id="hexo-configurations">
     let KEEP = window.KEEP || {};
     KEEP.hexo_config = {"hostname":"oliverschen.github.io","root":"/","language":"zh-Hans","path":"search.xml"};
-    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.0"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.0"};
     KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days age","week":"%s weeks age","month":"%s months age","year":"%s years age"};
   </script>
 <meta name="generator" content="Hexo 5.3.0"></head>
@@ -214,7 +214,7 @@
         
 
         <div class="article-content markdown-body">
-            <p><img lazyload src="/images/loading.svg" data-src="/linux.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
+            <p><img src="/2020/01/01/Linux/linux.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
 <p>Linux 是服务端最常用的操作系统，也是范围最广的，都是通过命令来交互的，记录些常用命令，这里会一直追加，年底了，回家的诱惑越来越强。</p>
 <a id="more"></a>
 
@@ -232,7 +232,7 @@
 <blockquote>
 <p>使用命令 ll 就可以清晰的查看 Linux 文件目录权限。</p>
 </blockquote>
-<p><img lazyload src="/images/loading.svg" data-src="/Linux-%E6%9D%83%E9%99%90.png" alt="文件目录权限"></p>
+<p><img src="/2020/01/01/Linux/Linux-%E6%9D%83%E9%99%90.png" alt="文件目录权限"></p>
 <p>具体的命令执行后：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">drwxr-xr-x. 2 root root  4096 May 11  2019 bin</span><br><span class="line">drwxr-xr-x. 2 root root  4096 May 11  2019 etc</span><br><span class="line">drwxr-xr-x. 2 root root  4096 May 11  2019 games</span><br><span class="line">-rw-r--r--. 1 root root 13871 Dec 16 11:38 jihe.sh</span><br><span class="line">drwxr-xr-x. 2 root root  4096 May 11  2019 include</span><br><span class="line">drwxr-xr-x. 2 root root  4096 May 11  2019 lib</span><br></pre></td></tr></table></figure>
 <p>比较有意思的是，以上 <code>rwx</code> 表示的权限也可以用数字来描述：<br>r=4,w=2,x=1；如果想设置可读可执行：r + x = 5</p>
@@ -541,8 +541,6 @@
     <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
 
 
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/lazyload.js"></script>
 
 
 <div class="post-scripts">

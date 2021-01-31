@@ -7,7 +7,7 @@ category: nginx
 
 ![Photo by deleted on wallhaven.cc](/nginx.png)
 
-nginx 是互联网公司必不可少的一个中间件。它不仅性能好，而且资源占用极低。nginx (http://www.nginx.cn/doc/)[中文文档]，(http://nginx.org/en/download.html)[官方下载地址]
+nginx 是互联网公司必不可少的一个中间件。它不仅性能好，而且资源占用极低。nginx [中文文档](http://www.nginx.cn/doc/)，[官方下载地址](http://nginx.org/en/download.html)
 
 <!--more-->
 
@@ -68,7 +68,7 @@ events 配置
 
 ```bash
 events{
-   }
+      }
 # 参数
 # 每个 worker 进程所能够打开的最大并发链接数数量
 # 总最大并发数：worker_processes * worker_connections
@@ -104,14 +104,13 @@ http{
 ```
 server_name
 
-> 1. 虚拟主机名称后可以跟多个由空白字符分割的字符串
-> 2. 支持 * 通配任意长度的任意字符：server_name *.baidu.com www.baidu.*
-> 3. 支持 ~ 起始的字符做正则表达式匹配，但是存在性能问题：server_name ~^www\d+\.baidu\.com$
-> 匹配优先级：
-> a. 字符串精确匹。b. 左侧 * 通配符。c. 右侧 * 通配符 eg:com.www.baidu.* 。 d. 正则。e. defult_server
-
-
-
+```bash
+ 1. 虚拟主机名称后可以跟多个由空白字符分割的字符串
+ 2. 支持 * 通配任意长度的任意字符：server_name *.baidu.com www.baidu.*
+ 3. 支持 ~ 起始的字符做正则表达式匹配，但是存在性能问题：server_name ~^www\d+\.baidu\.com$
+ 匹配优先级：
+ a. 字符串精确匹。b. 左侧 * 通配符。c. 右侧 * 通配符 eg:com.www.baidu.* 。 d. 正则。e. defult_server
+```
 location 配置
 
 ```bash

@@ -5,13 +5,16 @@ tags: netty
 category: netty
 ---
 
-![Photo by deleted on wallhaven.cc](/netty.png)
+![Photo by WallpaperManiac on wallhaven.cc](/netty.png)
 
 
 介绍
 1. 高性能，时间驱动，异步非阻塞
 2. 基于 NIO 的客户端，服务端编程框架
 3. 可靠的稳定性和伸缩性
+
+<!--more-->
+
 
 应用场景
 1. 高性能领域

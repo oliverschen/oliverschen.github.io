@@ -491,7 +491,7 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
   <entry>
     <title>Spring源码</title>
     <url>/2021/02/10/Spring%E6%BA%90%E7%A0%81/</url>
-    <content><![CDATA[<p><img src="/2021/02/10/Spring%E6%BA%90%E7%A0%81/destex.png" alt="Photo by lumberjacck on wallhaven.cc"></p>
+    <content><![CDATA[<p><img src="/2021/02/10/Spring%E6%BA%90%E7%A0%81/Spring-source.png" alt="Photo by destex on wallhaven.cc"></p>
 <p>Spring 源码流程分析，主要包含 Spring 核心功能 IoC 和 AOP 部分代码，Spring 循环依赖等问题。</p>
 <a id="more"></a>
 
@@ -1365,6 +1365,33 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
+    <title>springcloud-feign</title>
+    <url>/2019/12/15/springcloud-feign/</url>
+    <content><![CDATA[<p><img src="/2019/12/15/springcloud-feign/springcloud-feign.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
+<p>在远程调用时，Java 提供了 UrlConnection 来进行远程调用，也有 Apace 封装的 HttpClient 库进行调用。 在<a class="link" href="https://fengzhu.top/2019/04/18/springcloud-eureka/">eureka<i class="fas fa-external-link-alt"></i></a>中的例子使用了 RestTemplate 来进行服务调用，feign 也一样，是一个远程调用组件，它是以接口的方式来进行调用，时调用姿势更加优雅，使用起来更加方便。<a class="link" href="https://spring.io/projects/spring-cloud-openfeign#overview">官网地址<i class="fas fa-external-link-alt"></i></a></p>
+<a id="more"></a>
+
+<h4 id="feign"><a href="#feign" class="headerlink" title="feign"></a>feign</h4><p>改造 <a class="link" href="https://fengzhu.top/2019/04/18/springcloud-eureka/">eureka<i class="fas fa-external-link-alt"></i></a>中的例子，将 restTemplate 修改成 feign 调用。</p>
+<h5 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h5><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h5 id="开启-feign"><a href="#开启-feign" class="headerlink" title="开启 feign"></a>开启 feign</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="comment">// 开启 feign 客户端</span></span><br><span class="line"><span class="meta">@EnableFeignClients</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JiheOrderApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(JiheOrderApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@LoadBalanced</span></span><br><span class="line">    <span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RestTemplate <span class="title">restTemplate</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="接口方式调用"><a href="#接口方式调用" class="headerlink" title="接口方式调用"></a>接口方式调用</h5><p>feign 调用是以接口的方式进行 http 调用</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@FeignClient(value = &quot;jihe-user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FeignService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/user/&#123;id&#125;&quot;,method = RequestMethod.GET)</span></span><br><span class="line">    <span class="function">String <span class="title">getUser</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> <span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>@FeignClient 指定具体要调用的服务应用名。</li>
+<li>@RequestMapping 指定要调用的服务路径，请求方式。</li>
+</ol>
+<h5 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OderController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// @Autowired</span></span><br><span class="line">    <span class="comment">// private OderService oderService;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// @RequestMapping(&quot;/order/&#123;name&#125;/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="comment">// public String getOrderAndUserInfo(@PathVariable(&quot;name&quot;) String name, @PathVariable(&quot;id&quot;) int id) &#123;</span></span><br><span class="line">    <span class="comment">//     String user = oderService.getUser(id);</span></span><br><span class="line">    <span class="comment">//     return &quot;我是：&quot; + name + &quot;,&quot; + user;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> FeignService feignService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/order-feign/&#123;name&#125;/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getOrderAndUserInfoByFeign</span><span class="params">(<span class="meta">@PathVariable(&quot;name&quot;)</span> String name, <span class="meta">@PathVariable(&quot;id&quot;)</span> <span class="keyword">int</span> id)</span> </span>&#123;</span><br><span class="line">        String user = feignService.getUser(id);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;FEIGN-我是：&quot;</span> + name + <span class="string">&quot;,&quot;</span> + user;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>引入 feign 接口，直接调用接口中的方法，实现对远程服务的调用。实现方式很快捷方便。访问 <code>http://localhost:8082/order-feign/jihe/1002</code> 这个路径，可以看到具体的结果。</p>
+<hr>
+<center></center>]]></content>
+      <categories>
+        <category>springcloud</category>
+      </categories>
+      <tags>
+        <tag>springcloud</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>springcloud-eureka</title>
     <url>/2019/04/18/springcloud-eureka/</url>
     <content><![CDATA[<p><img src="/2019/04/18/springcloud-eureka/eureka.png" alt="不如吃茶去"></p>
@@ -1419,33 +1446,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
 <hr>
 <center>不积跬步，无以至千里</center>
 ]]></content>
-      <categories>
-        <category>springcloud</category>
-      </categories>
-      <tags>
-        <tag>springcloud</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>springcloud-feign</title>
-    <url>/2019/12/15/springcloud-feign/</url>
-    <content><![CDATA[<p><img src="/2019/12/15/springcloud-feign/springcloud-feign.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
-<p>在远程调用时，Java 提供了 UrlConnection 来进行远程调用，也有 Apace 封装的 HttpClient 库进行调用。 在<a class="link" href="https://fengzhu.top/2019/04/18/springcloud-eureka/">eureka<i class="fas fa-external-link-alt"></i></a>中的例子使用了 RestTemplate 来进行服务调用，feign 也一样，是一个远程调用组件，它是以接口的方式来进行调用，时调用姿势更加优雅，使用起来更加方便。<a class="link" href="https://spring.io/projects/spring-cloud-openfeign#overview">官网地址<i class="fas fa-external-link-alt"></i></a></p>
-<a id="more"></a>
-
-<h4 id="feign"><a href="#feign" class="headerlink" title="feign"></a>feign</h4><p>改造 <a class="link" href="https://fengzhu.top/2019/04/18/springcloud-eureka/">eureka<i class="fas fa-external-link-alt"></i></a>中的例子，将 restTemplate 修改成 feign 调用。</p>
-<h5 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h5><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h5 id="开启-feign"><a href="#开启-feign" class="headerlink" title="开启 feign"></a>开启 feign</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="comment">// 开启 feign 客户端</span></span><br><span class="line"><span class="meta">@EnableFeignClients</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JiheOrderApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(JiheOrderApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@LoadBalanced</span></span><br><span class="line">    <span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RestTemplate <span class="title">restTemplate</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="接口方式调用"><a href="#接口方式调用" class="headerlink" title="接口方式调用"></a>接口方式调用</h5><p>feign 调用是以接口的方式进行 http 调用</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@FeignClient(value = &quot;jihe-user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FeignService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/user/&#123;id&#125;&quot;,method = RequestMethod.GET)</span></span><br><span class="line">    <span class="function">String <span class="title">getUser</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> <span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>@FeignClient 指定具体要调用的服务应用名。</li>
-<li>@RequestMapping 指定要调用的服务路径，请求方式。</li>
-</ol>
-<h5 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OderController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// @Autowired</span></span><br><span class="line">    <span class="comment">// private OderService oderService;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// @RequestMapping(&quot;/order/&#123;name&#125;/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="comment">// public String getOrderAndUserInfo(@PathVariable(&quot;name&quot;) String name, @PathVariable(&quot;id&quot;) int id) &#123;</span></span><br><span class="line">    <span class="comment">//     String user = oderService.getUser(id);</span></span><br><span class="line">    <span class="comment">//     return &quot;我是：&quot; + name + &quot;,&quot; + user;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> FeignService feignService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/order-feign/&#123;name&#125;/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getOrderAndUserInfoByFeign</span><span class="params">(<span class="meta">@PathVariable(&quot;name&quot;)</span> String name, <span class="meta">@PathVariable(&quot;id&quot;)</span> <span class="keyword">int</span> id)</span> </span>&#123;</span><br><span class="line">        String user = feignService.getUser(id);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;FEIGN-我是：&quot;</span> + name + <span class="string">&quot;,&quot;</span> + user;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>引入 feign 接口，直接调用接口中的方法，实现对远程服务的调用。实现方式很快捷方便。访问 <code>http://localhost:8082/order-feign/jihe/1002</code> 这个路径，可以看到具体的结果。</p>
-<hr>
-<center></center>]]></content>
       <categories>
         <category>springcloud</category>
       </categories>
@@ -1582,6 +1582,47 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
+    <title>timeline</title>
+    <url>/2019/03/25/timeline/</url>
+    <content><![CDATA[<p><img src="/2019/03/25/timeline/timeline.png"></p>
+<center>时间旅途</center>   
+
+<a id="more"></a>
+
+<p><img src="/2019/03/25/timeline/%E4%B8%80%E7%94%9F%E6%89%80%E7%88%B1.png"></p>
+<p>时间线</p>
+<hr>
+<p>2015 年 3 月 14 号，我们在一起了。</p>
+<p>那时我没有送她最爱的满天星</p>
+<p>我们喜欢在学校周围的街边散步，一走就是几个小时。</p>
+<p>感觉很开心。</p>
+<p>在最好的年纪一起开心大笑过，一起流过泪。</p>
+<p>市中心那家面馆</p>
+<p>健身房下面的那家冰激凌店，还有农场里没有全开的樱花。</p>
+<p>综合楼前的操场。</p>
+<p>时间过的很快，转眼就毕业了。</p>
+<p>时间走了，我们都在。</p>
+<p>我很幸运。</p>
+<hr>
+<p>现在</p>
+<p>我们一起徒步上过华山，虽然这辈子都不想在爬第二次，但是觉得很值得。</p>
+<p>6 月份的天在青海穿着棉袄</p>
+<p>我们饶了青海湖一圈。</p>
+<p>刚察很好玩，北方城市的沧桑和寂静给人不一样的感觉。</p>
+<p>在重庆吃火锅，你眼睛不小心进了辣椒油，吃完感觉没有嘴了。</p>
+<p>但我们还是默默都说还会再来。</p>
+<p>到洪崖洞挤过人，也看了网红轻轨。</p>
+<p>还有那个全是我们足迹的小岛。</p>
+<p>这只是开始。</p>
+]]></content>
+      <categories>
+        <category>we</category>
+      </categories>
+      <tags>
+        <tag>we</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>springcloud</title>
     <url>/2019/04/18/springcloud/</url>
     <content><![CDATA[<p><img src="/2019/04/18/springcloud/springcloud.png" alt="大多数人的生活，是无数次选择的结果"></p>
@@ -1650,47 +1691,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </categories>
       <tags>
         <tag>springcloud</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>timeline</title>
-    <url>/2019/03/25/timeline/</url>
-    <content><![CDATA[<p><img src="/2019/03/25/timeline/timeline.png"></p>
-<center>时间旅途</center>   
-
-<a id="more"></a>
-
-<p><img src="/2019/03/25/timeline/%E4%B8%80%E7%94%9F%E6%89%80%E7%88%B1.png"></p>
-<p>时间线</p>
-<hr>
-<p>2015 年 3 月 14 号，我们在一起了。</p>
-<p>那时我没有送她最爱的满天星</p>
-<p>我们喜欢在学校周围的街边散步，一走就是几个小时。</p>
-<p>感觉很开心。</p>
-<p>在最好的年纪一起开心大笑过，一起流过泪。</p>
-<p>市中心那家面馆</p>
-<p>健身房下面的那家冰激凌店，还有农场里没有全开的樱花。</p>
-<p>综合楼前的操场。</p>
-<p>时间过的很快，转眼就毕业了。</p>
-<p>时间走了，我们都在。</p>
-<p>我很幸运。</p>
-<hr>
-<p>现在</p>
-<p>我们一起徒步上过华山，虽然这辈子都不想在爬第二次，但是觉得很值得。</p>
-<p>6 月份的天在青海穿着棉袄</p>
-<p>我们饶了青海湖一圈。</p>
-<p>刚察很好玩，北方城市的沧桑和寂静给人不一样的感觉。</p>
-<p>在重庆吃火锅，你眼睛不小心进了辣椒油，吃完感觉没有嘴了。</p>
-<p>但我们还是默默都说还会再来。</p>
-<p>到洪崖洞挤过人，也看了网红轻轨。</p>
-<p>还有那个全是我们足迹的小岛。</p>
-<p>这只是开始。</p>
-]]></content>
-      <categories>
-        <category>we</category>
-      </categories>
-      <tags>
-        <tag>we</tag>
       </tags>
   </entry>
   <entry>

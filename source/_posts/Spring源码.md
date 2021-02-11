@@ -12,7 +12,7 @@ Spring 源码流程分析，主要包含 Spring 核心功能 IoC 和 AOP 部分�
 <!--more-->
 
 ## Bean生命周期
-![生命周期](https://cdn.nlark.com/yuque/0/2021/png/2731471/1612514147347-8de360d0-548c-4cc9-afac-5301027077c5.png)
+![生命周期](/bean.jpg)
 
 ## 🦸‍♀️IoC
 控制反转：将创建对象的权利交给 Spring 容器来完成
@@ -24,7 +24,9 @@ Spring 源码流程分析，主要包含 Spring 核心功能 IoC 和 AOP 部分�
 ### 流程图
 下面是通过加载 XML 的形式加载 Bean 时 IoC 容器启动过程，包含初始化 Bean 和 循环依赖问题。
 > ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-![IoC](https://cdn.nlark.com/yuque/0/2020/png/2731471/1608736702583-7e2284b5-ccb4-4a27-9f19-0ff33683e487.png)
+
+![IoC](/IoC.png)
+
 以注解扫描的方式启动和 XML 的类似。流程是一样的。
 ### 后置处理器🤖️
 Spring 提供了很多空接口，供开发者自己实现，比如下面是 PostProcessor 「后置处理器」相关接口
@@ -94,6 +96,8 @@ public class XmlBean {
 ```
 ## 🦸‍♂️AOP
 AOP 是在原有代码的基础上，对代码进行「横向」增强。OOP 中继承都是「竖向」对代码进行增强，AOP 弥补了这个空白。
+
+![aop-oop](/aop-oop.jpg)
 ### 实现
 #### AspectJ
 Eclipse 基金会提供的一个完整的解决方案。功能比 Spring AOP 要强大。它属于静态织入，有多种织入方式。
@@ -114,11 +118,13 @@ JDK 内置的动态代理类。在 Spring 中如果目标类有接口就直接�
 ### 流程
 类关系
 下图是自动代理主要的类 AnnotationAwareAspectJAutoProxyCreator 继承关系，它本质其实是一个拥有BeanPostProcessor 接口特性的类。
-![](https://cdn.nlark.com/yuque/0/2020/png/2731471/1608858396222-f3e2a29c-6c8b-4d66-9b5a-6b4273a13709.png)
+![](class-image.png)
+
 调用流程
 1. AOP 生成代理对象是依赖了 IoC 容器，在容器初始化完 Bean 之后，在 BeanPostProcessor 后置处理器的 after 方法中执行生成过程。
 2. 调用时先拿到目标方法的拦截器链，然后执行对应的切面方法。
-![AOP](https://cdn.nlark.com/yuque/0/2020/png/2731471/1608868731344-d57c3210-abe3-40d6-96d4-7b108a39c7cd.png?x-oss-process=image%2Fresize%2Cw_2062)
+![AOP](/AOP.png)
+
 #### 代码
 ##### 切面
 ```java

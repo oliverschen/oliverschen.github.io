@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="海贼王">
+    <meta name="description" content="一直在路上">
+    <meta name="author" content="jihe">
+    
+    <title>
+        
+            SpringBoot源码 |
+        
+        jihe
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/logo.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"oliverschen.github.io","root":"/","language":"zh-Hans","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.0"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days age","week":"%s weeks age","month":"%s months age","year":"%s years age"};
+  </script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                jihe
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                ABOUT
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">SpringBoot源码</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">jihe</span>
+                        
+                            <span class="author-label">Engineer</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-02-14 15:04:06
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Spring/">Spring</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Spring/">Spring</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>614 Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>2 Mins</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/SpringBoot.png" alt="Photo by destex on JustJon"></p>
+<p>Springboot 是 Spring 退出的一个快速集成开发框架，可以很容易的搭建一个 Web 项目，它采用 <code>starter</code> 的方式来引入需要的组件，自动装配需要的配置信息。很大程度的提高了开发效率，让开发者专注于具体业务的开发。这里是我在看 SpringBoot 源码时的一些分析和流程梳理。 </p>
+<a id="more"></a>
+
+<h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><h3 id="SpringBootApplication"><a href="#SpringBootApplication" class="headerlink" title="@SpringBootApplication"></a>@SpringBootApplication</h3><p>这是 SpringBoot 启动动类注解，它是一个组合注解。</p>
+<p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/SpringBoot-anno.jpg" alt="SpringBootApplication 注解"></p>
+<h4 id="SpringBootConfiguration"><a href="#SpringBootConfiguration" class="headerlink" title="@SpringBootConfiguration"></a>@SpringBootConfiguration</h4><p>它导入了 @Configuration 注解，拥有配置属性。所以 @SpringBootApplication 注解也拥有「配置类」属性。</p>
+<h4 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h4><h5 id="AutoConfigurationImportSelector"><a href="#AutoConfigurationImportSelector" class="headerlink" title="AutoConfigurationImportSelector"></a>AutoConfigurationImportSelector</h5><p>开启自动配置注解，这个注解 Import 了一个 AutoConfigurationImportSelector 自动配置导入选择器。</p>
+<p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/impl.png" alt="实现类"></p>
+<p>它实现了 Aware 接口，在 IoC 容器启动后，在初始化 Bean 时执行导入，Selector 类会去加载 <code>spring-boot-autoconfigure</code> 包下 <code>Resource/META-INFO/spring.factories</code> 文件中的  <code>Auto Configure</code> 自动配置类，这个文件已经默认将 Redis,RabbitMQ,Kafka,Mybatis,elasticsearch 等常见的第三方自动配置类配置了。只要引入依赖就可以直接使用了。</p>
+<h5 id="AutoConfigurationPackage"><a href="#AutoConfigurationPackage" class="headerlink" title="@AutoConfigurationPackage"></a>@AutoConfigurationPackage</h5><p>自动配置基础扫描包，这个注解 Import 了 AutoConfigurationPackages.Registrar 类，负责将标注次注解的类所在的包名注册到 Bean 定义中</p>
+<h4 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h4><p>组建扫描注解，通过 ClassUtils.<em>getPackageName</em>(启动类) 扫描启动类包以及子包中的 @Component，@Service 等注解，将其加入到 IoC 容器中。</p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><p>下图是源码的大致调用和启动流程，蓝色为主干，其他均为各个分支。</p>
+<p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/flow.png" alt="源码流程图"></p>
+<h3 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h3><h4 id="invokeBeanFactoryPostProcessors-beanFactory"><a href="#invokeBeanFactoryPostProcessors-beanFactory" class="headerlink" title="invokeBeanFactoryPostProcessors(beanFactory)"></a>invokeBeanFactoryPostProcessors(beanFactory)</h4><p>扫描 Bean 定义并且执行核心的自动配置都是在这里完成的，@SpringBootApplication 包含的所有注解涉及的步骤也是在这个方法中被加载使用。</p>
+<h5 id="AutoConfigurationImportSelector-1"><a href="#AutoConfigurationImportSelector-1" class="headerlink" title="AutoConfigurationImportSelector"></a>AutoConfigurationImportSelector</h5><p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/auto-import.png" alt="自动装配类"></p>
+<p>它实现 Aware 和 ImportSelector 接口，在配置类记载是执行，并找到 <code>spring-boot-autoconfigure</code></p>
+<p>包中的 spring.factories 下所有的自动配置类，进行过滤并且自动装配。</p>
+<h5 id="过滤规则"><a href="#过滤规则" class="headerlink" title="过滤规则"></a>过滤规则</h5><p>SpringBoot 自动装配时不会把所有的配置都加载进来 ，它会进行过滤，只添加项目需要的配置类，根据下面的注解：</p>
+<ol>
+<li>@ConditionalOnProperty</li>
+<li>@ConditionalOnClass</li>
+<li>@ConditionalOnBean</li>
+<li>@ConditionalOnWebApplication</li>
+</ol>
+<p>通过自动配置类上面的注解进行过滤，筛选出项目依赖的配置类。</p>
+<h5 id="DispatcherServletAutoConfiguration"><a href="#DispatcherServletAutoConfiguration" class="headerlink" title="DispatcherServletAutoConfiguration"></a>DispatcherServletAutoConfiguration</h5><p>@ConditionalOnWebApplication(type = Type.SERVLET) 以 SERVLET 类型启动并且 @ConditionalOnClass(DispatcherServlet.class) 存在该类时会自动加载 DispatcherServlet 相关配置。</p>
+<h4 id="onRefresh"><a href="#onRefresh" class="headerlink" title="onRefresh()"></a>onRefresh()</h4><p>如果依赖了 <code>spring-boot-starter-web</code> ，会在此时去创建 tomcat 相关的操作。</p>
+<hr>
+<center>🌵</center>
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：SpringBoot源码</li>
+        <li>Post author：jihe</li>
+        <li>Create time：2021-02-14 15:04:06</li>
+        <li>
+            Post link：https://oliverschen.github.io/2021/02/14/SpringBoot源码/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/02/10/Spring%E6%BA%90%E7%A0%81/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Spring源码</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+    <div id="gitalk-container"></div>
+    <script 
+            src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script >
+
+        function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+                __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+                Gitalk && new Gitalk({
+                    clientID: 'e997912961463b00de10',
+                    clientSecret: 'b31873817cc187ebde3b36cbdc09bd5892424a3e',
+                    repo: 'oliverschen.github.io',
+                    owner: 'oliverschen',
+                    admin: ['oliverschen'],
+                    id: __gitalk__pathname,
+                    language: 'zh-Hans'
+                }).render('gitalk-container');
+
+            } catch (e) {
+                window.Gitalk = null;
+            }
+        }
+
+        if ('false') {
+            const loadGitalkTimeout = setTimeout(() => {
+                loadGitalk();
+                clearTimeout(loadGitalkTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+        }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">jihe</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        Visitor Count&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        Totalview&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3"><span class="nav-number">1.</span> <span class="nav-text">注解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringBootApplication"><span class="nav-number">1.1.</span> <span class="nav-text">@SpringBootApplication</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SpringBootConfiguration"><span class="nav-number">1.1.1.</span> <span class="nav-text">@SpringBootConfiguration</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EnableAutoConfiguration"><span class="nav-number">1.1.2.</span> <span class="nav-text">@EnableAutoConfiguration</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#AutoConfigurationImportSelector"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">AutoConfigurationImportSelector</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#AutoConfigurationPackage"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">@AutoConfigurationPackage</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ComponentScan"><span class="nav-number">1.1.3.</span> <span class="nav-text">@ComponentScan</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">源码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">重点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#invokeBeanFactoryPostProcessors-beanFactory"><span class="nav-number">2.1.1.</span> <span class="nav-text">invokeBeanFactoryPostProcessors(beanFactory)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#AutoConfigurationImportSelector-1"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">AutoConfigurationImportSelector</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">过滤规则</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#DispatcherServletAutoConfiguration"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">DispatcherServletAutoConfiguration</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#onRefresh"><span class="nav-number">2.1.2.</span> <span class="nav-text">onRefresh()</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/toc.js"></script>
+    
+</div>
+
+
+
+</body>
+</html>

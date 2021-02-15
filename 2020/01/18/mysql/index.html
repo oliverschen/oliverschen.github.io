@@ -246,7 +246,7 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 0 关闭自动提交，查询也会自动开启，并且不会自动提交。一直持续到commit/rollback，或者断开连接。</span></span><br><span class="line"><span class="keyword">set</span> autocommit<span class="operator">=</span><span class="number">0</span></span><br></pre></td></tr></table></figure>
 <p>由于 MySQL MVCC 多版本并发控制，每个操作都会有相应的回滚操作保存下来，每个事务都会记录。当设置为自动提交时，连接成功就会执行 set autocommit=0 的操作，每个操作都会在事务中，如果时长连接就会导致意外长事务。<strong>所以一般 set autocommit=1,显示开启事务</strong></p>
 <hr>
-<center></center>
+<center>我该选哪个？</center>
         </div>
 
         

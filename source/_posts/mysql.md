@@ -1,5 +1,5 @@
 ---
-title: mysql
+title: MySQL
 date: 2020-01-18 22:16:51
 tags: mysql
 category: mysql

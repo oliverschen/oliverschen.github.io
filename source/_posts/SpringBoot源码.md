@@ -79,6 +79,75 @@ SpringBoot 自动装配时不会把所有的配置都加载进来 ，它会进�
 
 如果依赖了 `spring-boot-starter-web` ，会在此时去创建 tomcat 相关的操作。
 
+### refresh
+refresh() 方法是容器启动的核心方法。
+```java
+@Override
+public void refresh() throws BeansException, IllegalStateException {
+    synchronized (this.startupShutdownMonitor) {
+        // Prepare this context for refreshing.
+        //1. 设置容器启动状态。创建早期事件监听，发布于多播器创建之前
+        prepareRefresh();
+        
+        // Tell the subclass to refresh the internal bean factory.
+        //2. 创建 beanFactory，加载 beanDefinitions(bean 定义)
+        ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+        
+        // Prepare the bean factory for use in this context.
+        //3. 准备工厂的类加载器等信息。设置 aware 类型的后置处理器，注册默认的环境 bean 到工厂中的一级缓存。
+        prepareBeanFactory(beanFactory);
+        try {
+            // Allows post-processing of the bean factory in context subclasses.
+            //4. 处理 BeanFactoryPostProcessor 后置处理器流程
+            postProcessBeanFactory(beanFactory);
+            
+            // Invoke factory processors registered as beans in the context.
+            //5. 调用执行后置处理器 BeanDefinitionRegistryPostProcessors, BeanFactoryPostProcessors 
+            invokeBeanFactoryPostProcessors(beanFactory);
+            
+            // Register bean processors that intercept bean creation.
+            //6. 注册 BeanPostProcessors 后置处理器
+            registerBeanPostProcessors(beanFactory);
+            
+            //7. Initialize message source for this context.初始化国际化的一直资源
+            initMessageSource();
+            
+            //8. Initialize event multicaster for this context.初始化事件多播器
+            initApplicationEventMulticaster();
+            
+            //9. Initialize other special beans in specific context subclasses.留给子类的扩展点
+            onRefresh();
+            
+            //10. Check for listener beans and register them.注册监听到多播器中
+            registerListeners();
+            
+            // Instantiate all remaining (non-lazy-init) singletons.
+            //11. 初始化所有的非懒加载单例 bean，重要
+            finishBeanFactoryInitialization(beanFactory);
+            
+            //12. Last step: publish corresponding event.最后发布一些事件等
+            finishRefresh();
+        }
+        catch (BeansException ex) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("Exception encountered during context initialization - " + "cancelling refresh attempt: " + ex);
+            }
+            // Destroy already created singletons to avoid dangling resources.
+            destroyBeans();
+            // Reset 'active' flag.
+            cancelRefresh(ex);
+            // Propagate exception to caller.
+            throw ex;
+        }
+        finally {
+            // Reset common introspection caches in Spring's core, since we
+            // might not ever need metadata for singleton beans anymore...
+            resetCommonCaches();
+        }
+    }
+}
+```
+
 ---
 
 <center>🌵</center>

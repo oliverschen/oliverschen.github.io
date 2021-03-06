@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://oliverschen.github.io/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/</loc>
+    <lastmod>2021-03-06</lastmod>
+  </url>
+  <url>
     <loc>https://oliverschen.github.io/2019/12/01/%E6%94%AF%E4%BB%98%E5%AE%9D%E5%BE%AE%E4%BF%A1%E4%B8%80%E7%A0%81%E6%94%AF%E4%BB%98/</loc>
     <lastmod>2021-03-02</lastmod>
   </url>
@@ -22,10 +26,6 @@
   </url>
   <url>
     <loc>https://oliverschen.github.io/2021/02/10/Spring%E6%BA%90%E7%A0%81/</loc>
-    <lastmod>2021-02-14</lastmod>
-  </url>
-  <url>
-    <loc>https://oliverschen.github.io/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/</loc>
     <lastmod>2021-02-14</lastmod>
   </url>
   <url>
@@ -69,11 +69,11 @@
     <lastmod>2021-01-31</lastmod>
   </url>
   <url>
-    <loc>https://oliverschen.github.io/2019/12/15/springcloud-config/</loc>
+    <loc>https://oliverschen.github.io/2019/11/23/springboot%E9%9B%86%E6%88%90jedis%E5%92%8Credisson/</loc>
     <lastmod>2021-01-31</lastmod>
   </url>
   <url>
-    <loc>https://oliverschen.github.io/2019/11/23/springboot%E9%9B%86%E6%88%90jedis%E5%92%8Credisson/</loc>
+    <loc>https://oliverschen.github.io/2019/12/15/springcloud-config/</loc>
     <lastmod>2021-01-31</lastmod>
   </url>
   <url>

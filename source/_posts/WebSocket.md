@@ -20,7 +20,7 @@ WebSocket：和 Http 一样，是应用层协议。首次建立连接时需要�
 ### 使用
 #### gradle 坐标
 
-```
+```json
 implementation 'org.springframework.boot:spring-boot-starter-websocket'
 ```
 
@@ -28,7 +28,7 @@ implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
 开启 WebSocket 自动装配，和测试群发消息的 API
 
-```
+```java
 @RestController
 @EnableWebSocket // 开启 WebSocket
 @SpringBootApplication
@@ -53,7 +53,7 @@ public class WebSocketApplication {
 
 #### 配置类
 
-```
+```java
 @Configuration
 public class WebScoketConfig {
 
@@ -68,7 +68,7 @@ public class WebScoketConfig {
 
 这里需要注意使用 Spring 自动注入的时候只能在首次获取到注入值
 
-```
+```java
 @Slf4j
 @Component
 @ServerEndpoint(value = "/ws/conn")
@@ -127,7 +127,7 @@ public class WsServer implements InitializingBean {
 
 #### service类
 
-```
+```java
 @Slf4j
 @Service
 public class WsService {
@@ -194,6 +194,6 @@ public class WsService {
 2. 多开窗口，访问 `http://localhost:7777/publish` 测试群发消息。
 
 
-###
+***
 
 <center>别拖延，都要还回来</center>

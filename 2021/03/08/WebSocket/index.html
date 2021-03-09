@@ -57,7 +57,7 @@
                             <a class=""
                                href="/"
                             >
-                                HOME
+                                首页
                             </a>
                         </li>
                     
@@ -65,7 +65,7 @@
                             <a class=""
                                href="/archives"
                             >
-                                ARCHIVES
+                                归档
                             </a>
                         </li>
                     
@@ -73,7 +73,7 @@
                             <a class=""
                                href="/categories"
                             >
-                                CATEGORIES
+                                分类
                             </a>
                         </li>
                     
@@ -81,7 +81,7 @@
                             <a class=""
                                href="/about"
                             >
-                                ABOUT
+                                关于
                             </a>
                         </li>
                     
@@ -108,22 +108,22 @@
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/">HOME</a>
+                       href="/">首页</a>
                 </li>
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/archives">ARCHIVES</a>
+                       href="/archives">归档</a>
                 </li>
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/categories">CATEGORIES</a>
+                       href="/categories">分类</a>
                 </li>
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/about">ABOUT</a>
+                       href="/about">关于</a>
                 </li>
             
         </ul>
@@ -193,12 +193,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>53 Words</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>893 字</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>1 Mins</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>4 分钟</span>
         </span>
     
     
@@ -215,22 +215,35 @@
 
         <div class="article-content markdown-body">
             <p><img src="/2021/03/08/WebSocket/websocket.png" alt="Photo by JustJon on wallhaven.cc"></p>
-<p>WebScoket 协议支持浏览器和服务器双向通信，HTTP 协议只能浏览器向服务器主动请求获取数据，而 WebSocket 协议服务端可以推送消息给浏览器</p>
+<p>WebSocket 协议建立的是一个长连接，Http 协议是浏览器通过主动请求服务端建立连接获取数据，而 WebScoket 协议服务端可以实现主动向浏览器推送数据服务，浏览器也可以主动向服务端发生请求，它是一个全双工通信协议。WebSocket 协议在第一次连接时需要通过 Http 协议进行建立，建立成功之后通过 TCP 进行数据交换。在一些需要即使获取服务端信息的场景下，如果使用 Http 只能采用轮训的方式来获取，在及时性和资源方面都不友好，而通过 WebSocket 可以立即收到服务端的推送消息。</p>
 <a id="more"></a>
+<h3 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h3><p>Socket：一组系统为了避免直接操作底层 TCP/UDP 协议而提供的 API 接口。在通过网络层 IP 协议找到对应的主机和应用程序。<br>WebSocket：和 Http 一样，是应用层协议。首次建立连接时需要通过 Http 进行连接，连接建立成功后通过 TCP 进行通讯。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><h4 id="gradle-坐标"><a href="#gradle-坐标" class="headerlink" title="gradle 坐标"></a>gradle 坐标</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation &#39;org.springframework.boot:spring-boot-starter-websocket&#39;</span><br></pre></td></tr></table></figure>
+<h4 id="启动类"><a href="#启动类" class="headerlink" title="启动类"></a>启动类</h4><p>开启 WebSocket 自动装配，和测试群发消息的 API</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">@RestController</span><br><span class="line">@EnableWebSocket &#x2F;&#x2F; 开启 WebSocket</span><br><span class="line">@SpringBootApplication</span><br><span class="line">public class WebSocketApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(DemoGradleApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private WsService wsService;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 群发消息</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @GetMapping(&quot;&#x2F;publish&#x2F;&#123;msg&#125;&quot;)</span><br><span class="line">    public void publish(@PathVariable(&quot;msg&quot;) String msg) &#123;</span><br><span class="line">        wsService.publishMsg(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="配置类"><a href="#配置类" class="headerlink" title="配置类"></a>配置类</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class WebScoketConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public ServerEndpointExporter serverEndpointExporter() &#123;</span><br><span class="line">        return new ServerEndpointExporter();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="WebSocket对外服务"><a href="#WebSocket对外服务" class="headerlink" title="WebSocket对外服务"></a>WebSocket对外服务</h4><p>这里需要注意使用 Spring 自动注入的时候只能在首次获取到注入值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">@Slf4j</span><br><span class="line">@Component</span><br><span class="line">@ServerEndpoint(value &#x3D; &quot;&#x2F;ws&#x2F;conn&quot;)</span><br><span class="line">public class WsServer implements InitializingBean &#123;</span><br><span class="line">    </span><br><span class="line">    private static WsService wsService;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 建立webSocket连接</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @OnOpen</span><br><span class="line">    public void onOpen(Session session) &#123;</span><br><span class="line">        wsService.create(session);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 接收到前端消息</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @OnMessage</span><br><span class="line">    public void onMessage(Session session, String message) &#123;</span><br><span class="line">        wsService.receiveMessage(session, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 发生异常</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @OnError</span><br><span class="line">    public void onError(Session session, Throwable throwable) &#123;</span><br><span class="line">        log.error(&quot;发生异常，sessionId：&#123;&#125;&quot;, session.getUserPrincipal().getName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 关闭连接</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @OnClose</span><br><span class="line">    public void onClose(Session session) &#123;</span><br><span class="line">        wsService.close(session);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 实际有用的是静态变量，自动注入的只是在 bean 初始化完成时赋值给静态变量</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @Autowired</span><br><span class="line">    private WsService wsServiceAuto;</span><br><span class="line">    </span><br><span class="line">    &#x2F;**</span><br><span class="line">     * WebSocket 是多例的，启动之后客户端访问时创建的新的实例中 wsService 为空，</span><br><span class="line">     * 这里初始化完成之后设置一个全局静态变量</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @Override</span><br><span class="line">    public void afterPropertiesSet() throws Exception &#123;</span><br><span class="line">        wsService &#x3D; this.wsServiceAuto;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="service类"><a href="#service类" class="headerlink" title="service类"></a>service类</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">@Slf4j</span><br><span class="line">@Service</span><br><span class="line">public class WsService &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 保存所有的WebSocket连接</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private static final ConcurrentHashMap&lt;Integer, Session&gt; WEB_SOCKET_MAP &#x3D; new ConcurrentHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 创建</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public void create(Session session) &#123;</span><br><span class="line">        Integer sessionId &#x3D; getSessionId(session);</span><br><span class="line">        WEB_SOCKET_MAP.put(sessionId, session);</span><br><span class="line">        log.info(&quot;新客户端&#123;&#125;连接成功&quot;, sessionId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 收到消息</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public void receiveMessage(Session session, String message) &#123;</span><br><span class="line">        log.info(&quot;客户端&#123;&#125;收到消息&#123;&#125;&quot;, getSessionId(session), message);</span><br><span class="line">        sendMessage(session, message.replace(&quot;吗？&quot;, &quot;！&quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 发送消息</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private void sendMessage(Session session, String msg) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            session.getBasicRemote().sendText(msg);</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            log.error(&quot;error msg:&quot;, e);</span><br><span class="line">        &#125;</span><br><span class="line">        log.info(&quot;发送消息成功：&#123;&#125;&quot;, msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 关闭</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public void close(Session session) &#123;</span><br><span class="line">        Integer sessionId &#x3D; getSessionId(session);</span><br><span class="line">        WEB_SOCKET_MAP.remove(sessionId);</span><br><span class="line">        log.info(&quot;客户端&#123;&#125;关闭&quot;, sessionId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 群发消息</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public void publishMsg(String msg) &#123;</span><br><span class="line">        WEB_SOCKET_MAP.forEach((key, value) -&gt; sendMessage(value, msg));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Integer getSessionId(Session session) &#123;</span><br><span class="line">        return Integer.valueOf(session.getId());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><ol>
+<li>使用<a class="link" target="_blank" rel="noopener" href="http://www.websocket-test.com/">在线测试地址<i class="fas fa-external-link-alt"></i></a>测试 WebSocket 连接是否能正常建立。</li>
+<li>多开窗口，访问 <code>http://localhost:7777/publish</code> 测试群发消息。</li>
+</ol>
+<h3 id><a href="#" class="headerlink" title></a></h3><center>别拖延，都要还回来</center>
         </div>
 
         
             <div class="post-copyright-info">
                 <div class="article-copyright-info-container">
     <ul>
-        <li>Post title：WebSocket</li>
-        <li>Post author：jihe</li>
-        <li>Create time：2021-03-08 23:20:34</li>
+        <li>本文标题：WebSocket</li>
+        <li>本文作者：jihe</li>
+        <li>创建时间：2021-03-08 23:20:34</li>
         <li>
-            Post link：https://oliverschen.github.io/2021/03/08/WebSocket/
+            本文链接：https://oliverschen.github.io/2021/03/08/WebSocket/
         </li>
         <li>
-            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
         </li>
     </ul>
 </div>
@@ -249,7 +262,7 @@
                         >
                             <span class="title flex-center">
                                 <span class="post-nav-title-item">SpringBoot源码</span>
-                                <span class="post-nav-item">Next posts</span>
+                                <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex-center">
                               <i class="fas fa-chevron-right"></i>
@@ -265,7 +278,7 @@
                 <div class="comments-container">
     <div id="comment-anchor"></div>
     <div class="comment-area-title">
-        <i class="fas fa-comments">&nbsp;Comments</i>
+        <i class="fas fa-comments">&nbsp;评论</i>
     </div>
     
 
@@ -342,18 +355,18 @@
             <div class="website-count info-item">
                 
                     <span id="busuanzi_container_site_uv">
-                        Visitor Count&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
                     </span>
                 
                 
                     <span id="busuanzi_container_site_pv">
-                        Totalview&nbsp;<span id="busuanzi_value_site_pv"></span>
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
                     </span>
                 
             </div>
         
         <div class="theme-info info-item">
-            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
         </div>
         
     </div>
@@ -432,7 +445,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Socket"><span class="nav-number">1.</span> <span class="nav-text">Socket</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#gradle-%E5%9D%90%E6%A0%87"><span class="nav-number">2.1.</span> <span class="nav-text">gradle 坐标</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E7%B1%BB"><span class="nav-number">2.2.</span> <span class="nav-text">启动类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%B1%BB"><span class="nav-number">2.3.</span> <span class="nav-text">配置类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WebSocket%E5%AF%B9%E5%A4%96%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.4.</span> <span class="nav-text">WebSocket对外服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#service%E7%B1%BB"><span class="nav-number">2.5.</span> <span class="nav-text">service类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">3.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text"></span></a></li></ol>
     </div>
 </div>
         </aside>
@@ -454,7 +467,7 @@
                 <input autocomplete="off"
                        autocorrect="off"
                        autocapitalize="off"
-                       placeholder="Search..."
+                       placeholder="搜索..."
                        spellcheck="false"
                        type="search"
                        class="search-input"

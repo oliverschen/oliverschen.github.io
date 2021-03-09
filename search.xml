@@ -170,88 +170,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Linux-shell</title>
-    <url>/2020/01/03/Linux-shell/</url>
-    <content><![CDATA[<p><img src="/2020/01/03/Linux-shell/linux-shell.png" alt="Photo by deleted on wallhaven.cc"></p>
-<p>shell 是用户和 Linux 系统交互的一个应用程序，就像 Windows 操作系统可以用过界面进行交互。shell 脚本就是通过 shell 来执行的，就像 Java 程序执行在 JVM 上类似。类似 Java 虚拟机，Linux 下也有很多的 shell 程序，但是最常用的就是 bash，因为其使用简单，并且是免费的，所以是 Linux 的默认 shell。</p>
-<a id="more"></a>
-
-<h4 id="shell-script"><a href="#shell-script" class="headerlink" title="shell script"></a>shell script</h4><h5 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h5><p>任何语言都离不开一个 hello world ，现在感受下 shell 的第一个脚本。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello world&quot;</span></span><br></pre></td></tr></table></figure>
-<p>一般 shell 脚本命名都是以 .sh 来写的，这是一个约定俗成的写法，这样别人在看到 .sh 结尾的文件就知道是一个 shell 脚本，当然想以其他结尾也是可以的。</p>
-<blockquote>
-<p>#!<br>这个是告诉系统这个脚本使用哪个 shell 来执行。<br>echo<br>向窗口输出文本</p>
-</blockquote>
-<h5 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h5><p>规则</p>
-<blockquote>
-<ol>
-<li>只能使用数字，字母，下划线，且不能以数字开头</li>
-<li>变量名区分大小写</li>
-<li>变量赋值通过（=）号，且不能有空格</li>
-</ol>
-</blockquote>
-<p>使用</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># a=1</span></span><br><span class="line">[root@jihe shell]<span class="comment"># echo $a</span></span><br><span class="line">1</span><br><span class="line">[root@jihe shell]<span class="comment"># echo $&#123;a&#125;</span></span><br><span class="line">1</span><br><span class="line">[root@jihe shell]<span class="comment"># echo $ab</span></span><br><span class="line"></span><br><span class="line">[root@jihe shell]<span class="comment"># echo $&#123;a&#125;b</span></span><br><span class="line">1b</span><br></pre></td></tr></table></figure>
-<h6 id="特殊变量"><a href="#特殊变量" class="headerlink" title="特殊变量"></a>特殊变量</h6><p><strong>$?</strong></p>
-<p>接收上一天命令的返回状态码，上条命令执行成功是 0 ，失败为其他 1-255 之间的值。</p>
-<p><strong>$#</strong></p>
-<p>脚本执行的参数个数</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="variable">$1</span></span><br><span class="line"><span class="variable">$2</span></span><br><span class="line"><span class="variable">$#</span></span><br></pre></td></tr></table></figure>
-<p><code>$*</code></p>
-<p>所有参数</p>
-<p><strong>$$</strong></p>
-<p>获取当前脚本的进程号，可以实现脚本自杀，或者使用 exit 退出。</p>
-<h4 id="循环和判断"><a href="#循环和判断" class="headerlink" title="循环和判断"></a>循环和判断</h4><h5 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h5><p>shell 中也是 for 循环，但是格式区别于 Java 中的 for 循环，而且 shell 中 for 循环有多种写法，下面是比较容易记住的写法。</p>
-<p>打印 0 到 9</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="keyword">for</span>((i=0;i&lt;10;1++))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;i=&quot;</span><span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-<p>这样程序会打印 <code>i=0</code> 到  <code>i=9</code> 输出到窗口。<code>do</code> 作为循环体的开始，<code>done</code> 作为循环体的结束。</p>
-<h5 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h5><p>test EXPR<br>[ EXPR ] : 中括号和表达式之间有空格</p>
-<h6 id="整型"><a href="#整型" class="headerlink" title="整型"></a>整型</h6><p><code>-gt</code> : 大于， [ $1 -gt $2 ] 或者 test $1 -gt $2 判断变量 1 大于 变量 2<br><code>-lt</code>：小于<br><code>-ge</code>：大于等于<br><code>-le</code>：小于等于<br><code>-eq</code>：等于<br><code>-ne</code>：不等于</p>
-<h6 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h6><p><code>=</code>：等于，判断变量是否为空 [ “$str” = “” ] 或者 [ -z $str ]<br><code>!=</code>：不等于</p>
-<h5 id="判断"><a href="#判断" class="headerlink" title="判断"></a>判断</h5><p>类似 Java 中的 if，而且是以 fi 作为判断的结尾</p>
-<p>if [condition 1]<br>then<br>    first tree<br>elif [conditin 2]<br>    second tree<br>else<br>    third tree<br>fi</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">num=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$num</span> -eq 1 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> one</span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$num</span> -eq 2 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> two</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> none</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-<p>执行结果</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># ./if.sh 1</span></span><br><span class="line">one</span><br><span class="line">[root@jihe shell]<span class="comment"># ./if.sh 2</span></span><br><span class="line">two</span><br><span class="line">[root@jihe shell]<span class="comment"># ./if.sh 3</span></span><br><span class="line">none</span><br></pre></td></tr></table></figure>
-
-<h4 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h4><p><code>$&#123;&#125;</code>：获取变量的值<br><code>$()</code>：等于 ``，会执行里面的命令，并且获取命令执行的结果<br><code>$[]</code>：可以对方括号里面的公式进行算术运算<br><code>$(())</code>：可以对双括号里面的公式进行算数运算</p>
-<h4 id="日期"><a href="#日期" class="headerlink" title="日期"></a>日期</h4><h5 id="date"><a href="#date" class="headerlink" title="date"></a>date</h5><p>显示当前时间</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">date</span><br></pre></td></tr></table></figure>
-<h5 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># date +%Y-%m-%d</span></span><br><span class="line">2020-01-05</span><br></pre></td></tr></table></figure>
-<h5 id="获取时间戳"><a href="#获取时间戳" class="headerlink" title="获取时间戳"></a>获取时间戳</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># date +%s</span></span><br><span class="line">1578188573</span><br></pre></td></tr></table></figure>
-<h5 id="指定时间"><a href="#指定时间" class="headerlink" title="指定时间"></a>指定时间</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 获取前一天时间，按照指定格式输出</span></span><br><span class="line">[root@jihe shell]<span class="comment"># date --date=&#x27;1 days ago&#x27; +%Y-%m-%d</span></span><br><span class="line">2020-01-04</span><br><span class="line"><span class="comment"># 获取后一天时间，按照指定格式输出</span></span><br><span class="line">[root@jihe shell]<span class="comment"># date --date=&#x27;-1 days ago&#x27; +%Y-%m-%d</span></span><br><span class="line">2020-01-06</span><br><span class="line"><span class="comment"># 获取指定时间的前一天</span></span><br><span class="line">[root@jihe shell]<span class="comment"># date --date=&#x27;20191111 1 days ago&#x27; +%Y-%m-%d</span></span><br><span class="line">2019-11-10</span><br></pre></td></tr></table></figure>
-<h4 id="后台执行"><a href="#后台执行" class="headerlink" title="后台执行"></a>后台执行</h4><p>在后台执行脚本</p>
-<h5 id="nohup"><a href="#nohup" class="headerlink" title="nohup"></a>nohup</h5><p>不挂断的运行命令，忽略所有挂断（hangup）信号</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nohup for.sh &amp;</span><br></pre></td></tr></table></figure>
-<p>nohup 会忽略进程的挂断信号，也会在当前执行目录生成一个 nohup.out 日志文件。</p>
-<h4 id="标准输入，输出，重定向"><a href="#标准输入，输出，重定向" class="headerlink" title="标准输入，输出，重定向"></a>标准输入，输出，重定向</h4><p>标准输入，输出，错误可以使用文件描述符 0，1，2 引用</p>
-<h5 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># &gt; 将输出结果重定向输出到 file 文件中</span></span><br><span class="line"><span class="comment"># 1&gt; 将输出的正确结果重定向到 file 文件中</span></span><br><span class="line"><span class="comment"># &gt;&gt; 将输出的结果追加到 file 文件中，不做覆盖处理</span></span><br><span class="line">ls &gt;file 或者 ls 1&gt;file (ls &gt;&gt;file)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2&gt; 将错误输出到 file 文件中，haha 是一个错误命令</span></span><br><span class="line">haha 2&gt;file </span><br></pre></td></tr></table></figure>
-<p>特殊</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 把输出信息直接丢失，既不保存也不打印到控制台</span></span><br><span class="line">ls &gt;/dev/null</span><br></pre></td></tr></table></figure>
-<h4 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h4><p>Linux 下有专门执行定时任务的配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/crontab</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下面是 crontab 文件的内容</span></span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line">MAILTO=root</span><br><span class="line"></span><br><span class="line"><span class="comment"># For details see man 4 crontabs</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Example of job definition:</span></span><br><span class="line"><span class="comment"># .---------------- minute (0 - 59)</span></span><br><span class="line"><span class="comment"># |  .------------- hour (0 - 23)</span></span><br><span class="line"><span class="comment"># |  |  .---------- day of month (1 - 31)</span></span><br><span class="line"><span class="comment"># |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span></span><br><span class="line"><span class="comment"># |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span></span><br><span class="line"><span class="comment"># |  |  |  |  |</span></span><br><span class="line"><span class="comment"># *  *  *  *  * user-name  command to be executed</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在这里追加定时任务，都为 * 时为 1 分钟执行一次。root 为执行用户，后面跟脚本绝对路径。</span></span><br><span class="line">* * * * * root /usr/<span class="built_in">local</span>/shell/crontab.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>crontab.sh<br>脚本将文本内容输出到指定文件 cron.txt。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello world&quot;</span> &gt;&gt;/usr/<span class="built_in">local</span>/shell/cron.txt</span><br></pre></td></tr></table></figure>
-<p>查看 cron.txt 文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 实时输出内容</span></span><br><span class="line">tail -f cron.txt</span><br></pre></td></tr></table></figure>
-
-<hr>
-<center>美好的事即将发生</center>
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Linux-常用命令</title>
     <url>/2020/01/01/Linux/</url>
     <content><![CDATA[<p><img src="/2020/01/01/Linux/linux.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
@@ -363,6 +281,88 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看系统 cpu 信息</span></span><br><span class="line">lscpu</span><br></pre></td></tr></table></figure>
 <hr>
 <center>越来越好</center>
+
+
+
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux-shell</title>
+    <url>/2020/01/03/Linux-shell/</url>
+    <content><![CDATA[<p><img src="/2020/01/03/Linux-shell/linux-shell.png" alt="Photo by deleted on wallhaven.cc"></p>
+<p>shell 是用户和 Linux 系统交互的一个应用程序，就像 Windows 操作系统可以用过界面进行交互。shell 脚本就是通过 shell 来执行的，就像 Java 程序执行在 JVM 上类似。类似 Java 虚拟机，Linux 下也有很多的 shell 程序，但是最常用的就是 bash，因为其使用简单，并且是免费的，所以是 Linux 的默认 shell。</p>
+<a id="more"></a>
+
+<h4 id="shell-script"><a href="#shell-script" class="headerlink" title="shell script"></a>shell script</h4><h5 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h5><p>任何语言都离不开一个 hello world ，现在感受下 shell 的第一个脚本。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello world&quot;</span></span><br></pre></td></tr></table></figure>
+<p>一般 shell 脚本命名都是以 .sh 来写的，这是一个约定俗成的写法，这样别人在看到 .sh 结尾的文件就知道是一个 shell 脚本，当然想以其他结尾也是可以的。</p>
+<blockquote>
+<p>#!<br>这个是告诉系统这个脚本使用哪个 shell 来执行。<br>echo<br>向窗口输出文本</p>
+</blockquote>
+<h5 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h5><p>规则</p>
+<blockquote>
+<ol>
+<li>只能使用数字，字母，下划线，且不能以数字开头</li>
+<li>变量名区分大小写</li>
+<li>变量赋值通过（=）号，且不能有空格</li>
+</ol>
+</blockquote>
+<p>使用</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># a=1</span></span><br><span class="line">[root@jihe shell]<span class="comment"># echo $a</span></span><br><span class="line">1</span><br><span class="line">[root@jihe shell]<span class="comment"># echo $&#123;a&#125;</span></span><br><span class="line">1</span><br><span class="line">[root@jihe shell]<span class="comment"># echo $ab</span></span><br><span class="line"></span><br><span class="line">[root@jihe shell]<span class="comment"># echo $&#123;a&#125;b</span></span><br><span class="line">1b</span><br></pre></td></tr></table></figure>
+<h6 id="特殊变量"><a href="#特殊变量" class="headerlink" title="特殊变量"></a>特殊变量</h6><p><strong>$?</strong></p>
+<p>接收上一天命令的返回状态码，上条命令执行成功是 0 ，失败为其他 1-255 之间的值。</p>
+<p><strong>$#</strong></p>
+<p>脚本执行的参数个数</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="variable">$1</span></span><br><span class="line"><span class="variable">$2</span></span><br><span class="line"><span class="variable">$#</span></span><br></pre></td></tr></table></figure>
+<p><code>$*</code></p>
+<p>所有参数</p>
+<p><strong>$$</strong></p>
+<p>获取当前脚本的进程号，可以实现脚本自杀，或者使用 exit 退出。</p>
+<h4 id="循环和判断"><a href="#循环和判断" class="headerlink" title="循环和判断"></a>循环和判断</h4><h5 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h5><p>shell 中也是 for 循环，但是格式区别于 Java 中的 for 循环，而且 shell 中 for 循环有多种写法，下面是比较容易记住的写法。</p>
+<p>打印 0 到 9</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="keyword">for</span>((i=0;i&lt;10;1++))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;i=&quot;</span><span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>这样程序会打印 <code>i=0</code> 到  <code>i=9</code> 输出到窗口。<code>do</code> 作为循环体的开始，<code>done</code> 作为循环体的结束。</p>
+<h5 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h5><p>test EXPR<br>[ EXPR ] : 中括号和表达式之间有空格</p>
+<h6 id="整型"><a href="#整型" class="headerlink" title="整型"></a>整型</h6><p><code>-gt</code> : 大于， [ $1 -gt $2 ] 或者 test $1 -gt $2 判断变量 1 大于 变量 2<br><code>-lt</code>：小于<br><code>-ge</code>：大于等于<br><code>-le</code>：小于等于<br><code>-eq</code>：等于<br><code>-ne</code>：不等于</p>
+<h6 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h6><p><code>=</code>：等于，判断变量是否为空 [ “$str” = “” ] 或者 [ -z $str ]<br><code>!=</code>：不等于</p>
+<h5 id="判断"><a href="#判断" class="headerlink" title="判断"></a>判断</h5><p>类似 Java 中的 if，而且是以 fi 作为判断的结尾</p>
+<p>if [condition 1]<br>then<br>    first tree<br>elif [conditin 2]<br>    second tree<br>else<br>    third tree<br>fi</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">num=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$num</span> -eq 1 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> one</span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$num</span> -eq 2 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> two</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> none</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>执行结果</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># ./if.sh 1</span></span><br><span class="line">one</span><br><span class="line">[root@jihe shell]<span class="comment"># ./if.sh 2</span></span><br><span class="line">two</span><br><span class="line">[root@jihe shell]<span class="comment"># ./if.sh 3</span></span><br><span class="line">none</span><br></pre></td></tr></table></figure>
+
+<h4 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h4><p><code>$&#123;&#125;</code>：获取变量的值<br><code>$()</code>：等于 ``，会执行里面的命令，并且获取命令执行的结果<br><code>$[]</code>：可以对方括号里面的公式进行算术运算<br><code>$(())</code>：可以对双括号里面的公式进行算数运算</p>
+<h4 id="日期"><a href="#日期" class="headerlink" title="日期"></a>日期</h4><h5 id="date"><a href="#date" class="headerlink" title="date"></a>date</h5><p>显示当前时间</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">date</span><br></pre></td></tr></table></figure>
+<h5 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># date +%Y-%m-%d</span></span><br><span class="line">2020-01-05</span><br></pre></td></tr></table></figure>
+<h5 id="获取时间戳"><a href="#获取时间戳" class="headerlink" title="获取时间戳"></a>获取时间戳</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@jihe shell]<span class="comment"># date +%s</span></span><br><span class="line">1578188573</span><br></pre></td></tr></table></figure>
+<h5 id="指定时间"><a href="#指定时间" class="headerlink" title="指定时间"></a>指定时间</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 获取前一天时间，按照指定格式输出</span></span><br><span class="line">[root@jihe shell]<span class="comment"># date --date=&#x27;1 days ago&#x27; +%Y-%m-%d</span></span><br><span class="line">2020-01-04</span><br><span class="line"><span class="comment"># 获取后一天时间，按照指定格式输出</span></span><br><span class="line">[root@jihe shell]<span class="comment"># date --date=&#x27;-1 days ago&#x27; +%Y-%m-%d</span></span><br><span class="line">2020-01-06</span><br><span class="line"><span class="comment"># 获取指定时间的前一天</span></span><br><span class="line">[root@jihe shell]<span class="comment"># date --date=&#x27;20191111 1 days ago&#x27; +%Y-%m-%d</span></span><br><span class="line">2019-11-10</span><br></pre></td></tr></table></figure>
+<h4 id="后台执行"><a href="#后台执行" class="headerlink" title="后台执行"></a>后台执行</h4><p>在后台执行脚本</p>
+<h5 id="nohup"><a href="#nohup" class="headerlink" title="nohup"></a>nohup</h5><p>不挂断的运行命令，忽略所有挂断（hangup）信号</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nohup for.sh &amp;</span><br></pre></td></tr></table></figure>
+<p>nohup 会忽略进程的挂断信号，也会在当前执行目录生成一个 nohup.out 日志文件。</p>
+<h4 id="标准输入，输出，重定向"><a href="#标准输入，输出，重定向" class="headerlink" title="标准输入，输出，重定向"></a>标准输入，输出，重定向</h4><p>标准输入，输出，错误可以使用文件描述符 0，1，2 引用</p>
+<h5 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># &gt; 将输出结果重定向输出到 file 文件中</span></span><br><span class="line"><span class="comment"># 1&gt; 将输出的正确结果重定向到 file 文件中</span></span><br><span class="line"><span class="comment"># &gt;&gt; 将输出的结果追加到 file 文件中，不做覆盖处理</span></span><br><span class="line">ls &gt;file 或者 ls 1&gt;file (ls &gt;&gt;file)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2&gt; 将错误输出到 file 文件中，haha 是一个错误命令</span></span><br><span class="line">haha 2&gt;file </span><br></pre></td></tr></table></figure>
+<p>特殊</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 把输出信息直接丢失，既不保存也不打印到控制台</span></span><br><span class="line">ls &gt;/dev/null</span><br></pre></td></tr></table></figure>
+<h4 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h4><p>Linux 下有专门执行定时任务的配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/crontab</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下面是 crontab 文件的内容</span></span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line">MAILTO=root</span><br><span class="line"></span><br><span class="line"><span class="comment"># For details see man 4 crontabs</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Example of job definition:</span></span><br><span class="line"><span class="comment"># .---------------- minute (0 - 59)</span></span><br><span class="line"><span class="comment"># |  .------------- hour (0 - 23)</span></span><br><span class="line"><span class="comment"># |  |  .---------- day of month (1 - 31)</span></span><br><span class="line"><span class="comment"># |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span></span><br><span class="line"><span class="comment"># |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span></span><br><span class="line"><span class="comment"># |  |  |  |  |</span></span><br><span class="line"><span class="comment"># *  *  *  *  * user-name  command to be executed</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在这里追加定时任务，都为 * 时为 1 分钟执行一次。root 为执行用户，后面跟脚本绝对路径。</span></span><br><span class="line">* * * * * root /usr/<span class="built_in">local</span>/shell/crontab.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>crontab.sh<br>脚本将文本内容输出到指定文件 cron.txt。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello world&quot;</span> &gt;&gt;/usr/<span class="built_in">local</span>/shell/cron.txt</span><br></pre></td></tr></table></figure>
+<p>查看 cron.txt 文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 实时输出内容</span></span><br><span class="line">tail -f cron.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<center>美好的事即将发生</center>
+
+
 
 
 
@@ -584,6 +584,61 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
+    <title>WebSocket</title>
+    <url>/2021/03/08/WebSocket/</url>
+    <content><![CDATA[<p><img src="/2021/03/08/WebSocket/websocket.png" alt="Photo by JustJon on wallhaven.cc"></p>
+<p>WebSocket 协议建立的是一个长连接，Http 协议是浏览器通过主动请求服务端建立连接获取数据，而 WebScoket 协议服务端可以实现主动向浏览器推送数据服务，浏览器也可以主动向服务端发生请求，它是一个全双工通信协议。WebSocket 协议在第一次连接时需要通过 Http 协议进行建立，建立成功之后通过 TCP 进行数据交换。在一些需要即使获取服务端信息的场景下，如果使用 Http 只能采用轮训的方式来获取，在及时性和资源方面都不友好，而通过 WebSocket 可以立即收到服务端的推送消息。</p>
+<a id="more"></a>
+<h3 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h3><p>Socket：一组系统为了避免直接操作底层 TCP/UDP 协议而提供的 API 接口。在通过网络层 IP 协议找到对应的主机和应用程序。<br>WebSocket：和 Http 一样，是应用层协议。首次建立连接时需要通过 Http 进行连接，连接建立成功后通过 TCP 进行通讯。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><h4 id="gradle-坐标"><a href="#gradle-坐标" class="headerlink" title="gradle 坐标"></a>gradle 坐标</h4><figure class="highlight"><table><tr><td class="code"><pre><span class="line">implementation &#x27;org.springframework.boot:spring-boot-starter-websocket&#x27;</span><br></pre></td></tr></table></figure>
+<h4 id="启动类"><a href="#启动类" class="headerlink" title="启动类"></a>启动类</h4><p>开启 WebSocket 自动装配，和测试群发消息的 API</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@EnableWebSocket</span> <span class="comment">// 开启 WebSocket</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebSocketApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(DemoGradleApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> WsService wsService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 群发消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/publish/&#123;msg&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">publish</span><span class="params">(<span class="meta">@PathVariable(&quot;msg&quot;)</span> String msg)</span> </span>&#123;</span><br><span class="line">        wsService.publishMsg(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="配置类"><a href="#配置类" class="headerlink" title="配置类"></a>配置类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebScoketConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ServerEndpointExporter <span class="title">serverEndpointExporter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ServerEndpointExporter();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="WebSocket对外服务"><a href="#WebSocket对外服务" class="headerlink" title="WebSocket对外服务"></a>WebSocket对外服务</h4><p>这里需要注意使用 Spring 自动注入的时候只能在首次获取到注入值</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@ServerEndpoint(value = &quot;/ws/conn&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WsServer</span> <span class="keyword">implements</span> <span class="title">InitializingBean</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> WsService wsService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 建立webSocket连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@OnOpen</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onOpen</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        wsService.create(session);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 接收到前端消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@OnMessage</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMessage</span><span class="params">(Session session, String message)</span> </span>&#123;</span><br><span class="line">        wsService.receiveMessage(session, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发生异常</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@OnError</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Session session, Throwable throwable)</span> </span>&#123;</span><br><span class="line">        log.error(<span class="string">&quot;发生异常，sessionId：&#123;&#125;&quot;</span>, session.getUserPrincipal().getName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关闭连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@OnClose</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClose</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        wsService.close(session);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 实际有用的是静态变量，自动注入的只是在 bean 初始化完成时赋值给静态变量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> WsService wsServiceAuto;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * WebSocket 是多例的，启动之后客户端访问时创建的新的实例中 wsService 为空，</span></span><br><span class="line"><span class="comment">     * 这里初始化完成之后设置一个全局静态变量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        wsService = <span class="keyword">this</span>.wsServiceAuto;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="service类"><a href="#service类" class="headerlink" title="service类"></a>service类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WsService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 保存所有的WebSocket连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ConcurrentHashMap&lt;Integer, Session&gt; WEB_SOCKET_MAP = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">create</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        Integer sessionId = getSessionId(session);</span><br><span class="line">        WEB_SOCKET_MAP.put(sessionId, session);</span><br><span class="line">        log.info(<span class="string">&quot;新客户端&#123;&#125;连接成功&quot;</span>, sessionId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 收到消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">receiveMessage</span><span class="params">(Session session, String message)</span> </span>&#123;</span><br><span class="line">        log.info(<span class="string">&quot;客户端&#123;&#125;收到消息&#123;&#125;&quot;</span>, getSessionId(session), message);</span><br><span class="line">        sendMessage(session, message.replace(<span class="string">&quot;吗？&quot;</span>, <span class="string">&quot;！&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">(Session session, String msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            session.getBasicRemote().sendText(msg);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;error msg:&quot;</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">        log.info(<span class="string">&quot;发送消息成功：&#123;&#125;&quot;</span>, msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关闭</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        Integer sessionId = getSessionId(session);</span><br><span class="line">        WEB_SOCKET_MAP.remove(sessionId);</span><br><span class="line">        log.info(<span class="string">&quot;客户端&#123;&#125;关闭&quot;</span>, sessionId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 群发消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">publishMsg</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        WEB_SOCKET_MAP.forEach((key, value) -&gt; sendMessage(value, msg));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getSessionId</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Integer.valueOf(session.getId());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><ol>
+<li>使用<a class="link" href="http://www.websocket-test.com/">在线测试地址<i class="fas fa-external-link-alt"></i></a>测试 WebSocket 连接是否能正常建立。</li>
+<li>多开窗口，访问 <code>http://localhost:7777/publish</code> 测试群发消息。</li>
+</ol>
+<h3 id><a href="#" class="headerlink" title></a></h3><center>别拖延，都要还回来</center>]]></content>
+      <categories>
+        <category>WebSocket</category>
+      </categories>
+      <tags>
+        <tag>WebSocket</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker安装MySQL</title>
+    <url>/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/</url>
+    <content><![CDATA[<p><img src="/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/mysql.png"></p>
+<p>自从接触到 docker 之后，就想把所有组件都安装在上面，方便后面使用。今天开始折腾安装 MySQL，虽然目前公司项目使用 MySQL 非常少，但是我很喜欢 MySQL，哈哈。</p>
+<a id="more"></a>
+
+<h5 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 拉去最新版的 mysql</span></span><br><span class="line">sudo docker pull mysql</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>使用以上命令拉取最新版 MySQL</p>
+<h5 id="启动-MySQL"><a href="#启动-MySQL" class="headerlink" title="启动 MySQL"></a>启动 MySQL</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3306:3306 --name mysql-ck -v /usr/<span class="built_in">local</span>/mysql/conf:/etc/mysql/conf.d -v /usr/<span class="built_in">local</span>/mysql/logs:/logs -v /usr/<span class="built_in">local</span>/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.7</span><br><span class="line"></span><br><span class="line"><span class="comment"># -p 将 3306 端口映射到本机 3306 端口</span></span><br><span class="line"><span class="comment"># --name 后面跟 MySQL 别名</span></span><br><span class="line"><span class="comment"># -v MySQL 数据保存路径：/usr/local/mysql/conf:/etc/mysql/conf.d   将本机 /usr/local/mysql/conf 映射到 docker 的 /etc/mysql/conf.d 目录</span></span><br><span class="line"><span class="comment"># -e 设置初始密码</span></span><br><span class="line"><span class="comment"># -d 后台运行</span></span><br></pre></td></tr></table></figure>
+<p>启动 MySQL 成功之后，容器会返回一个 id 类似 <code>6d2b3575b78f67481300d01cd65ca47a2a1868f448f2a53bb68d7b056f7ef23d</code></p>
+<h5 id="进入-MySQL"><a href="#进入-MySQL" class="headerlink" title="进入 MySQL"></a>进入 MySQL</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> -it mysql bash</span><br><span class="line"><span class="comment"># 登录</span></span><br><span class="line">root@6d2b3575b78f:/<span class="comment"># mysql -uroot -proot</span></span><br><span class="line">mysql: [Warning] Using a password on the <span class="built_in">command</span> line interface can be insecure.</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 8</span><br><span class="line">Server version: 8.0.15 MySQL Community Server - GPL</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type <span class="string">&#x27;help;&#x27;</span> or <span class="string">&#x27;\h&#x27;</span> <span class="keyword">for</span> <span class="built_in">help</span>. Type <span class="string">&#x27;\c&#x27;</span> to clear the current input statement.</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="客户端安装"><a href="#客户端安装" class="headerlink" title="客户端安装"></a>客户端安装</h5><p>建议到<a class="link" href="https://www.navicat.com.cn/products/">官网<i class="fas fa-external-link-alt"></i></a>下载 navicat 客户端，当然条件允许的建议购买正版产品，实在不行就先下载下来，有半个月的试用期，体验一般，个人觉得他们家的产品用起来很不错。下载后解压，直接启动即可使用。</p>
+<p>此时就进入到我们熟悉的客户端了，接下来的操作就和在物理机上的操作是一样的了。虽然公司项目可能接触 MySQL 会很少，但是 MySQL 依然是很多公司数据存储不可替代的部分，所以嘛，好好学习，天天向上。</p>
+<p>今天没有加班，下班早早就溜了，最近加班比较多，希望程序狗们都能天天没 bug ,天天早下班。</p>
+<hr>
+<center>道理都懂，但做不到</center>
+
+
+]]></content>
+      <categories>
+        <category>docker</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>mysql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>docker安装mongodb</title>
     <url>/2019/03/19/docker%E5%AE%89%E8%A3%85mongodb/</url>
     <content><![CDATA[<p><img src="/2019/03/19/docker%E5%AE%89%E8%A3%85mongodb/mongo.png"></p>
@@ -666,32 +721,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
-    <title>WebSocket</title>
-    <url>/2021/03/08/WebSocket/</url>
-    <content><![CDATA[<p><img src="/2021/03/08/WebSocket/websocket.png" alt="Photo by JustJon on wallhaven.cc"></p>
-<p>WebSocket 协议建立的是一个长连接，Http 协议是浏览器通过主动请求服务端建立连接获取数据，而 WebScoket 协议服务端可以实现主动向浏览器推送数据服务，浏览器也可以主动向服务端发生请求，它是一个全双工通信协议。WebSocket 协议在第一次连接时需要通过 Http 协议进行建立，建立成功之后通过 TCP 进行数据交换。在一些需要即使获取服务端信息的场景下，如果使用 Http 只能采用轮训的方式来获取，在及时性和资源方面都不友好，而通过 WebSocket 可以立即收到服务端的推送消息。</p>
-<a id="more"></a>
-<h3 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h3><p>Socket：一组系统为了避免直接操作底层 TCP/UDP 协议而提供的 API 接口。在通过网络层 IP 协议找到对应的主机和应用程序。<br>WebSocket：和 Http 一样，是应用层协议。首次建立连接时需要通过 Http 进行连接，连接建立成功后通过 TCP 进行通讯。</p>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><h4 id="gradle-坐标"><a href="#gradle-坐标" class="headerlink" title="gradle 坐标"></a>gradle 坐标</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">implementation &#39;org.springframework.boot:spring-boot-starter-websocket&#39;</span><br></pre></td></tr></table></figure>
-<h4 id="启动类"><a href="#启动类" class="headerlink" title="启动类"></a>启动类</h4><p>开启 WebSocket 自动装配，和测试群发消息的 API</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@RestController</span><br><span class="line">@EnableWebSocket &#x2F;&#x2F; 开启 WebSocket</span><br><span class="line">@SpringBootApplication</span><br><span class="line">public class WebSocketApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(DemoGradleApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private WsService wsService;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 群发消息</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @GetMapping(&quot;&#x2F;publish&#x2F;&#123;msg&#125;&quot;)</span><br><span class="line">    public void publish(@PathVariable(&quot;msg&quot;) String msg) &#123;</span><br><span class="line">        wsService.publishMsg(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="配置类"><a href="#配置类" class="headerlink" title="配置类"></a>配置类</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class WebScoketConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public ServerEndpointExporter serverEndpointExporter() &#123;</span><br><span class="line">        return new ServerEndpointExporter();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="WebSocket对外服务"><a href="#WebSocket对外服务" class="headerlink" title="WebSocket对外服务"></a>WebSocket对外服务</h4><p>这里需要注意使用 Spring 自动注入的时候只能在首次获取到注入值</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Slf4j</span><br><span class="line">@Component</span><br><span class="line">@ServerEndpoint(value &#x3D; &quot;&#x2F;ws&#x2F;conn&quot;)</span><br><span class="line">public class WsServer implements InitializingBean &#123;</span><br><span class="line">    </span><br><span class="line">    private static WsService wsService;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 建立webSocket连接</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @OnOpen</span><br><span class="line">    public void onOpen(Session session) &#123;</span><br><span class="line">        wsService.create(session);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 接收到前端消息</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @OnMessage</span><br><span class="line">    public void onMessage(Session session, String message) &#123;</span><br><span class="line">        wsService.receiveMessage(session, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 发生异常</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @OnError</span><br><span class="line">    public void onError(Session session, Throwable throwable) &#123;</span><br><span class="line">        log.error(&quot;发生异常，sessionId：&#123;&#125;&quot;, session.getUserPrincipal().getName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 关闭连接</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @OnClose</span><br><span class="line">    public void onClose(Session session) &#123;</span><br><span class="line">        wsService.close(session);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 实际有用的是静态变量，自动注入的只是在 bean 初始化完成时赋值给静态变量</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @Autowired</span><br><span class="line">    private WsService wsServiceAuto;</span><br><span class="line">    </span><br><span class="line">    &#x2F;**</span><br><span class="line">     * WebSocket 是多例的，启动之后客户端访问时创建的新的实例中 wsService 为空，</span><br><span class="line">     * 这里初始化完成之后设置一个全局静态变量</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @Override</span><br><span class="line">    public void afterPropertiesSet() throws Exception &#123;</span><br><span class="line">        wsService &#x3D; this.wsServiceAuto;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="service类"><a href="#service类" class="headerlink" title="service类"></a>service类</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Slf4j</span><br><span class="line">@Service</span><br><span class="line">public class WsService &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 保存所有的WebSocket连接</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private static final ConcurrentHashMap&lt;Integer, Session&gt; WEB_SOCKET_MAP &#x3D; new ConcurrentHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 创建</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public void create(Session session) &#123;</span><br><span class="line">        Integer sessionId &#x3D; getSessionId(session);</span><br><span class="line">        WEB_SOCKET_MAP.put(sessionId, session);</span><br><span class="line">        log.info(&quot;新客户端&#123;&#125;连接成功&quot;, sessionId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 收到消息</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public void receiveMessage(Session session, String message) &#123;</span><br><span class="line">        log.info(&quot;客户端&#123;&#125;收到消息&#123;&#125;&quot;, getSessionId(session), message);</span><br><span class="line">        sendMessage(session, message.replace(&quot;吗？&quot;, &quot;！&quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 发送消息</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private void sendMessage(Session session, String msg) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            session.getBasicRemote().sendText(msg);</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            log.error(&quot;error msg:&quot;, e);</span><br><span class="line">        &#125;</span><br><span class="line">        log.info(&quot;发送消息成功：&#123;&#125;&quot;, msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 关闭</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public void close(Session session) &#123;</span><br><span class="line">        Integer sessionId &#x3D; getSessionId(session);</span><br><span class="line">        WEB_SOCKET_MAP.remove(sessionId);</span><br><span class="line">        log.info(&quot;客户端&#123;&#125;关闭&quot;, sessionId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 群发消息</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public void publishMsg(String msg) &#123;</span><br><span class="line">        WEB_SOCKET_MAP.forEach((key, value) -&gt; sendMessage(value, msg));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Integer getSessionId(Session session) &#123;</span><br><span class="line">        return Integer.valueOf(session.getId());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><ol>
-<li>使用<a class="link" href="http://www.websocket-test.com/">在线测试地址<i class="fas fa-external-link-alt"></i></a>测试 WebSocket 连接是否能正常建立。</li>
-<li>多开窗口，访问 <code>http://localhost:7777/publish</code> 测试群发消息。</li>
-</ol>
-<h3 id><a href="#" class="headerlink" title></a></h3><center>别拖延，都要还回来</center>]]></content>
-      <categories>
-        <category>WebSocket</category>
-      </categories>
-      <tags>
-        <tag>WebSocket</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>jvm-class文件结构</title>
     <url>/2019/05/05/jvm-class%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
     <content><![CDATA[<p><img src="/2019/05/05/jvm-class%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/class.png"></p>
@@ -750,35 +779,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </categories>
       <tags>
         <tag>Java</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>docker安装MySQL</title>
-    <url>/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/</url>
-    <content><![CDATA[<p><img src="/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/mysql.png"></p>
-<p>自从接触到 docker 之后，就想把所有组件都安装在上面，方便后面使用。今天开始折腾安装 MySQL，虽然目前公司项目使用 MySQL 非常少，但是我很喜欢 MySQL，哈哈。</p>
-<a id="more"></a>
-
-<h5 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 拉去最新版的 mysql</span></span><br><span class="line">sudo docker pull mysql</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>使用以上命令拉取最新版 MySQL</p>
-<h5 id="启动-MySQL"><a href="#启动-MySQL" class="headerlink" title="启动 MySQL"></a>启动 MySQL</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3306:3306 --name mysql-ck -v /usr/<span class="built_in">local</span>/mysql/conf:/etc/mysql/conf.d -v /usr/<span class="built_in">local</span>/mysql/logs:/logs -v /usr/<span class="built_in">local</span>/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.7</span><br><span class="line"></span><br><span class="line"><span class="comment"># -p 将 3306 端口映射到本机 3306 端口</span></span><br><span class="line"><span class="comment"># --name 后面跟 MySQL 别名</span></span><br><span class="line"><span class="comment"># -v MySQL 数据保存路径：/usr/local/mysql/conf:/etc/mysql/conf.d   将本机 /usr/local/mysql/conf 映射到 docker 的 /etc/mysql/conf.d 目录</span></span><br><span class="line"><span class="comment"># -e 设置初始密码</span></span><br><span class="line"><span class="comment"># -d 后台运行</span></span><br></pre></td></tr></table></figure>
-<p>启动 MySQL 成功之后，容器会返回一个 id 类似 <code>6d2b3575b78f67481300d01cd65ca47a2a1868f448f2a53bb68d7b056f7ef23d</code></p>
-<h5 id="进入-MySQL"><a href="#进入-MySQL" class="headerlink" title="进入 MySQL"></a>进入 MySQL</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> -it mysql bash</span><br><span class="line"><span class="comment"># 登录</span></span><br><span class="line">root@6d2b3575b78f:/<span class="comment"># mysql -uroot -proot</span></span><br><span class="line">mysql: [Warning] Using a password on the <span class="built_in">command</span> line interface can be insecure.</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 8</span><br><span class="line">Server version: 8.0.15 MySQL Community Server - GPL</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type <span class="string">&#x27;help;&#x27;</span> or <span class="string">&#x27;\h&#x27;</span> <span class="keyword">for</span> <span class="built_in">help</span>. Type <span class="string">&#x27;\c&#x27;</span> to clear the current input statement.</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="客户端安装"><a href="#客户端安装" class="headerlink" title="客户端安装"></a>客户端安装</h5><p>建议到<a class="link" href="https://www.navicat.com.cn/products/">官网<i class="fas fa-external-link-alt"></i></a>下载 navicat 客户端，当然条件允许的建议购买正版产品，实在不行就先下载下来，有半个月的试用期，体验一般，个人觉得他们家的产品用起来很不错。下载后解压，直接启动即可使用。</p>
-<p>此时就进入到我们熟悉的客户端了，接下来的操作就和在物理机上的操作是一样的了。虽然公司项目可能接触 MySQL 会很少，但是 MySQL 依然是很多公司数据存储不可替代的部分，所以嘛，好好学习，天天向上。</p>
-<p>今天没有加班，下班早早就溜了，最近加班比较多，希望程序狗们都能天天没 bug ,天天早下班。</p>
-<hr>
-<center>道理都懂，但做不到</center>
-
-
-]]></content>
-      <categories>
-        <category>docker</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-        <tag>mysql</tag>
       </tags>
   </entry>
   <entry>
@@ -1013,76 +1013,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
-    <title>MySQL</title>
-    <url>/2020/01/18/mysql/</url>
-    <content><![CDATA[<p><img src="/2020/01/18/mysql/mysql.png" alt="Photo by WoshWosh on wallhaven.cc"></p>
-<p>趁着放假，准备系统的在理一理 MySQL 的知识，所以报名了极客时间上丁奇老师的课程，跟着大神又重新学习了一遍。现在学习东西喜欢记录下来，这样才有种确实学习了知识的感觉。^_^</p>
-<a id="more"></a>
-
-<h4 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h4><p>MySQL 是由两大部分 server 部分和存储引擎构成的。而 server 部分主要由 连接器，分析器，优化器和执行器组成的，server 部分主要负责客户端的连接，SQL 语句的解析，优化以及执行。 存储引擎主要负责数存储，并且提供数据的读写接口。</p>
-<h5 id="server"><a href="#server" class="headerlink" title="server"></a>server</h5><p>MySQL 前置操作都在这里执行。</p>
-<h6 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h6><p>负责管理客户端连接，权限的验证等操作。当验证通过一个用户名和密码之后，此后的操作都是依赖当前权限，也就是说当一个用户连接成功之后，即使管理员修改密码，但是他还是能完成操作。</p>
-<h6 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h6><p>当用户通过连接器，SQL 到达之后，一般会先查询缓存（8.0 之前）。如果缓存中存在的话直接返回。没有的话则对 SQL 语句进行语法分析等动作。对于缓存不建议使用，因为当有表涉及到更新时，所有关于当前表的缓存会失效。除非是数据不经常变更的数据表。</p>
-<h6 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h6><p>优化器主要是分析 SQL 语句怎样执行最优，然后生成执行方案。</p>
-<h6 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h6><p>执行 SQL 语句，返回结果集。</p>
-<h4 id="日志系统"><a href="#日志系统" class="headerlink" title="日志系统"></a>日志系统</h4><h5 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h5><p>在 MySQL 语句更新过程中，如果每次都在磁盘找到相应记录，并且修改记录，写入磁盘的话，效率会很低。所以在执行过程中一些会将修改结果先保存在内存中，然后在 redo log 中记录当前的修改，当事务提交之后。服务在空闲的时候，或者日志空间不够时，在刷新 redo log 中 commit 的数据到磁盘中去。WAL （write-ahead logging）技术, 先写日志，在写磁盘。redo log 是存储引擎 InnoDB 独有的日志记录系统，它保证了在 MySQL 服务宕机之后保证数据不丢失。 可以通过设置参数 <code>innodb_flush_log_at_trx_commit=1</code> 保证每次 redo lod 都写在磁盘上，保证重启之后数据不丢失。</p>
-<h5 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h5><p>MySQL server 层提供的日志系统，支持所有引擎。bin log 是追加的形式写入的，不像 redo log 有大小限制。binlog有两种记录模式，statement格式的话是记sql语句， row格式会记录行的内容，记两条，更新前和更新后都有。</p>
-<h4 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h4><p>在网上购物从确认商品，下订单，扣减库存，到付款成功。这是一个整体的操作。对于这个操作来说，如果有其中一步操作失败，那意味着在它之前的操作都要回滚。这就是一个事务。在这一系列操作中，要么都成功。要么都失败。</p>
-<p>事务特性：ACID，原子性（atomictity），一致性（consistency），隔离性（isolation），持久性（durablity）</p>
-<h5 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h5><p>隔离级别越高，效率越低。</p>
-<h6 id="读未提交（read-uncommitted）"><a href="#读未提交（read-uncommitted）" class="headerlink" title="读未提交（read uncommitted）"></a>读未提交（read uncommitted）</h6><blockquote>
-<p>一个事务还没有提交，它的变更能别其他事务看到</p>
-</blockquote>
-<h6 id="读提交（read-commit）"><a href="#读提交（read-commit）" class="headerlink" title="读提交（read commit）"></a>读提交（read commit）</h6><blockquote>
-<p>事务提交之后，变更才能被其他事务看到</p>
-</blockquote>
-<h6 id="可重复读（repeatable-read）"><a href="#可重复读（repeatable-read）" class="headerlink" title="可重复读（repeatable read）"></a>可重复读（repeatable read）</h6><blockquote>
-<p>事务启动之后，在事务提交之前，看到的数据和启动之前一致。没有提交的事务对其他事务不可见。</p>
-</blockquote>
-<h6 id="串行化（serialiable）"><a href="#串行化（serialiable）" class="headerlink" title="串行化（serialiable）"></a>串行化（serialiable）</h6><blockquote>
-<p>对于同一行记录，写会加写锁，读会加读锁，当出现读写锁冲突时，必须等上个事务完成之后才能执行下一个事务。</p>
-</blockquote>
-<h5 id="开启"><a href="#开启" class="headerlink" title="开启"></a>开启</h5><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 开启</span></span><br><span class="line"><span class="keyword">begin</span> (<span class="keyword">start</span>) transaction;</span><br><span class="line"><span class="comment">-- 提交</span></span><br><span class="line"><span class="keyword">commit</span>;</span><br><span class="line"><span class="comment">-- 回滚</span></span><br><span class="line"><span class="keyword">rollback</span>;</span><br></pre></td></tr></table></figure>
-<p>或者设置参数</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 0 关闭自动提交，查询也会自动开启，并且不会自动提交。一直持续到commit/rollback，或者断开连接。</span></span><br><span class="line"><span class="keyword">set</span> autocommit<span class="operator">=</span><span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p>由于 MySQL MVCC 多版本并发控制，每个操作都会有相应的回滚操作保存下来，每个事务都会记录。当设置为自动提交时，连接成功就会执行 set autocommit=0 的操作，每个操作都会在事务中，如果时长连接就会导致意外长事务。<strong>所以一般 set autocommit=1,显示开启事务</strong></p>
-<hr>
-<center>我该选哪个？</center>]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mongo权限设置.md</title>
-    <url>/2019/03/28/mongo%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE/</url>
-    <content><![CDATA[<p><img src="/2019/03/28/mongo%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE/mongoPower.png"></p>
-<p>mongodb 使用起来还是相对简单的，但是在权限设置时，遇到了几个小问题，以至于花了比较久的时间，在给 mongo 设置权限前首先要清楚几点：</p>
-<a id="more"></a>
-
-<ol>
-<li>mongo 默认是没有用户的。</li>
-<li>mongo 每个数据库由独立的用户来管理。<br>因为 mongo 默认是没有用户的，所以首先要创建管理员用户，这里创建管理员用户时要进入 admin 数据库来设置</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入 adimn 数据库</span></span><br><span class="line">&gt; use admin</span><br><span class="line">switched to db admin</span><br><span class="line">&gt; db.createUser(</span><br><span class="line">   &#123;</span><br><span class="line">     user: <span class="string">&quot;admin&quot;</span>, <span class="comment"># admin 用户名</span></span><br><span class="line">     <span class="built_in">pwd</span>: <span class="string">&quot;123456&quot;</span>, <span class="comment"># 密码</span></span><br><span class="line">     roles: [ &#123; role: <span class="string">&quot;userAdminAnyDatabase&quot;</span>, db: <span class="string">&quot;admin&quot;</span> &#125; ] <span class="comment"># admin 此用户作用的目标数据库</span></span><br><span class="line">   &#125;</span><br><span class="line">);</span><br><span class="line"><span class="comment"># 此处创建成功 bash 会返回成功信息</span></span><br><span class="line"><span class="comment"># 验证权限</span></span><br><span class="line">&gt; db.auth(<span class="string">&quot;admin&quot;</span>,<span class="string">&quot;123456&quot;</span>);</span><br><span class="line">1 <span class="comment"># 成功会返回1</span></span><br></pre></td></tr></table></figure>
-<p>至此，mongo 管理员用户已经创建成功了，现在退出 mongo ,在配置文件中开启验证</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">auth&#x3D;ture</span><br></pre></td></tr></table></figure>
-<p>重启 mongo</p>
-<p>创建 test 数据库，给此数据库创建 test 用户方能连接到此数据库</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 有的话进入，没有则创建此库</span></span><br><span class="line">&gt; use <span class="built_in">test</span></span><br><span class="line">&gt; db.createUser(</span><br><span class="line">   &#123;</span><br><span class="line">     user: <span class="string">&quot;test&quot;</span>,</span><br><span class="line">     <span class="built_in">pwd</span>: <span class="string">&quot;123456&quot;</span>,</span><br><span class="line">     roles: [ &#123; role: <span class="string">&quot;readWrite&quot;</span>, db: <span class="string">&quot;test&quot;</span> &#125; ]</span><br><span class="line">   &#125;</span><br><span class="line">);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>此时用户和关联的库已经创建好，在 robo3T 客户端就可以直接连接使用了。</p>
-<hr>
-<center>夜深人静的时候，世界才是自己的</center>]]></content>
-      <categories>
-        <category>mongo</category>
-      </categories>
-      <tags>
-        <tag>mongo</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>mongo分片集群</title>
     <url>/2019/11/12/mongo%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/</url>
     <content><![CDATA[<p><img src="/2019/11/12/mongo%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/replicaSet.png" alt="Photo by Unsplash"></p>
@@ -1218,6 +1148,76 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </categories>
       <tags>
         <tag>mongo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mongo权限设置.md</title>
+    <url>/2019/03/28/mongo%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE/</url>
+    <content><![CDATA[<p><img src="/2019/03/28/mongo%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE/mongoPower.png"></p>
+<p>mongodb 使用起来还是相对简单的，但是在权限设置时，遇到了几个小问题，以至于花了比较久的时间，在给 mongo 设置权限前首先要清楚几点：</p>
+<a id="more"></a>
+
+<ol>
+<li>mongo 默认是没有用户的。</li>
+<li>mongo 每个数据库由独立的用户来管理。<br>因为 mongo 默认是没有用户的，所以首先要创建管理员用户，这里创建管理员用户时要进入 admin 数据库来设置</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入 adimn 数据库</span></span><br><span class="line">&gt; use admin</span><br><span class="line">switched to db admin</span><br><span class="line">&gt; db.createUser(</span><br><span class="line">   &#123;</span><br><span class="line">     user: <span class="string">&quot;admin&quot;</span>, <span class="comment"># admin 用户名</span></span><br><span class="line">     <span class="built_in">pwd</span>: <span class="string">&quot;123456&quot;</span>, <span class="comment"># 密码</span></span><br><span class="line">     roles: [ &#123; role: <span class="string">&quot;userAdminAnyDatabase&quot;</span>, db: <span class="string">&quot;admin&quot;</span> &#125; ] <span class="comment"># admin 此用户作用的目标数据库</span></span><br><span class="line">   &#125;</span><br><span class="line">);</span><br><span class="line"><span class="comment"># 此处创建成功 bash 会返回成功信息</span></span><br><span class="line"><span class="comment"># 验证权限</span></span><br><span class="line">&gt; db.auth(<span class="string">&quot;admin&quot;</span>,<span class="string">&quot;123456&quot;</span>);</span><br><span class="line">1 <span class="comment"># 成功会返回1</span></span><br></pre></td></tr></table></figure>
+<p>至此，mongo 管理员用户已经创建成功了，现在退出 mongo ,在配置文件中开启验证</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">auth&#x3D;ture</span><br></pre></td></tr></table></figure>
+<p>重启 mongo</p>
+<p>创建 test 数据库，给此数据库创建 test 用户方能连接到此数据库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 有的话进入，没有则创建此库</span></span><br><span class="line">&gt; use <span class="built_in">test</span></span><br><span class="line">&gt; db.createUser(</span><br><span class="line">   &#123;</span><br><span class="line">     user: <span class="string">&quot;test&quot;</span>,</span><br><span class="line">     <span class="built_in">pwd</span>: <span class="string">&quot;123456&quot;</span>,</span><br><span class="line">     roles: [ &#123; role: <span class="string">&quot;readWrite&quot;</span>, db: <span class="string">&quot;test&quot;</span> &#125; ]</span><br><span class="line">   &#125;</span><br><span class="line">);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>此时用户和关联的库已经创建好，在 robo3T 客户端就可以直接连接使用了。</p>
+<hr>
+<center>夜深人静的时候，世界才是自己的</center>]]></content>
+      <categories>
+        <category>mongo</category>
+      </categories>
+      <tags>
+        <tag>mongo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL</title>
+    <url>/2020/01/18/mysql/</url>
+    <content><![CDATA[<p><img src="/2020/01/18/mysql/mysql.png" alt="Photo by WoshWosh on wallhaven.cc"></p>
+<p>趁着放假，准备系统的在理一理 MySQL 的知识，所以报名了极客时间上丁奇老师的课程，跟着大神又重新学习了一遍。现在学习东西喜欢记录下来，这样才有种确实学习了知识的感觉。^_^</p>
+<a id="more"></a>
+
+<h4 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h4><p>MySQL 是由两大部分 server 部分和存储引擎构成的。而 server 部分主要由 连接器，分析器，优化器和执行器组成的，server 部分主要负责客户端的连接，SQL 语句的解析，优化以及执行。 存储引擎主要负责数存储，并且提供数据的读写接口。</p>
+<h5 id="server"><a href="#server" class="headerlink" title="server"></a>server</h5><p>MySQL 前置操作都在这里执行。</p>
+<h6 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h6><p>负责管理客户端连接，权限的验证等操作。当验证通过一个用户名和密码之后，此后的操作都是依赖当前权限，也就是说当一个用户连接成功之后，即使管理员修改密码，但是他还是能完成操作。</p>
+<h6 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h6><p>当用户通过连接器，SQL 到达之后，一般会先查询缓存（8.0 之前）。如果缓存中存在的话直接返回。没有的话则对 SQL 语句进行语法分析等动作。对于缓存不建议使用，因为当有表涉及到更新时，所有关于当前表的缓存会失效。除非是数据不经常变更的数据表。</p>
+<h6 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h6><p>优化器主要是分析 SQL 语句怎样执行最优，然后生成执行方案。</p>
+<h6 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h6><p>执行 SQL 语句，返回结果集。</p>
+<h4 id="日志系统"><a href="#日志系统" class="headerlink" title="日志系统"></a>日志系统</h4><h5 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h5><p>在 MySQL 语句更新过程中，如果每次都在磁盘找到相应记录，并且修改记录，写入磁盘的话，效率会很低。所以在执行过程中一些会将修改结果先保存在内存中，然后在 redo log 中记录当前的修改，当事务提交之后。服务在空闲的时候，或者日志空间不够时，在刷新 redo log 中 commit 的数据到磁盘中去。WAL （write-ahead logging）技术, 先写日志，在写磁盘。redo log 是存储引擎 InnoDB 独有的日志记录系统，它保证了在 MySQL 服务宕机之后保证数据不丢失。 可以通过设置参数 <code>innodb_flush_log_at_trx_commit=1</code> 保证每次 redo lod 都写在磁盘上，保证重启之后数据不丢失。</p>
+<h5 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h5><p>MySQL server 层提供的日志系统，支持所有引擎。bin log 是追加的形式写入的，不像 redo log 有大小限制。binlog有两种记录模式，statement格式的话是记sql语句， row格式会记录行的内容，记两条，更新前和更新后都有。</p>
+<h4 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h4><p>在网上购物从确认商品，下订单，扣减库存，到付款成功。这是一个整体的操作。对于这个操作来说，如果有其中一步操作失败，那意味着在它之前的操作都要回滚。这就是一个事务。在这一系列操作中，要么都成功。要么都失败。</p>
+<p>事务特性：ACID，原子性（atomictity），一致性（consistency），隔离性（isolation），持久性（durablity）</p>
+<h5 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h5><p>隔离级别越高，效率越低。</p>
+<h6 id="读未提交（read-uncommitted）"><a href="#读未提交（read-uncommitted）" class="headerlink" title="读未提交（read uncommitted）"></a>读未提交（read uncommitted）</h6><blockquote>
+<p>一个事务还没有提交，它的变更能别其他事务看到</p>
+</blockquote>
+<h6 id="读提交（read-commit）"><a href="#读提交（read-commit）" class="headerlink" title="读提交（read commit）"></a>读提交（read commit）</h6><blockquote>
+<p>事务提交之后，变更才能被其他事务看到</p>
+</blockquote>
+<h6 id="可重复读（repeatable-read）"><a href="#可重复读（repeatable-read）" class="headerlink" title="可重复读（repeatable read）"></a>可重复读（repeatable read）</h6><blockquote>
+<p>事务启动之后，在事务提交之前，看到的数据和启动之前一致。没有提交的事务对其他事务不可见。</p>
+</blockquote>
+<h6 id="串行化（serialiable）"><a href="#串行化（serialiable）" class="headerlink" title="串行化（serialiable）"></a>串行化（serialiable）</h6><blockquote>
+<p>对于同一行记录，写会加写锁，读会加读锁，当出现读写锁冲突时，必须等上个事务完成之后才能执行下一个事务。</p>
+</blockquote>
+<h5 id="开启"><a href="#开启" class="headerlink" title="开启"></a>开启</h5><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 开启</span></span><br><span class="line"><span class="keyword">begin</span> (<span class="keyword">start</span>) transaction;</span><br><span class="line"><span class="comment">-- 提交</span></span><br><span class="line"><span class="keyword">commit</span>;</span><br><span class="line"><span class="comment">-- 回滚</span></span><br><span class="line"><span class="keyword">rollback</span>;</span><br></pre></td></tr></table></figure>
+<p>或者设置参数</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 0 关闭自动提交，查询也会自动开启，并且不会自动提交。一直持续到commit/rollback，或者断开连接。</span></span><br><span class="line"><span class="keyword">set</span> autocommit<span class="operator">=</span><span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>由于 MySQL MVCC 多版本并发控制，每个操作都会有相应的回滚操作保存下来，每个事务都会记录。当设置为自动提交时，连接成功就会执行 set autocommit=0 的操作，每个操作都会在事务中，如果时长连接就会导致意外长事务。<strong>所以一般 set autocommit=1,显示开启事务</strong></p>
+<hr>
+<center>我该选哪个？</center>]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
       </tags>
   </entry>
   <entry>
@@ -1529,38 +1529,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
-    <title>springcloud-ribbon</title>
-    <url>/2019/12/15/springcloud-ribbon/</url>
-    <content><![CDATA[<p><img src="/2019/12/15/springcloud-ribbon/springcloud-ribbon.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
-<p>一般负载均衡指的是服务端的负载均衡，硬件有 F5 等设备，软件方面有 nginx 等。负载均衡是系统在高可用和容灾性等方面的重要的解决方案之一。而 Ribbon 是一款基于客户端的负载均衡应用。<br>我的理解是，请求没有到达应用之前，是由 nginx 来进行请求分发，决定进入到那个服务，当请求进入到服务之后，在服务调用时由 Ribbon 来进行服务之间请求分发，实现内网应用的负载均衡。</p>
-<a id="more"></a>
-
-
-<h4 id="ribbon"><a href="#ribbon" class="headerlink" title="ribbon"></a>ribbon</h4><p>一般 <code>spring-cloud-starter-netflix-eureka-client</code> 已经引入了 ribbon 组件，在使用时直接进行使用就可以了。</p>
-<h5 id="LoadBalanced"><a href="#LoadBalanced" class="headerlink" title="@LoadBalanced"></a>@LoadBalanced</h5><p>负载均衡注解，官方解释 <code>Annotation to mark a RestTemplate bean to be configured to use a LoadBalancerClient.</code> 大概意思是 让 restTemplate 实例配置使用负载均衡客户端。</p>
-<h5 id="负载均衡算法"><a href="#负载均衡算法" class="headerlink" title="负载均衡算法"></a>负载均衡算法</h5><h6 id="轮询"><a href="#轮询" class="headerlink" title="轮询"></a>轮询</h6><h6 id="随机获取"><a href="#随机获取" class="headerlink" title="随机获取"></a>随机获取</h6><h5 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h5><p>使用在 <a class="link" href="https://fengzhu.top/2019/04/18/springcloud-eureka/">eureka<i class="fas fa-external-link-alt"></i></a>中的例子来进行使用。</p>
-<h6 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h6><p>在订单服务启动时加载负载均衡配置</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JiheOrderApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(JiheOrderApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 负载均衡注解</span></span><br><span class="line"><span class="comment">     **/</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@LoadBalanced</span></span><br><span class="line">    <span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RestTemplate <span class="title">restTemplate</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>请求到服务时打印端口信息，方便测试</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;server.port&#125;&quot;)</span></span><br><span class="line">    String port;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/user/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getUser</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> <span class="keyword">int</span> id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;我是&quot;</span> + id + <span class="string">&quot;号用户&quot;</span> + <span class="string">&quot;,访问端口：&quot;</span> + port;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h6 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h6><ol>
-<li><p>首先要在 idea 开启并行启动，在 idea 右上角编辑服务栏打开 <code>Edit Configurations</code> ，进入到编辑页面后，右上角会有和复选框 <code>Allow Parallel run</code> ，选择之后项目修改端口后就可以启动多个实列了。</p>
-</li>
-<li><p>修改端口号，同时启动 3 和 user 服务。</p>
-</li>
-<li><p>使用 order 服务调用 user 服务，通过不同的端口号打印信息，会看到 ribbon 默认是轮询的方式来负载均衡请求客户端的。</p>
-</li>
-</ol>
-<hr>
-<center></center>]]></content>
-      <categories>
-        <category>springcloud</category>
-      </categories>
-      <tags>
-        <tag>springcloud</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>springcloud-hystrix(二)</title>
     <url>/2019/04/25/springcloud-hystrix/</url>
     <content><![CDATA[<p><img src="/2019/04/25/springcloud-hystrix/hystrix.png" alt="行到水穷处，坐看云起时"></p>
@@ -1593,6 +1561,109 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
 
 
 ]]></content>
+      <categories>
+        <category>springcloud</category>
+      </categories>
+      <tags>
+        <tag>springcloud</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>springcloud-ribbon</title>
+    <url>/2019/12/15/springcloud-ribbon/</url>
+    <content><![CDATA[<p><img src="/2019/12/15/springcloud-ribbon/springcloud-ribbon.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
+<p>一般负载均衡指的是服务端的负载均衡，硬件有 F5 等设备，软件方面有 nginx 等。负载均衡是系统在高可用和容灾性等方面的重要的解决方案之一。而 Ribbon 是一款基于客户端的负载均衡应用。<br>我的理解是，请求没有到达应用之前，是由 nginx 来进行请求分发，决定进入到那个服务，当请求进入到服务之后，在服务调用时由 Ribbon 来进行服务之间请求分发，实现内网应用的负载均衡。</p>
+<a id="more"></a>
+
+
+<h4 id="ribbon"><a href="#ribbon" class="headerlink" title="ribbon"></a>ribbon</h4><p>一般 <code>spring-cloud-starter-netflix-eureka-client</code> 已经引入了 ribbon 组件，在使用时直接进行使用就可以了。</p>
+<h5 id="LoadBalanced"><a href="#LoadBalanced" class="headerlink" title="@LoadBalanced"></a>@LoadBalanced</h5><p>负载均衡注解，官方解释 <code>Annotation to mark a RestTemplate bean to be configured to use a LoadBalancerClient.</code> 大概意思是 让 restTemplate 实例配置使用负载均衡客户端。</p>
+<h5 id="负载均衡算法"><a href="#负载均衡算法" class="headerlink" title="负载均衡算法"></a>负载均衡算法</h5><h6 id="轮询"><a href="#轮询" class="headerlink" title="轮询"></a>轮询</h6><h6 id="随机获取"><a href="#随机获取" class="headerlink" title="随机获取"></a>随机获取</h6><h5 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h5><p>使用在 <a class="link" href="https://fengzhu.top/2019/04/18/springcloud-eureka/">eureka<i class="fas fa-external-link-alt"></i></a>中的例子来进行使用。</p>
+<h6 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h6><p>在订单服务启动时加载负载均衡配置</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JiheOrderApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(JiheOrderApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 负载均衡注解</span></span><br><span class="line"><span class="comment">     **/</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@LoadBalanced</span></span><br><span class="line">    <span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RestTemplate <span class="title">restTemplate</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>请求到服务时打印端口信息，方便测试</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;server.port&#125;&quot;)</span></span><br><span class="line">    String port;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/user/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getUser</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> <span class="keyword">int</span> id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;我是&quot;</span> + id + <span class="string">&quot;号用户&quot;</span> + <span class="string">&quot;,访问端口：&quot;</span> + port;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h6><ol>
+<li><p>首先要在 idea 开启并行启动，在 idea 右上角编辑服务栏打开 <code>Edit Configurations</code> ，进入到编辑页面后，右上角会有和复选框 <code>Allow Parallel run</code> ，选择之后项目修改端口后就可以启动多个实列了。</p>
+</li>
+<li><p>修改端口号，同时启动 3 和 user 服务。</p>
+</li>
+<li><p>使用 order 服务调用 user 服务，通过不同的端口号打印信息，会看到 ribbon 默认是轮询的方式来负载均衡请求客户端的。</p>
+</li>
+</ol>
+<hr>
+<center></center>]]></content>
+      <categories>
+        <category>springcloud</category>
+      </categories>
+      <tags>
+        <tag>springcloud</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>springcloud</title>
+    <url>/2019/04/18/springcloud/</url>
+    <content><![CDATA[<p><img src="/2019/04/18/springcloud/springcloud.png" alt="大多数人的生活，是无数次选择的结果"></p>
+<p>最近两年微服务架构特别火，很多公司都投身到微服务的怀抱。面试的时候面试官也一定会问有没有用过或者了解过微服务，微服务的火热可见一斑。很多公司都在微服务的路上试探，我们公司也不例外。目前一般 Java 为基础的公司大多用的都是 spring 全家桶，而近年出了 spring boot 和 spring cloud，为微服务提供了一站式解决方案。</p>
+<a id="more"></a>
+
+<h4 id="什么是-Spring-boot"><a href="#什么是-Spring-boot" class="headerlink" title="什么是 Spring boot"></a>什么是 Spring boot</h4><p>官方是这样介绍的：“spring boot 可以轻松创建独立的企业级应用。”<br>它是对 spring 框架的封装，简化了开发流程，专注于开发功能。去除传统 xml 配置的方式。以 java 代码配合注解的方式实现配置，更易于理解和编写。因为它的这些特性，它也成为了开发微服务系统的基础。之前 spring 能开发的它都可以做到，并且更快速，更高效。</p>
+<h4 id="什么是-Spring-Cloud"><a href="#什么是-Spring-Cloud" class="headerlink" title="什么是 Spring Cloud"></a>什么是 Spring Cloud</h4><p>spring cloud 是一系列框架的集合，它包含了 服务的注册、发现，服务网关，配置中心、消息总线、负载均衡、断路器、数据监控等，而这些组件中大部分也不是 spring 公司研发的，而是基于现有的一些优秀开源框架进行二次封装的。当然这也是 spring 不重复造轮子的理念。而这些服务的开发都是基于 spring boot 这款优秀的框架的。spring cloud 现有组件都有 20 多个，而且还在新增中。</p>
+<h5 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h5><ol>
+<li>可扩展性强：可以针对需求方便的进行扩展</li>
+<li>弹性：各个组件独立部署，单个组件故障不会导致雪崩效应，系统还是正常运行</li>
+<li>组合性高：不同服务之间的不同组合，可以完成不同业务的开发。</li>
+</ol>
+<h5 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h5><ol>
+<li>运维成本增高</li>
+<li>系统复杂性增高</li>
+</ol>
+<h4 id="spring-boot-和-spring-cloud"><a href="#spring-boot-和-spring-cloud" class="headerlink" title="spring boot 和 spring cloud"></a>spring boot 和 spring cloud</h4><p>上面分别了解了 spring boot 和 spring cloud 之后相信对他们的区别和联系也有了认识。简单来说，没有 spring cloud，spring boot 是可以独立创建应用，并且投入生产不会有影响。而 spring cloud 的开发却离不开 spring boot 的支持。也就是说  spring cloud 是基于 spring boot 的，分清楚两者关系在学习微服务架构的时候就会有一个整体的概念，学好 spring boot 意味着 spring cloud 开发也会顺畅很多。</p>
+<h4 id="dubbo"><a href="#dubbo" class="headerlink" title="dubbo"></a>dubbo</h4><p>dubbo 是阿里开源的一款服务治理中间件，在国内特别火，并且其有一个强大的监控后台，最近又开始了更新。相信未来在服务治理方面会做的更好。</p>
+<h4 id="spring-cloud-和-dubbo"><a href="#spring-cloud-和-dubbo" class="headerlink" title="spring cloud 和 dubbo"></a>spring cloud 和 dubbo</h4><p>下面是一张它们核心功能对比表。</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>dubbo</th>
+<th>spring cloud</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>服务注册中心</td>
+<td>zookeeper</td>
+<td>Eureka 等等..</td>
+</tr>
+<tr>
+<td>服务网关</td>
+<td>无</td>
+<td>Zuul 等..</td>
+</tr>
+<tr>
+<td>断路器</td>
+<td>不完善</td>
+<td>Hystrix</td>
+</tr>
+<tr>
+<td>配置中心</td>
+<td>无</td>
+<td>Config</td>
+</tr>
+<tr>
+<td>链路追踪</td>
+<td>无</td>
+<td>Slenth</td>
+</tr>
+<tr>
+<td>消息总线</td>
+<td>无</td>
+<td>Bus</td>
+</tr>
+</tbody></table>
+<p>其实直接把 dubbo 和 spring cloud 放在一起对比是不公平的，spring cloud 是封装了很多优秀组件之后的一个微服务解决方案的集合，而 dubbo 更专注于服务治理，在服务治理和监控方面做的比是spring cloud 还要优秀。</p>
+<p>总的来说 spring cloud 有 spring 这个强大的组织做背书，在未来微服务方向肯定是所向披靡的，但是 dubbo 在服务治理方面也会一枝独秀，毕竟在阿里这样体量的公司和实际的业务场景下，它只会进化的越来越完善，越来越优秀。</p>
+<hr>
+<center>愿你 平安喜乐</center>]]></content>
       <categories>
         <category>springcloud</category>
       </categories>
@@ -1695,77 +1766,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </categories>
       <tags>
         <tag>we</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>springcloud</title>
-    <url>/2019/04/18/springcloud/</url>
-    <content><![CDATA[<p><img src="/2019/04/18/springcloud/springcloud.png" alt="大多数人的生活，是无数次选择的结果"></p>
-<p>最近两年微服务架构特别火，很多公司都投身到微服务的怀抱。面试的时候面试官也一定会问有没有用过或者了解过微服务，微服务的火热可见一斑。很多公司都在微服务的路上试探，我们公司也不例外。目前一般 Java 为基础的公司大多用的都是 spring 全家桶，而近年出了 spring boot 和 spring cloud，为微服务提供了一站式解决方案。</p>
-<a id="more"></a>
-
-<h4 id="什么是-Spring-boot"><a href="#什么是-Spring-boot" class="headerlink" title="什么是 Spring boot"></a>什么是 Spring boot</h4><p>官方是这样介绍的：“spring boot 可以轻松创建独立的企业级应用。”<br>它是对 spring 框架的封装，简化了开发流程，专注于开发功能。去除传统 xml 配置的方式。以 java 代码配合注解的方式实现配置，更易于理解和编写。因为它的这些特性，它也成为了开发微服务系统的基础。之前 spring 能开发的它都可以做到，并且更快速，更高效。</p>
-<h4 id="什么是-Spring-Cloud"><a href="#什么是-Spring-Cloud" class="headerlink" title="什么是 Spring Cloud"></a>什么是 Spring Cloud</h4><p>spring cloud 是一系列框架的集合，它包含了 服务的注册、发现，服务网关，配置中心、消息总线、负载均衡、断路器、数据监控等，而这些组件中大部分也不是 spring 公司研发的，而是基于现有的一些优秀开源框架进行二次封装的。当然这也是 spring 不重复造轮子的理念。而这些服务的开发都是基于 spring boot 这款优秀的框架的。spring cloud 现有组件都有 20 多个，而且还在新增中。</p>
-<h5 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h5><ol>
-<li>可扩展性强：可以针对需求方便的进行扩展</li>
-<li>弹性：各个组件独立部署，单个组件故障不会导致雪崩效应，系统还是正常运行</li>
-<li>组合性高：不同服务之间的不同组合，可以完成不同业务的开发。</li>
-</ol>
-<h5 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h5><ol>
-<li>运维成本增高</li>
-<li>系统复杂性增高</li>
-</ol>
-<h4 id="spring-boot-和-spring-cloud"><a href="#spring-boot-和-spring-cloud" class="headerlink" title="spring boot 和 spring cloud"></a>spring boot 和 spring cloud</h4><p>上面分别了解了 spring boot 和 spring cloud 之后相信对他们的区别和联系也有了认识。简单来说，没有 spring cloud，spring boot 是可以独立创建应用，并且投入生产不会有影响。而 spring cloud 的开发却离不开 spring boot 的支持。也就是说  spring cloud 是基于 spring boot 的，分清楚两者关系在学习微服务架构的时候就会有一个整体的概念，学好 spring boot 意味着 spring cloud 开发也会顺畅很多。</p>
-<h4 id="dubbo"><a href="#dubbo" class="headerlink" title="dubbo"></a>dubbo</h4><p>dubbo 是阿里开源的一款服务治理中间件，在国内特别火，并且其有一个强大的监控后台，最近又开始了更新。相信未来在服务治理方面会做的更好。</p>
-<h4 id="spring-cloud-和-dubbo"><a href="#spring-cloud-和-dubbo" class="headerlink" title="spring cloud 和 dubbo"></a>spring cloud 和 dubbo</h4><p>下面是一张它们核心功能对比表。</p>
-<table>
-<thead>
-<tr>
-<th>组件</th>
-<th>dubbo</th>
-<th>spring cloud</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>服务注册中心</td>
-<td>zookeeper</td>
-<td>Eureka 等等..</td>
-</tr>
-<tr>
-<td>服务网关</td>
-<td>无</td>
-<td>Zuul 等..</td>
-</tr>
-<tr>
-<td>断路器</td>
-<td>不完善</td>
-<td>Hystrix</td>
-</tr>
-<tr>
-<td>配置中心</td>
-<td>无</td>
-<td>Config</td>
-</tr>
-<tr>
-<td>链路追踪</td>
-<td>无</td>
-<td>Slenth</td>
-</tr>
-<tr>
-<td>消息总线</td>
-<td>无</td>
-<td>Bus</td>
-</tr>
-</tbody></table>
-<p>其实直接把 dubbo 和 spring cloud 放在一起对比是不公平的，spring cloud 是封装了很多优秀组件之后的一个微服务解决方案的集合，而 dubbo 更专注于服务治理，在服务治理和监控方面做的比是spring cloud 还要优秀。</p>
-<p>总的来说 spring cloud 有 spring 这个强大的组织做背书，在未来微服务方向肯定是所向披靡的，但是 dubbo 在服务治理方面也会一枝独秀，毕竟在阿里这样体量的公司和实际的业务场景下，它只会进化的越来越完善，越来越优秀。</p>
-<hr>
-<center>愿你 平安喜乐</center>]]></content>
-      <categories>
-        <category>springcloud</category>
-      </categories>
-      <tags>
-        <tag>springcloud</tag>
       </tags>
   </entry>
   <entry>

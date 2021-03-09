@@ -1,5 +1,5 @@
 ---
-title: tomcat一键启动脚本
+title: tomcat启动shell脚本
 date: 2020-02-24 21:46:07
 tags: tomcat
 category: tomcat

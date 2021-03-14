@@ -193,12 +193,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>230 Words</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.5k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>1 Mins</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>5 Mins</span>
         </span>
     
     
@@ -215,52 +215,125 @@
 
         <div class="article-content markdown-body">
             <p><img src="/2020/01/14/netty/netty.png" alt="Photo by WallpaperManiac on wallhaven.cc"></p>
-<p>介绍</p>
-<ol>
-<li>高性能，时间驱动，异步非阻塞</li>
-<li>基于 NIO 的客户端，服务端编程框架</li>
-<li>可靠的稳定性和伸缩性</li>
-</ol>
+<p>Netty 提供<strong>异步</strong>的、<strong>事件驱动</strong>的网络应用程序框架和工具，用以快速开发高性能、高可靠性的网络服务器和客户端程序。也就是说，Netty 是一个<strong>基于 NIO</strong> 的客户，服务器端编程框架，使用Netty 可以确保你快速和简单的开发出一个网络应用，Netty相当简化和流线化了网络应用的编程开发过程，例如，TCP和UDP的socket服务开发。</p>
 <a id="more"></a>
 
+<h2 id="✈️NIO"><a href="#✈️NIO" class="headerlink" title="✈️NIO"></a>✈️NIO</h2><h3 id="Java-Socket-编程"><a href="#Java-Socket-编程" class="headerlink" title="Java Socket 编程"></a>Java Socket 编程</h3><p>使用Socket进行网络编程时，本质上就是两个进程之间的网络通信。其中一个进程必须充当服务器端，它会主动监听某个指定的端口，另一个进程必须充当客户端，它必须主动连接服务器的IP地址和指定端口，如果连接成功，服务器端和客户端就成功地建立了一个TCP连接，双方后续就可以随时发送和接收数据。</p>
+<h3 id="I-O模型"><a href="#I-O模型" class="headerlink" title="I/O模型"></a>I/O模型</h3><table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">阻塞</th>
+<th align="center">非阻塞</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">同步</td>
+<td align="center">阻塞 I/O 模型</td>
+<td align="center">非阻塞 I/O 模型</td>
+</tr>
+<tr>
+<td align="center">同步</td>
+<td align="center">I/O 复用模型</td>
+<td align="center">信号驱动 I/O 模型</td>
+</tr>
+<tr>
+<td align="center">异步</td>
+<td align="center"></td>
+<td align="center">异步 I/O 模型</td>
+</tr>
+</tbody></table>
+<h4 id="阻塞I-O"><a href="#阻塞I-O" class="headerlink" title="阻塞I/O"></a>阻塞I/O</h4><p>阻塞式 I/O 模型，一般通过在循环中等待接收客户端连接的请求，建立连接之后只能等待当前客户端通信完成才能接收其他客户端请求。「可以通过多线程来处理多个客户端连接」</p>
+<ul>
+<li>等待数据就绪。通过网络 I/O 数据抵达接收端</li>
+<li>数据拷贝。 将数据从内核态拷贝到用户态</li>
+</ul>
+<h4 id="非阻塞I-O"><a href="#非阻塞I-O" class="headerlink" title="非阻塞I/O"></a>非阻塞I/O</h4><p>内核会立即返回。用户进程第一个阶段不是阻塞的,需要不断的主动询问 kernel 数据好了没有；第二个阶段依然总是阻塞的。</p>
+<ul>
+<li>设置状态。将请求设置为「非阻塞状态」，当数据没有准备好时线程不要进入阻塞队列，直接返回状态码 <code>EWOULDBLOCK</code> </li>
+<li>轮询。轮询查看数据是否准备好</li>
+<li>数据拷贝。数据准备好时，将数据从内核态拷贝到用户态</li>
+</ul>
+<h4 id="I-O多路复用"><a href="#I-O多路复用" class="headerlink" title="I/O多路复用"></a>I/O多路复用</h4><p>也称事件驱动 I/O：就是在单线程里同时监控多个 Socket，通过 select/poll 函数轮询负责所有的 Socket，当某个 Socket 数据到达了，就通知用户进程。</p>
+<ul>
+<li>请求先阻塞在 select/poll 上，阻塞多个请求，轮询查看数据是否准备好</li>
+<li>告知客户端数据已准备好，客户端发起请求获取数据</li>
+<li>将数据从内核态拷贝到用户态，返回</li>
+</ul>
+<h5 id="select-poll缺点"><a href="#select-poll缺点" class="headerlink" title="select/poll缺点"></a>select/poll缺点</h5><ol>
+<li><p>每次调用 select，都需要把 fd 集合从用户态拷贝到内核态，这个开销在 fd 很多时会很大</p>
+</li>
+<li><p>同时每次调用 select 都需要在<strong>内核遍历传递进来的所有 fd</strong>，这个开销在 fd 很多时也很大</p>
+</li>
+<li><p>select 支持的文件描述符数量太小了，默认是1024</p>
+</li>
+</ol>
+<h5 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h5><p>Linux 2.5.44内核中引入,2.6内核正式引入,可被用于代替 POSIX select 和 poll 系统调用</p>
+<ol>
+<li><p>内核与用户空间共享一块内存</p>
+</li>
+<li><p>通过回调解决遍历问题</p>
+</li>
+<li><p>fd 没有限制，可以支撑10万连接</p>
+</li>
+</ol>
+<h4 id="信号驱动I-O"><a href="#信号驱动I-O" class="headerlink" title="信号驱动I/O"></a>信号驱动I/O</h4><p>信号驱动 IO（SIGIO） 与 BIO 和 NIO 最大的区别就在于，在 IO 执行的数据准备阶段，不会阻塞用户进程。</p>
+<ul>
+<li>客户端发送请求数据的信号，期间不会发生阻塞</li>
+<li>服务端准备好数据后传递一个信号 SIGIO 给客户端。客户端发起请求获取数据</li>
+<li>将数据从内核态拷贝到用户态，返回</li>
+</ul>
+<h4 id="异步I-O"><a href="#异步I-O" class="headerlink" title="异步I/O"></a>异步I/O</h4><p>异步 IO <strong>真正实现</strong>了 IO 全流程的非阻塞。用户进程发出系统调用后立即返回，内核等待数据准备完成，然后将数据拷贝到用户进程缓冲区，然后发送信号告诉用户进程 IO 操作执行完毕「与 SIGIO 相比，一个是发送信号告诉用户进程数据准备完毕，一个是 IO 执行完毕」。</p>
+<h3 id="Netty"><a href="#Netty" class="headerlink" title="Netty"></a>Netty</h3><p>Netty 提供<strong>异步</strong>的、<strong>事件驱动</strong>的网络应用程序框架和工具，用以快速开发高性能、高可靠性的网络服务器和客户端程序。也就是说，Netty 是一个<strong>基于 NIO</strong> 的客户，服务器端编程框架，使用Netty 可以确保你快速和简单的开发出一个网络应用，Netty相当简化和流线化了网络应用的编程开发过程，例如，TCP和UDP的socket服务开发。</p>
+<h4 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h4><p>高性能协议服务器</p>
+<p>高吞吐，低延迟，低开销，零拷贝，可扩容，松耦合: 网络和业务逻辑分离，使用方便、可维护性好</p>
+<h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><h5 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h5><p>通道，Java NIO 中的基础概念,代表一个打开的连接,可执行读取/写入 IO 操作。Netty 对 Channel 的所有 IO 操作都是非阻塞的。</p>
+<h5 id="ChannelFuture"><a href="#ChannelFuture" class="headerlink" title="ChannelFuture"></a>ChannelFuture</h5><p>Java 的 Future 接口，只能查询操作的完成情况, 或者阻塞当前线程等待操作完成。Netty 封装一个 ChannelFuture 接口。可以将回调方法传给 ChannelFuture，在操作完成时自动执行。</p>
+<h5 id="Event-amp-Handler"><a href="#Event-amp-Handler" class="headerlink" title="Event&amp;Handler"></a>Event&amp;Handler</h5><p>Netty 基于事件驱动，事件和处理器可以关联到入站和出站数据流。</p>
+<h5 id="Encoder-amp-Decoder"><a href="#Encoder-amp-Decoder" class="headerlink" title="Encoder&amp;Decoder"></a>Encoder&amp;Decoder</h5><p>处理网络 IO 时，需要进行序列化和反序列化, 转换 Java 对象与字节流。对入站数据进行解码, 基类是 ByteToMessageDecoder。对出站数据进行编码, 基类是 MessageToByteEncoder。 </p>
+<h5 id="ChannelPipeline"><a href="#ChannelPipeline" class="headerlink" title="ChannelPipeline"></a>ChannelPipeline</h5><p>数据处理管道就是事件处理器链。有顺序、同一 Channel 的出站处理器和入站处理器在同一个列表中。</p>
+<h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><ol>
+<li><p>不要阻塞 EventLoop</p>
+</li>
+<li><p>系统参数优化</p>
+</li>
+</ol>
+<blockquote>
+<p>ulimit -a /proc/sys/net/ipv4/tcp_fin_timeout, TcpTimedWaitDelay</p>
+</blockquote>
+<ol start="3">
+<li>缓冲区优化</li>
+</ol>
+<blockquote>
+<p>SO_RCVBUF/SO_SNDBUF/SO_BACKLOG/ REUSEXXX</p>
+</blockquote>
+<ol start="4">
+<li>心跳频率周期优化</li>
+</ol>
+<blockquote>
+<p>心跳机制与断线重连</p>
+</blockquote>
+<ol start="5">
+<li>内存与 ByteBuffer 优化</li>
+</ol>
+<blockquote>
+<p>DirectBuffer与HeapBuffer</p>
+</blockquote>
+<ol start="6">
+<li>其他优化</li>
+</ol>
+<blockquote>
+<p>-ioRatio</p>
+<p>-Watermark</p>
+<p>-TrafficShaping</p>
+</blockquote>
+<h4 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h4><p>实现 API 网关</p>
+<h5 id="常见网关"><a href="#常见网关" class="headerlink" title="常见网关"></a>常见网关</h5><p>zuul ,zuul2 ,Spring Cloud Gateway ,openResty ,Kong </p>
+<h3 id="总结图"><a href="#总结图" class="headerlink" title="总结图"></a>总结图</h3><img src="https://github.com/oliverschen/Java-Summarize/blob/main/images/NIO.png" style="zoom:50%">
 
-<p>应用场景</p>
-<ol>
-<li>高性能领域</li>
-<li>多线程并发领域</li>
-<li>异步通信领域</li>
-</ol>
-<p>Java IO 通信</p>
-<p>BIO 通信</p>
-<ol>
-<li>一个客户端对应一个线程，当客户端个数增多时，服务端线程也随之增多，而线程对于服务端来说是一种有限资源。</li>
-</ol>
-<p>伪异步 IO 通信</p>
-<ol>
-<li>线程池负责连接，当有大量请求进来时，也不会导致线程剧增而宕机。</li>
-</ol>
-<p>NIO 通信</p>
-<ol>
-<li>缓冲区 buffer</li>
-<li>通道 channel （支持同时可读可写）</li>
-<li>多路复用器 selector</li>
-</ol>
-<p>AIO 通信</p>
-<ol>
-<li>连接注册读写时间和回调函数</li>
-<li>读写方法异步</li>
-<li>主动通知程序</li>
-</ol>
-<p>Netty </p>
-<p>优点：</p>
-<ol>
-<li>API 简单</li>
-<li>入门门槛低</li>
-<li>性能高</li>
-<li>成熟，稳定</li>
-</ol>
-<p>http: 半双工协议（）<br>webSocket：全双工协议</p>
-
+<h3 id="资料"><a href="#资料" class="headerlink" title="资料"></a>资料</h3><p><a class="link" target="_blank" rel="noopener" href="https://waylau.gitbooks.io/essential-netty-in-action/content/GETTING%20STARTED/Asynchronous%20and%20Event%20Driven.html">Essential Netty in Action 《Netty 实战(精髓)》<i class="fas fa-external-link-alt"></i></a></p>
+<hr>
+<center>曾经的愿望实现了吗？</center>
         </div>
 
         
@@ -491,7 +564,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%9C%88%EF%B8%8FNIO"><span class="nav-number">1.</span> <span class="nav-text">✈️NIO</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-Socket-%E7%BC%96%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">Java Socket 编程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-O%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">I&#x2F;O模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%BB%E5%A1%9EI-O"><span class="nav-number">1.2.1.</span> <span class="nav-text">阻塞I&#x2F;O</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%9E%E9%98%BB%E5%A1%9EI-O"><span class="nav-number">1.2.2.</span> <span class="nav-text">非阻塞I&#x2F;O</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#I-O%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">1.2.3.</span> <span class="nav-text">I&#x2F;O多路复用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#select-poll%E7%BC%BA%E7%82%B9"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">select&#x2F;poll缺点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#epoll"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">epoll</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8I-O"><span class="nav-number">1.2.4.</span> <span class="nav-text">信号驱动I&#x2F;O</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5I-O"><span class="nav-number">1.2.5.</span> <span class="nav-text">异步I&#x2F;O</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netty"><span class="nav-number">1.3.</span> <span class="nav-text">Netty</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E6%80%A7"><span class="nav-number">1.3.1.</span> <span class="nav-text">特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.3.2.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Channel"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">Channel</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ChannelFuture"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">ChannelFuture</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Event-amp-Handler"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">Event&amp;Handler</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Encoder-amp-Decoder"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">Encoder&amp;Decoder</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ChannelPipeline"><span class="nav-number">1.3.2.5.</span> <span class="nav-text">ChannelPipeline</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.3.</span> <span class="nav-text">优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">1.3.4.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%BD%91%E5%85%B3"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">常见网关</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%9B%BE"><span class="nav-number">1.4.</span> <span class="nav-text">总结图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B5%84%E6%96%99"><span class="nav-number">1.5.</span> <span class="nav-text">资料</span></a></li></ol></li></ol>
     </div>
 </div>
         </aside>

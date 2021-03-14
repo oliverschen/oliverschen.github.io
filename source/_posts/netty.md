@@ -146,9 +146,6 @@ Netty 基于事件驱动，事件和处理器可以关联到入站和出站数�
 
 zuul ,zuul2 ,Spring Cloud Gateway ,openResty ,Kong 
 
-### 总结图
-
-<img src="https://github.com/oliverschen/Java-Summarize/blob/main/images/NIO.png" style="zoom:50%" />
 
 ### 资料
 

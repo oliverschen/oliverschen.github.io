@@ -193,12 +193,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>27 Words</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>3k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>1 Mins</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>11 Mins</span>
         </span>
     
     
@@ -215,14 +215,117 @@
 
         <div class="article-content markdown-body">
             <p><img src="/2020/01/08/tomcat/tomcat.png" alt="Photo by MatrizenDesign on wallhaven.cc"></p>
-<p>ClassLoader,tomcat 里面怎么利用自定义 Classloader</p>
+<h2 id="Servlet"><a href="#Servlet" class="headerlink" title="Servlet"></a>Servlet</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>Sun公司在其API中提供了一个servlet接口，用户若想用发一个动态web资源(即开发一个Java程序向浏览器输出数据)，需要完成以下2个步骤：</p>
+<ol>
+<li>编写一个Java类，实现servlet接口</li>
+<li>把开发好的Java类部署到web服务器中</li>
+</ol>
 <a id="more"></a>
 
+<h3 id="调用过程"><a href="#调用过程" class="headerlink" title="调用过程"></a>调用过程</h3><p>Servlet 程序是由WEB服务器调用，web 服务器收到客户端的 Servlet 访问请求后：</p>
+<ol>
+<li>Web 服务器首先检查是否已经装载并创建了该 Servlet 的实例对象。如果是，则直接执行第 4 步，否则，执行第 2 步。</li>
+<li>装载并创建该 Servlet 的一个实例对象。</li>
+<li>调用 Servlet 实例对象的 init() 方法。</li>
+<li>创建一个用于封装 HTTP 请求消息的 HttpServletRequest 对象和一个代表 HTTP 响应消息的HttpServletResponse 对象，然后调用 Servlet 的 service() 方法并将请求和响应对象作为参数传递进去。</li>
+<li>WEB 应用程序被停止或重新启动之前，Servlet 引擎将卸载 Servlet，并在卸载之前调用 Servlet 的 destroy() 方法。</li>
+</ol>
+<h3 id="实现类"><a href="#实现类" class="headerlink" title="实现类"></a>实现类</h3><p>Servlet 接口 SUN 公司定义了两个默认实现类，分别为：GenericServlet、HttpServlet。</p>
+<ol>
+<li>HttpServlet 指能够处理 HTTP 请求的 Servlet，它在原有 Servlet 接口上添加了一些与 HTTP 协议处理方法，它比 Servlet 接口的功能更为强大。因此开发人员在编写 Servlet 时，通常应继承这个类，而避免直接去实现 Servlet 接口。</li>
+<li>HttpServlet 在实现 Servlet 接口时，覆写了 service 方法，该方法体内的代码会自动判断用户的请求方式，如为 GET 请求，则调用 HttpServlet 的doGet 方法，如为 Post 请求，则调用 doPost 方法。因此，在编写 Servlet 时，通常只需要覆写 doGet 或 doPost 方法，而不要去覆写 service 方法。</li>
+</ol>
+<h3 id="URL-映射"><a href="#URL-映射" class="headerlink" title="URL 映射"></a>URL 映射</h3><p>由于客户端是通过 URL 地址访问 web 服务器中的资源，所以 Servlet 程序若想被外界访问，必须把 Servlet 程序映射到一个 URL 地址上，这个工作在 <code>web.xml</code> 文件中使用 <code>&lt;servlet&gt;</code> 元素和 <code>&lt;servlet-mapping&gt;</code> 元素完成。</p>
+<h4 id><a href="#" class="headerlink" title></a><servlet></servlet></h4><p>该标签用于注册 Servlet，它包含有两个主要的子标签：<code>&lt;servlet-name&gt;</code> 和 <code>&lt;servlet-class&gt;</code> ，分别用于设置 Servlet 的注册名称和Servlet 的完整类名。</p>
+<h4 id="-1"><a href="#-1" class="headerlink" title></a><servlet-mapping></servlet-mapping></h4><p>该标签用于映射一个已注册的 Servlet 的一个对外访问路径，它包含有两个子元素：</p>
+<p><code>&lt;servlet-name&gt;</code> 和 <code>&lt;url-pattern&gt;</code> ，分别用于指定 Servlet 的注册名称和 Servlet 的对外访问路径。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;web-app&gt;</span><br><span class="line">  &lt;servlet&gt;</span><br><span class="line">    &lt;servlet-name&gt;ck&lt;&#x2F;servlet-name&gt;</span><br><span class="line">    &lt;servlet-class&gt;HelloServlet&lt;&#x2F;servlet-class&gt;</span><br><span class="line">  &lt;&#x2F;servlet&gt;</span><br><span class="line">  &lt;servlet-mapping&gt;</span><br><span class="line">    &lt;servlet-name&gt;ck&lt;&#x2F;servlet-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;&#x2F;ck.html&lt;&#x2F;url-pattern&gt;</span><br><span class="line">  &lt;&#x2F;servlet-mapping&gt;</span><br><span class="line">&lt;&#x2F;web-app&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><ol>
+<li>同一个 Servlet 可以被映射到多个 URL 上，即多个 <code>&lt;servlet-mapping&gt;</code> 元素的 <code>&lt;servlet-name&gt;</code> 子元素的设置值可以是同一个 Servlet 的注册名。</li>
+<li>在 Servlet 映射到的 URL 中也可以使用 <code>*</code> 通配符，但是只能有两种固定的格式：一种格式是 <code>*.扩展名</code> ，另一种格式是以正斜杠 <code>/</code> 开头并以 <code>/*</code> 结尾。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;url-pattern&gt;*.do&lt;&#x2F;url-pattern&gt;</span><br><span class="line">&lt;url-pattern&gt;&#x2F;action&#x2F;*&lt;&#x2F;url-pattern&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><ol>
+<li>Servlet是一个供其他 Java 程序（Servlet 引擎）调用的 Java 类，它不能独立运行，它的运行完全由 Servlet 引擎来控制和调度。</li>
+<li>针对客户端的多次 Servlet 请求，通常情况下，服务器只会创建一个 Servlet 实例对象，也就是说 Servlet 实例对象一旦创建，它就会驻留在内存中，为后续的其它请求服务，直至 web 容器退出，Servlet 实例对象才会销毁。</li>
+<li>在 Servlet 的整个生命周期内，Servlet 的 init 方法只被调用一次。而对一个 Servlet 的每次访问请求都导致 Servlet 引擎调用一次 Servlet 的 service方法。对于每次访问请求，Servlet 引擎都会创建一个新的 HttpServletRequest 请求对象和一个新的 HttpServletResponse 响应对象，然后将这两个对象作为参数传递给它调用的 Servlet 的 service() 方法，service 方法再根据请求方式分别调用 doXXX 方法。</li>
+<li>在 <servlet> 元素中配置了一个 <load-on-startup> 元素，那么 WEB 应用程序在启动时，就会装载并创建 Servlet 的实例对象、以及调用 Servlet 实例对象的 init() 方法。</load-on-startup></servlet></li>
+<li>如果某个 Servlet 的映射路径仅仅为一个正斜杠 <code>/</code> ，那么这个 Servlet 就成为当前 Web 应用程序的默认 Servlet。</li>
+<li>凡是在 web.xml 文件中找不到匹配的 <servlet-mapping> 元素的 URL，它们的访问请求都将交给缺省 Servlet 处理，也就是说，缺省 Servlet 用于处理所有其他 Servlet 都不处理的访问请求。</servlet-mapping></li>
+<li>在 &lt;tomcat的安装目录&gt;\conf\web.xml 文件中，注册了一个名称为 org.apache.catalina.servlets.DefaultServlet 的 Servlet，并将这个 Servlet 设置为了缺省 Servlet。</li>
+<li>当访问 Tomcat 服务器中的某个静态 HTML 文件和图片时，实际上是在访问这个缺省 Servlet。</li>
+<li>当多个客户端并发访问同一个 Servlet 时，web 服务器会为每一个客户端的访问请求创建一个线程，并在这个线程上调用 Servlet 的 service 方法，因此 service 方法内如果访问了同一个资源的话，就有可能引发线程安全问题。</li>
+</ol>
+<h3 id="ServletConfig"><a href="#ServletConfig" class="headerlink" title="ServletConfig"></a>ServletConfig</h3><ol>
+<li>在 Servlet 的配置文件中，可以使用一个或多个 <init-param> 标签为 servlet 配置一些初始化参数。</init-param></li>
+<li>当 servlet 配置了初始化参数后，web 容器在创建 servlet 实例对象时，会自动将这些初始化参数封装到 ServletConfig 对象中，并在调用 servlet 的init 方法时，将 ServletConfig 对象传递给 servlet。进而通过 ServletConfig 对象就可以得到当前 servlet 的初始化参数信息。</li>
+</ol>
+<h3 id="ServletContext"><a href="#ServletContext" class="headerlink" title="ServletContext"></a>ServletContext</h3><ol>
+<li>WEB 容器在启动时，它会为每个 WEB 应用程序都创建一个对应的 ServletContext 对象，它代表当前 web 应用。</li>
+<li>ServletConfig 对象中维护了 ServletContext 对象的引用，开发人员在编写 servlet 时，可以通过 ServletConfig.getServletContext 方法获得ServletContext 对象。</li>
+<li>由于一个 WEB 应用中的所有 Servlet 共享同一个 ServletContext 对象，因此 Servlet 对象之间可以通过 ServletContext 对象来实现通讯。ServletContext 对象通常也被称之为 context 域对象。</li>
+</ol>
+<h4 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h4><ol>
+<li>多个 Servlet 通过 ServletContext 对象实现数据共享。</li>
+<li>获取 WEB 应用的初始化参数。</li>
+<li>实现 Servlet 的转发。</li>
+<li>对于不经常变化的数据，在 servlet 中可以为其设置合理的缓存时间值，以避免浏览器频繁向服务器发送请求，提升服务器的性能。</li>
+<li>利用 ServletContext 对象读取资源文件。</li>
+<li>得到文件路径</li>
+<li>读取资源文件的三种方式</li>
+<li>properties文件（属性文件）</li>
+</ol>
+<h3 id="Filter"><a href="#Filter" class="headerlink" title="Filter"></a>Filter</h3><p>Servlet API 中提供了一个 Filter 接口，开发 web 应用时，如果编写的 Java 类实现了这个接口，则把这个 java 类称之为过滤器 Filter。通过 Filter 技术，开发人员可以实现用户在访问某个目标资源之前，对访问的请求和响应进行拦截。</p>
+<h4 id="拦截流程"><a href="#拦截流程" class="headerlink" title="拦截流程"></a>拦截流程</h4><p>Filter 接口中有一个 doFilter()，配置对哪个 web 资源进行拦截后，WEB 服务器每次在调用 web 资源的 <strong>service() 方法之前</strong>，都会先调用一下 Filter 的 doFilter()。</p>
+<h4 id="FilterChain"><a href="#FilterChain" class="headerlink" title="FilterChain"></a>FilterChain</h4><ol>
+<li>web 服务器在调用 doFilter 方法时，会传递一个 filterChain 对象进来，filterChain 对象是 filter 接口中最重要的一个对象，它也提供了一个doFilter 方法，开发人员可以根据需求决定是否调用此方法，调用该方法，则 web 服务器就会调用 web 资源的 service 方法，即 web 资源就会被访问，否则 web 资源不会被访问。</li>
+<li>在一个 web 应用中，可以开发编写多个 Filter，这些 Filter 组合起来称之为一个 Filter 链。</li>
+<li>web 服务器根据 Filter 在 web.xml 文件中的注册顺序，决定先调用哪个 Filter，当第一个 Filter 的 doFilter 方法被调用时，web 服务器会创建一个代表 Filter 链的 FilterChain 对象传递给该方法。在 doFilter 方法中，如果调用了 FilterChain 对象的 doFilter 方法，则 web 服务器会检查 FilterChain 对象中是否还有 filter，如果有，则调用第 2 个 filter，如果没有，则调用目标资源。</li>
+</ol>
+<h4 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h4><blockquote>
+<p>init(FilterConfig filterConfig)throws ServletException：</p>
+</blockquote>
+<ol>
+<li>和 Servlet 程序一样，Filter 的创建和销毁由 WEB 服务器负责。 web 应用程序启动时，web 服务器将创建 Filter 的实例对象，并调用其 init 方法，完成对象的初始化功能，从而为后续的用户请求作好拦截的准备工作「注：filter 对象只会创建一次，init 方法也只会执行一次。」通过 init 方法的参数，可获得代表当前 filter 配置信息的 FilterConfig 对象</li>
+<li>destroy()：在Web容器卸载 Filter 对象之前被调用。该方法在 Filter 的生命周期中仅执行一次。在这个方法中，可以释放过滤器使用的资源。</li>
+</ol>
+<h4 id="FilterConfig"><a href="#FilterConfig" class="headerlink" title="FilterConfig"></a>FilterConfig</h4><p>用户在配置 filter 时，可以使用 <code>&lt;init-param&gt;</code> 为 filter 配置一些初始化参数，当 web 容器实例化 Filter 对象，调用其 init 方法时，会把封装了 filter初始化参数的 filterConfig 对象传递进来。因此通过 filterConfig 对象的方法，就可获得：</p>
+<ol>
+<li>String getFilterName()：得到filter的名称。</li>
+<li>String getInitParameter(String name)： 返回在部署描述中指定名称的初始化参数的值。如果不存在返回 null.</li>
+<li>Enumeration getInitParameterNames()：返回过滤器的所有初始化参数的名字的枚举集合。</li>
+<li>public ServletContext getServletContext()：返回 Servlet 上下文对象的引用。</li>
+</ol>
+<h4 id="应用-1"><a href="#应用-1" class="headerlink" title="应用"></a>应用</h4><h5 id="统一全站字符编码的过滤器"><a href="#统一全站字符编码的过滤器" class="headerlink" title="统一全站字符编码的过滤器"></a>统一全站字符编码的过滤器</h5><p>通过配置参数 encoding 指明使用何种字符编码,以处理 Html Form 请求参数的中文问题</p>
+<h5 id="禁止浏览器缓存所有动态页面的过滤器："><a href="#禁止浏览器缓存所有动态页面的过滤器：" class="headerlink" title="禁止浏览器缓存所有动态页面的过滤器："></a>禁止浏览器缓存所有动态页面的过滤器：</h5><p>有 3 个 HTTP 响应头字段都可以禁止浏览器缓存当前页面，它们在 Servlet 中的示例代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">response.setDateHeader(&quot;Expires&quot;,-1);</span><br><span class="line">response.setHeader(&quot;Cache-Control&quot;,&quot;no-cache&quot;);</span><br><span class="line">response.setHeader(&quot;Pragma&quot;,&quot;no-cache&quot;);</span><br></pre></td></tr></table></figure>
+<p>并不是所有的浏览器都能完全支持上面的三个响应头，因此最好是同时使用上面的三个响应头。</p>
+<ol>
+<li>Expires 数据头：值为GMT时间值，为-1指浏览器不要缓存页面</li>
+<li>Cache-Control 响应头有两个常用值</li>
+<li>no-cache 指浏览器不要缓存当前页面</li>
+<li>max-age xxx指浏览器缓存页面xxx秒</li>
+</ol>
+<h5 id="使用-Filter-实现-URL-级别的权限认证"><a href="#使用-Filter-实现-URL-级别的权限认证" class="headerlink" title="使用 Filter 实现 URL 级别的权限认证"></a>使用 Filter 实现 URL 级别的权限认证</h5><p>把一些执行敏感操作的 servlet 映射到一些特殊目录中，并用 filter 把这些特殊目录保护起来，限制只能拥有相应访问权限的用户才能访问这些目录下的资源。从而在我们系统中实现一种 URL 级别的权限功能。</p>
+<h2 id="JSP"><a href="#JSP" class="headerlink" title="JSP"></a>JSP</h2><h3 id="运行原理"><a href="#运行原理" class="headerlink" title="运行原理"></a>运行原理</h3><ol>
+<li>每个JSP 页面在第一次被访问时，WEB 容器都会把请求交给 JSP 引擎（即一个 Java 程序）去处理。JSP 引擎先将 JSP 翻译成一个 _jspServlet(实质上也是一个 servlet ) ，然后按照 servlet 的调用方式进行调用。</li>
+<li>由于 JSP 第一次访问时会翻译成 servlet，所以第一次访问通常会比较慢，但第二次访问，JSP 引擎如果发现 JSP 没有变化，就不再翻译，而是直接调用，所以程序的执行效率不会受到影响。</li>
+<li>JSP 引擎在调用 JSP 对应的 _jspServlet  时，会传递或创建 9 个与 web 开发相关的对象供 _jspServlet 使用。JSP 技术的设计者为便于开发人员在编写 JSP 页面时获得这些 web 对象的引用，特意定义了 9 个相应的变量，开发人员在 JSP 页面中通过这些变量就可以快速获得这 9 大对象的引用。</li>
+</ol>
+<h3 id="9大内置对象"><a href="#9大内置对象" class="headerlink" title="9大内置对象"></a>9大内置对象</h3><ol>
+<li>Request</li>
+<li>Response</li>
+<li>Session</li>
+<li>Application</li>
+<li>Config</li>
+<li>Page</li>
+<li>Exception </li>
+<li>Out</li>
+<li>PageContext</li>
+</ol>
+<hr>
+<center>何以为家</center>
 
-<p>2.SecurityManager</p>
-<p>3.spring boot + embedTomcat + servlet</p>
-<p>socket 编程</p>
-<p>bio 和 nio 区别</p>
 
         </div>
 
@@ -454,7 +557,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet"><span class="nav-number">1.</span> <span class="nav-text">Servlet</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E8%BF%87%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">调用过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="nav-number">1.3.</span> <span class="nav-text">实现类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#URL-%E6%98%A0%E5%B0%84"><span class="nav-number">1.4.</span> <span class="nav-text">URL 映射</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">1.4.1.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#-1"><span class="nav-number">1.4.2.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F"><span class="nav-number">1.4.3.</span> <span class="nav-text">注意</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">1.4.4.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ServletConfig"><span class="nav-number">1.5.</span> <span class="nav-text">ServletConfig</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ServletContext"><span class="nav-number">1.6.</span> <span class="nav-text">ServletContext</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">1.6.1.</span> <span class="nav-text">应用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Filter"><span class="nav-number">1.7.</span> <span class="nav-text">Filter</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%A6%E6%88%AA%E6%B5%81%E7%A8%8B"><span class="nav-number">1.7.1.</span> <span class="nav-text">拦截流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FilterChain"><span class="nav-number">1.7.2.</span> <span class="nav-text">FilterChain</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.7.3.</span> <span class="nav-text">生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FilterConfig"><span class="nav-number">1.7.4.</span> <span class="nav-text">FilterConfig</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8-1"><span class="nav-number">1.7.5.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%9F%E4%B8%80%E5%85%A8%E7%AB%99%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E7%9A%84%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-number">1.7.5.1.</span> <span class="nav-text">统一全站字符编码的过滤器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A6%81%E6%AD%A2%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98%E6%89%80%E6%9C%89%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2%E7%9A%84%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%9A"><span class="nav-number">1.7.5.2.</span> <span class="nav-text">禁止浏览器缓存所有动态页面的过滤器：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-Filter-%E5%AE%9E%E7%8E%B0-URL-%E7%BA%A7%E5%88%AB%E7%9A%84%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81"><span class="nav-number">1.7.5.3.</span> <span class="nav-text">使用 Filter 实现 URL 级别的权限认证</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSP"><span class="nav-number">2.</span> <span class="nav-text">JSP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">运行原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9%E5%A4%A7%E5%86%85%E7%BD%AE%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.2.</span> <span class="nav-text">9大内置对象</span></a></li></ol></li></ol>
     </div>
 </div>
         </aside>

@@ -1,5 +1,5 @@
 ---
-title: tomcat
+title: Tomcat
 date: 2020-01-08 23:25:55
 tags: tomcat
 category: tomcat
@@ -7,7 +7,9 @@ category: tomcat
 
 ![Photo by MatrizenDesign on wallhaven.cc](/tomcat.png)
 
+Tomcat 是一款轻量级 Web 容器，也是目前使用最广泛的应用服务器之一，Springboot 内嵌的默认服务器就是 Tomcat。
 
+<!--more-->
 ## Servlet
 
 ### 介绍
@@ -16,8 +18,6 @@ Sun公司在其API中提供了一个servlet接口，用户若想用发一个动�
 
 1. 编写一个Java类，实现servlet接口
 2. 把开发好的Java类部署到web服务器中
-
-<!--more-->
 
 ### 调用过程
 

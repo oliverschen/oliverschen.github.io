@@ -1,8 +1,9 @@
 ---
-title: redis安装和使用
+title: Redis安装和使用
 date: 2019-11-20 00:53:22
-tags: redis
-category: 缓存
+tags: [Cache,Redis]
+category: [Cache,Redis]
+comments: true
 ---
 
 ![Photo by Richs on wallhaven.cc](/redis.png)

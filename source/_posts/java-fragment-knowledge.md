@@ -1,8 +1,9 @@
 ---
-title: java-fragment-knowledge
+title: Java-fragment-knowledge
 date: 2019-12-15 11:18:01
 tags: Java
 category: Java
+comments: true
 ---
 
 ![Photo by vinc on wallhaven.cc](/java-konwlege.png)

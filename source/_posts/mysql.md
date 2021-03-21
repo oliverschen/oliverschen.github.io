@@ -1,8 +1,9 @@
 ---
 title: MySQL
 date: 2020-01-18 22:16:51
-tags: mysql
-category: mysql
+tags: Mysql
+category: Mysql
+comments: true
 ---
 
 ![Photo by WoshWosh on wallhaven.cc](/mysql.png)

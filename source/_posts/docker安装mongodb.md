@@ -1,9 +1,9 @@
 ---
 title: docker安装mongodb
 date: 2019-03-19 23:19:44
-tags: [docker,mongo]
-category: [docker,mongo]
-photos:   
+tags: [Docker,Mongo]
+category: [Docker,Mongo]
+comments: true
 ---
 
 ![](docker安装mongodb/mongo.png)

@@ -1,8 +1,9 @@
 ---
-title: manjaro编译openjdk
+title: Manjaro编译Openjdk
 date: 2019-04-09 23:01:53
-tags: openjdk
-category: openjdk
+tags: [Openjdk,Manjaro]
+category: [Openjdk,Manjaro]
+comments: true
 ---
 
 ![](manjaro编译openjdk/openjdk.png)

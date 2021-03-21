@@ -1,8 +1,9 @@
 ---
 title: Mongo权限设置
 date: 2019-03-28 23:45:33
-tags: mongo
-category: mongo
+tags: Mongo
+category: Mongo
+comments: true
 ---
 
 ![](mongo权限设置/mongoPower.png)

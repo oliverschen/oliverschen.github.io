@@ -3,6 +3,7 @@ title: Linux-shell
 date: 2020-01-03 00:15:01
 tags: Linux
 category: Linux
+comments: true
 ---
 
 ![Photo by deleted on wallhaven.cc](/linux-shell.png)

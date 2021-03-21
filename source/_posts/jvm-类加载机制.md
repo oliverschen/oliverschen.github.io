@@ -1,8 +1,9 @@
 ---
-title: jvm-类加载
+title: JVM-类加载
 date: 2019-08-04 00:57:25
 tags: Java
 category: Java
+comments: true
 ---
 
 ![photo by https://unsplash.com/photos/ISVm7Rzhy8s](jvm-类加载机制/load-class.png)

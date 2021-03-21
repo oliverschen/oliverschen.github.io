@@ -1,8 +1,9 @@
 ---
 title: RabbitMQ安装和使用
 date: 2019-09-05 00:16:09
-tags: RabbitMQ
-category: MQ
+tags: [MQ,RabbitMQ]
+category: [MQ,RabbitMQ]
+comments: true
 ---
 
 ![Photo by Vadim Sadovski on Unsplash](RabbitMQ安装和使用/rabbitmq.png)

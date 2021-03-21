@@ -1,8 +1,9 @@
 ---
 title: Java对接iOS内购以及各个渠道微信支付
 date: 2019-05-29 23:11:29
-tags: pay
-category: pay 
+tags: Pay
+category: Pay 
+comments: true
 ---
 
 ![](jvm-Java对接iOS内购以及各个渠道微信支付/pay.png)

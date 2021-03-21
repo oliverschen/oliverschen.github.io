@@ -1,8 +1,9 @@
 ---
-title: springcloud-config
+title: Springcloud-config
 date: 2019-12-15 22:39:09
-tags: springcloud
-category: springcloud
+tags: SpringCloud
+category: SpringCloud
+comments: true
 ---
 
 ![Photo by Maskarido on wallhaven.cc](/springcloud-config.png)

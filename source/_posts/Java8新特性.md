@@ -3,6 +3,7 @@ title: Java8新特性
 date: 2019-07-27 00:03:44
 tags: Java
 category: Java
+comments: true
 ---
 
 ![Photo by Cristofer Jeschke](Java8新特性/Java8新特性.png)

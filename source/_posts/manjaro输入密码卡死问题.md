@@ -1,8 +1,9 @@
 ---
-title: manjaro输入密码卡死问题
+title: Manjaro输入密码卡死问题
 date: 2019-04-24 23:01:19
-tags: manjaro
-category: manjaro
+tags: Manjaro
+category: Manjaro
+comments: true
 ---
 
 ![年轻才不怕](manjaro输入密码卡死问题/密码卡死.png)

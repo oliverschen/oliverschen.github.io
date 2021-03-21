@@ -1,8 +1,9 @@
 ---
-title: springcloud-hystrix(二)
+title: Springcloud-hystrix(二)
 date: 2019-04-25 22:38:29
-tags: springcloud
-category: springcloud
+tags: SpringCloud
+category: SpringCloud
+comments: true
 ---
 
 ![行到水穷处，坐看云起时](springcloud-hystrix/hystrix.png)

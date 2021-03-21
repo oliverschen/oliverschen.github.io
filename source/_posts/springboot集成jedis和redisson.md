@@ -1,8 +1,9 @@
 ---
-title: springboot集成jedis和redisson
+title: Springboot集成Jedis和Redisson
 date: 2019-11-23 21:38:33
-tags: redis
-category: 分布式锁
+tags: [Lock,Redis]
+category: [Lock,Redis]
+comments: true
 ---
 
 ![Photo by lumberjacck on wallhaven.cc](/redisLock.png)

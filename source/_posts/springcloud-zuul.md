@@ -1,8 +1,9 @@
 ---
-title: springcloud-zuul
+title: Springcloud-zuul
 date: 2019-12-15 17:03:26
-tags: springcloud
-category: springcloud
+tags: SpringCloud
+category: SpringCloud
+comments: true
 ---
 
 ![Photo by kejsirajbek on wallhaven.cc](/springcloud-zuul.png)

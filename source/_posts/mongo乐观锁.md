@@ -1,8 +1,9 @@
 ---
-title: mongo乐观锁
+title: Mongo乐观锁
 date: 2019-03-31 21:04:22
-tags: mongo
-category: mongo
+tags: Mongo
+category: Mongo
+comments: true
 ---
 
 ![](mongo乐观锁/mongoLock.png)

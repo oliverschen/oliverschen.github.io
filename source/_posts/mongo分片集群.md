@@ -1,8 +1,9 @@
 ---
-title: mongo分片集群
+title: Mongo分片集群
 date: 2019-11-12 22:59:17
-tags: mongo
-category: mongo
+tags: Mongo
+category: Mongo
+comments: true
 ---
 
 ![Photo by Unsplash](/replicaSet.png)

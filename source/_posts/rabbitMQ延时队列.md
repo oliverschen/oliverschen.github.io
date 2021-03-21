@@ -1,8 +1,9 @@
 ---
-title: rabbitMQ延时队列
+title: RabbitMQ延时队列
 date: 2019-11-02 16:28:50
-tags: RabbitMQ
-category: MQ
+tags: [MQ,RabbitMQ]
+category: [MQ,RabbitMQ]
+comments: true
 ---
 
 ![Photo by on Unsplash](/rabbitMqDelayQueue.png)

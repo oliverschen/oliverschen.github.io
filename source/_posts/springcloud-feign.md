@@ -1,8 +1,9 @@
 ---
-title: springcloud-feign
+title: Springcloud-feign
 date: 2019-12-15 09:47:39
-tags: springcloud
-category: springcloud
+tags: SpringCloud
+category: SpringCloud
+comments: true
 ---
 
 ![Photo by kejsirajbek on wallhaven.cc](/springcloud-feign.png)

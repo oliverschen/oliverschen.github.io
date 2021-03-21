@@ -1,8 +1,9 @@
 ---
 title: Tomcat
 date: 2020-01-08 23:25:55
-tags: tomcat
-category: tomcat
+tags: Tomcat
+category: Tomcat
+comments: true
 ---
 
 ![Photo by MatrizenDesign on wallhaven.cc](/tomcat.png)

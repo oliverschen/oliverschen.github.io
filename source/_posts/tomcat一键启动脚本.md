@@ -1,8 +1,8 @@
 ---
-title: 启动tomcat shell脚本
+title: 启动Tomcat Shell脚本
 date: 2020-02-24 21:46:07
-tags: tomcat
-category: tomcat
+tags: [Shell,Tomcat]
+category: [Shell,Tomcat]
 comments: true
 ---
 

@@ -1,9 +1,9 @@
 ---
 title: manjaro安装
 date: 2019-03-17 17:52:15
-category: OS
-tags: manjaro
-
+category: [OS,Manjaro]
+tags: [OS,Manjaro]
+comments: true
 ---
 
 ![](manjaro安装/manjaro.png)

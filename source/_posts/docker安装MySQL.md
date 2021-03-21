@@ -1,8 +1,9 @@
 ---
-title: docker安装MySQL
+title: Docker安装MySQL
 date: 2019-04-09 22:46:42
-tags: [docker,mysql]
-category: [docker,mysql]
+tags: [Docker,Mysql]
+category: [Docker,Mysql]
+comments: true
 ---
 
 

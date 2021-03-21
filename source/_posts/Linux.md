@@ -3,6 +3,7 @@ title: Linux-常用命令
 date: 2020-01-01 23:17:14
 tags: Linux
 category: Linux
+comments: true
 ---
 
 ![Photo by kejsirajbek on wallhaven.cc](/linux.png)

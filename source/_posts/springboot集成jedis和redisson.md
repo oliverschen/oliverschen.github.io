@@ -1,8 +1,8 @@
 ---
 title: Springboot集成Jedis和Redisson
 date: 2019-11-23 21:38:33
-tags: [Lock,Redis]
-category: [Lock,Redis]
+tags: [Redis,Lock]
+category: [Redis,Lock]
 comments: true
 ---
 

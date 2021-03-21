@@ -1,8 +1,8 @@
 ---
 title: JVM-类加载
 date: 2019-08-04 00:57:25
-tags: Java
-category: Java
+tags: [Java,JVM]
+category: [Java,JVM]
 comments: true
 ---
 

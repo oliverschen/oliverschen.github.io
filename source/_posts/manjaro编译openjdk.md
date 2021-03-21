@@ -1,8 +1,8 @@
 ---
 title: Manjaro编译Openjdk
 date: 2019-04-09 23:01:53
-tags: [Openjdk,Manjaro]
-category: [Openjdk,Manjaro]
+tags: [Manjaro,Openjdk]
+category: [Manjaro,Openjdk]
 comments: true
 ---
 

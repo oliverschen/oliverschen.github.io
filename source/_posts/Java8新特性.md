@@ -1,8 +1,8 @@
 ---
 title: Java8新特性
 date: 2019-07-27 00:03:44
-tags: Java
-category: Java
+tags: [Java,JDK8]
+category: [Java,JDK8]
 comments: true
 ---
 

@@ -206,7 +206,7 @@
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>15 Mins</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>16 Mins</span>
         </span>
     
     
@@ -230,7 +230,8 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">加载--&gt; 链接--&gt; 初始化--&gt; 使用--&gt; 卸载</span><br><span class="line"></span><br><span class="line">链接包含：</span><br><span class="line">验证--&gt; 准备--&gt; 解析</span><br></pre></td></tr></table></figure>
 <p>类的加载必须按照这个过程来加载，除了解析阶段，有可能发生在初始化阶段之后。</p>
 <h4 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h4><p>JDK 包含类 3 中类加载器。分别是 BootStrap ClassLoader 启动类加载器，Extension ClassLoader 扩展类加载器和 Application ClassLoader 应用程序类加载器，启动类类加载器是用 C++ 实现的，作为 JVM 的一部分，而其他类加载器是用 Java 来实现的，都继承自 java.lang.ClassLoader。</p>
-<h5 id="双亲委任"><a href="#双亲委任" class="headerlink" title="双亲委任"></a>双亲委任</h5><h6 id="类加载器层级"><a href="#类加载器层级" class="headerlink" title="类加载器层级"></a>类加载器层级</h6><p>自定义类加载器 &gt; 应用程序类加载器 &gt; 扩展类加载器 &gt; 启动类加载器</p>
+<h5 id="双亲委任"><a href="#双亲委任" class="headerlink" title="双亲委任"></a>双亲委任</h5><p>递归交给自己的上层类加载</p>
+<h6 id="类加载器层级"><a href="#类加载器层级" class="headerlink" title="类加载器层级"></a>类加载器层级</h6><p>自定义类加载器 &gt; 应用程序类加载器 &gt; 扩展类加载器 &gt; 启动类加载器</p>
 <p>除了启动类加载器之外，每个类都有父类加载器。</p>
 <p>双亲委任大致可以理解为：当一个加载器加载一个类时，首先交给它的父类加载器加载此类路径下的类，如果父类找不到，在交给它自己的父类进行加载，如果找到了，则加载此类，如果没有找到，则会告知子类信息，子类才会尝试自己加载。也就是说，如果想自己写一个 <code>java.lang.String</code> 类来代替 jdk 本身的 <code>String</code> 类是不可以的，就算自己写了类加载器也是不能被加载成功的。</p>
 <h5 id="运行时数据区"><a href="#运行时数据区" class="headerlink" title="运行时数据区"></a>运行时数据区</h5><p>简单来说，运行时数据区就是 Java 程序运行时的数据在内存中的存放空间。主要包含 方法区、堆、虚拟机栈、本地方法栈、程序计数器。</p>

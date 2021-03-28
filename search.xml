@@ -1160,6 +1160,33 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
+    <title>Mongo权限设置</title>
+    <url>/2019/03/28/mongo%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE/</url>
+    <content><![CDATA[<p><img src="/2019/03/28/mongo%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE/mongoPower.png"></p>
+<p>mongodb 使用起来还是相对简单的，但是在权限设置时，遇到了几个小问题，以至于花了比较久的时间，在给 mongo 设置权限前首先要清楚几点：</p>
+<a id="more"></a>
+
+<ol>
+<li>mongo 默认是没有用户的。</li>
+<li>mongo 每个数据库由独立的用户来管理。<br>因为 mongo 默认是没有用户的，所以首先要创建管理员用户，这里创建管理员用户时要进入 admin 数据库来设置</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入 adimn 数据库</span></span><br><span class="line">&gt; use admin</span><br><span class="line">switched to db admin</span><br><span class="line">&gt; db.createUser(</span><br><span class="line">   &#123;</span><br><span class="line">     user: <span class="string">&quot;admin&quot;</span>, <span class="comment"># admin 用户名</span></span><br><span class="line">     <span class="built_in">pwd</span>: <span class="string">&quot;123456&quot;</span>, <span class="comment"># 密码</span></span><br><span class="line">     roles: [ &#123; role: <span class="string">&quot;userAdminAnyDatabase&quot;</span>, db: <span class="string">&quot;admin&quot;</span> &#125; ] <span class="comment"># admin 此用户作用的目标数据库</span></span><br><span class="line">   &#125;</span><br><span class="line">);</span><br><span class="line"><span class="comment"># 此处创建成功 bash 会返回成功信息</span></span><br><span class="line"><span class="comment"># 验证权限</span></span><br><span class="line">&gt; db.auth(<span class="string">&quot;admin&quot;</span>,<span class="string">&quot;123456&quot;</span>);</span><br><span class="line">1 <span class="comment"># 成功会返回1</span></span><br></pre></td></tr></table></figure>
+<p>至此，mongo 管理员用户已经创建成功了，现在退出 mongo ,在配置文件中开启验证</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">auth&#x3D;ture</span><br></pre></td></tr></table></figure>
+<p>重启 mongo</p>
+<p>创建 test 数据库，给此数据库创建 test 用户方能连接到此数据库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 有的话进入，没有则创建此库</span></span><br><span class="line">&gt; use <span class="built_in">test</span></span><br><span class="line">&gt; db.createUser(</span><br><span class="line">   &#123;</span><br><span class="line">     user: <span class="string">&quot;test&quot;</span>,</span><br><span class="line">     <span class="built_in">pwd</span>: <span class="string">&quot;123456&quot;</span>,</span><br><span class="line">     roles: [ &#123; role: <span class="string">&quot;readWrite&quot;</span>, db: <span class="string">&quot;test&quot;</span> &#125; ]</span><br><span class="line">   &#125;</span><br><span class="line">);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>此时用户和关联的库已经创建好，在 robo3T 客户端就可以直接连接使用了。</p>
+<hr>
+<center>夜深人静的时候，世界才是自己的</center>]]></content>
+      <categories>
+        <category>Mongo</category>
+      </categories>
+      <tags>
+        <tag>Mongo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL</title>
     <url>/2020/01/18/mysql/</url>
     <content><![CDATA[<p><img src="/2020/01/18/mysql/mysql.png" alt="Photo by WoshWosh on wallhaven.cc"></p>
@@ -1218,33 +1245,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </categories>
       <tags>
         <tag>Mysql</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Mongo权限设置</title>
-    <url>/2019/03/28/mongo%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE/</url>
-    <content><![CDATA[<p><img src="/2019/03/28/mongo%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE/mongoPower.png"></p>
-<p>mongodb 使用起来还是相对简单的，但是在权限设置时，遇到了几个小问题，以至于花了比较久的时间，在给 mongo 设置权限前首先要清楚几点：</p>
-<a id="more"></a>
-
-<ol>
-<li>mongo 默认是没有用户的。</li>
-<li>mongo 每个数据库由独立的用户来管理。<br>因为 mongo 默认是没有用户的，所以首先要创建管理员用户，这里创建管理员用户时要进入 admin 数据库来设置</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入 adimn 数据库</span></span><br><span class="line">&gt; use admin</span><br><span class="line">switched to db admin</span><br><span class="line">&gt; db.createUser(</span><br><span class="line">   &#123;</span><br><span class="line">     user: <span class="string">&quot;admin&quot;</span>, <span class="comment"># admin 用户名</span></span><br><span class="line">     <span class="built_in">pwd</span>: <span class="string">&quot;123456&quot;</span>, <span class="comment"># 密码</span></span><br><span class="line">     roles: [ &#123; role: <span class="string">&quot;userAdminAnyDatabase&quot;</span>, db: <span class="string">&quot;admin&quot;</span> &#125; ] <span class="comment"># admin 此用户作用的目标数据库</span></span><br><span class="line">   &#125;</span><br><span class="line">);</span><br><span class="line"><span class="comment"># 此处创建成功 bash 会返回成功信息</span></span><br><span class="line"><span class="comment"># 验证权限</span></span><br><span class="line">&gt; db.auth(<span class="string">&quot;admin&quot;</span>,<span class="string">&quot;123456&quot;</span>);</span><br><span class="line">1 <span class="comment"># 成功会返回1</span></span><br></pre></td></tr></table></figure>
-<p>至此，mongo 管理员用户已经创建成功了，现在退出 mongo ,在配置文件中开启验证</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">auth&#x3D;ture</span><br></pre></td></tr></table></figure>
-<p>重启 mongo</p>
-<p>创建 test 数据库，给此数据库创建 test 用户方能连接到此数据库</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 有的话进入，没有则创建此库</span></span><br><span class="line">&gt; use <span class="built_in">test</span></span><br><span class="line">&gt; db.createUser(</span><br><span class="line">   &#123;</span><br><span class="line">     user: <span class="string">&quot;test&quot;</span>,</span><br><span class="line">     <span class="built_in">pwd</span>: <span class="string">&quot;123456&quot;</span>,</span><br><span class="line">     roles: [ &#123; role: <span class="string">&quot;readWrite&quot;</span>, db: <span class="string">&quot;test&quot;</span> &#125; ]</span><br><span class="line">   &#125;</span><br><span class="line">);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>此时用户和关联的库已经创建好，在 robo3T 客户端就可以直接连接使用了。</p>
-<hr>
-<center>夜深人静的时候，世界才是自己的</center>]]></content>
-      <categories>
-        <category>Mongo</category>
-      </categories>
-      <tags>
-        <tag>Mongo</tag>
       </tags>
   </entry>
   <entry>
@@ -1376,6 +1376,48 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
+    <title>Nginx安装和使用</title>
+    <url>/2019/11/25/nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<p><img src="/2019/11/25/nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/nginx.png" alt="Photo by deleted on wallhaven.cc"></p>
+<p>nginx 是互联网公司必不可少的一个中间件。它不仅性能好，而且资源占用极低。nginx <a class="link" href="http://www.nginx.cn/doc/">中文文档<i class="fas fa-external-link-alt"></i></a>，<a class="link" href="http://nginx.org/en/download.html">官方下载地址<i class="fas fa-external-link-alt"></i></a></p>
+<a id="more"></a>
+
+
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 epel 源，如果 yum 安装时提示没有找到 nginx 的话</span></span><br><span class="line">yum install epel-release</span><br><span class="line"></span><br><span class="line">yum install nginx</span><br></pre></td></tr></table></figure>
+<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><h5 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx</span><br></pre></td></tr></table></figure>
+<h5 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -s stop</span><br></pre></td></tr></table></figure>
+<h5 id="重新加载配置"><a href="#重新加载配置" class="headerlink" title="重新加载配置"></a>重新加载配置</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
+<h5 id="配置检查"><a href="#配置检查" class="headerlink" title="配置检查"></a>配置检查</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>main 配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 指定 worker 进程的运行身份，如组不指定，默认和用户名同名</span></span><br><span class="line">user nginx;</span><br><span class="line"><span class="comment"># worker 进程的数量，通常为当前主机 cpu 物理核心数</span></span><br><span class="line">worker_processes auto;</span><br><span class="line"><span class="comment"># worker 进程能够打开的文件数量上限（支持的并发数如：65535）</span></span><br><span class="line">worker_rlimit_nofile number</span><br><span class="line">error_log /var/<span class="built_in">log</span>/nginx/error.log;</span><br><span class="line"><span class="comment"># 指定存储 nginx 主进程 PID 的文件路径</span></span><br><span class="line">pid /run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.</span></span><br><span class="line"><span class="comment"># 指明包含进来的其他配置文件片段</span></span><br><span class="line">include /usr/share/nginx/modules/*.conf;</span><br><span class="line"><span class="comment"># 后台执行，默认 on 开启，off 则关闭，适合调试使用</span></span><br><span class="line">daemon off;</span><br><span class="line"><span class="comment"># 是否以 master/worker 模式运行，默认 on ，off 将不启动 worker</span></span><br><span class="line">master_process on|off</span><br></pre></td></tr></table></figure>
+<p>events 配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">events&#123;</span><br><span class="line">      &#125;</span><br><span class="line"><span class="comment"># 参数</span></span><br><span class="line"><span class="comment"># 每个 worker 进程所能够打开的最大并发链接数数量</span></span><br><span class="line"><span class="comment"># 总最大并发数：worker_processes * worker_connections</span></span><br><span class="line">worker_connections number</span><br><span class="line"><span class="comment"># 并发连接请求处理方式，默认选择最优 epoll</span></span><br><span class="line">use epoll/select</span><br><span class="line"><span class="comment"># 处理新连接请求方法，on 指 worker 轮流处理新请求，off 指每个新请求到达会通知（唤醒）所有 worker 进程，但是只有一个进程可以获得连接，造成‘惊群’，影响性能。</span></span><br><span class="line">accept_mutex on | off</span><br></pre></td></tr></table></figure>
+<p>http 配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">http&#123;</span><br><span class="line">    <span class="comment"># 各个 server 的公共配置</span></span><br><span class="line">    server&#123;</span><br><span class="line">      <span class="comment"># 每个 server 用于定义一个虚拟主机  </span></span><br><span class="line">    &#125;</span><br><span class="line">    server&#123;</span><br><span class="line">        <span class="comment"># 当前虚拟主机监听的端口</span></span><br><span class="line">        listen IP:PORT                       <span class="comment"># ipV4 地址</span></span><br><span class="line">        listen       [::]:80 default_server; <span class="comment"># ipV6 地址</span></span><br><span class="line">        <span class="comment"># 当前虚拟主机名称 eg：www.baidu.com</span></span><br><span class="line">        server_name 虚拟主机名</span><br><span class="line">        <span class="comment"># root：server 虚拟主机下的根目录</span></span><br><span class="line">        root        主目录</span><br><span class="line">        location [OPERATOR] URL &#123;  <span class="comment"># 指定 URL 的特性</span></span><br><span class="line">            <span class="keyword">if</span> CONDITION&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>server_name</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1. 虚拟主机名称后可以跟多个由空白字符分割的字符串</span><br><span class="line">2. 支持 * 通配任意长度的任意字符：server_name *.baidu.com www.baidu.*</span><br><span class="line">3. 支持 ~ 起始的字符做正则表达式匹配，但是存在性能问题：server_name ~^www\d+\.baidu\.com$</span><br><span class="line">匹配优先级：</span><br><span class="line">a. 字符串精确匹。b. 左侧 * 通配符。c. 右侧 * 通配符 eg:com.www.baidu.* 。 d. 正则。e. defult_server</span><br></pre></td></tr></table></figure>
+<p>location 配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在一个 sever 中 location 配置段可存在多个，用于实现从 uri 到文件系统的路径映射，nginx 会根据用户请求的 uri 来检查定义的所有 location,并找出一个最佳匹配进行应用。</span></span><br><span class="line">location [ = | ~ | ~* | ^~ ] uri &#123; ... &#125;</span><br><span class="line">location @name &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<p>location 中也有 root 路径，当请求是具体的 location 指向的路径时，走 location 中的 root 目录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 如果访问 http:192.168.31.107/news 则访问的时 location 指向的 /usr/local/html/news 目录下的文件，不带路径则访问的是 server 下 root 目录下的文件</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80 default_server;</span><br><span class="line">        server_name  _;</span><br><span class="line">        root        /usr/<span class="built_in">local</span>/html;</span><br><span class="line">        location /news &#123;</span><br><span class="line">                root /usr/<span class="built_in">local</span>/html</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>路径解析</p>
+<blockquote>
+<p>在 location 中指定路径有两种方式，一种是 root，一种是 alias。它们之间的区别是：<br>root 方式处理结果 = root 路径 + location 路径<br>alias 方式处理结果 = alias 路径直接替换 location 路径。</p>
+</blockquote>
+<p>匹配：<br><code>=</code> ：对 URL 精确匹配；</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">location = /&#123;  &#125;  只能精确匹配 http:fengzhu.top/  </span><br></pre></td></tr></table></figure>
+<p><code>^~</code>：对 URL　的最右边部分做匹配检查，不区分字符大小写<br><code>~</code>：对 URL 做正则匹配，区分大小写<br><code>~*</code>：对 URL 做正则匹配，不区分大小写<br>不带符号：匹配起始于此 URL 的所有 URL<br>优先级：=,^<del>,</del>/~*,不带符号</p>
+<p><strong>还是要自己配置试试，才能知道具体是怎么运行的</strong></p>
+<hr>
+<center>just do it</center>]]></content>
+      <categories>
+        <category>Nginx</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RabbitMQ延时队列</title>
     <url>/2019/11/02/rabbitMQ%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/</url>
     <content><![CDATA[<p><img src="/2019/11/02/rabbitMQ%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/rabbitMqDelayQueue.png" alt="Photo by on Unsplash"></p>
@@ -1427,48 +1469,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       <tags>
         <tag>MQ</tag>
         <tag>RabbitMQ</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Nginx安装和使用</title>
-    <url>/2019/11/25/nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<p><img src="/2019/11/25/nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/nginx.png" alt="Photo by deleted on wallhaven.cc"></p>
-<p>nginx 是互联网公司必不可少的一个中间件。它不仅性能好，而且资源占用极低。nginx <a class="link" href="http://www.nginx.cn/doc/">中文文档<i class="fas fa-external-link-alt"></i></a>，<a class="link" href="http://nginx.org/en/download.html">官方下载地址<i class="fas fa-external-link-alt"></i></a></p>
-<a id="more"></a>
-
-
-<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 epel 源，如果 yum 安装时提示没有找到 nginx 的话</span></span><br><span class="line">yum install epel-release</span><br><span class="line"></span><br><span class="line">yum install nginx</span><br></pre></td></tr></table></figure>
-<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><h5 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx</span><br></pre></td></tr></table></figure>
-<h5 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -s stop</span><br></pre></td></tr></table></figure>
-<h5 id="重新加载配置"><a href="#重新加载配置" class="headerlink" title="重新加载配置"></a>重新加载配置</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
-<h5 id="配置检查"><a href="#配置检查" class="headerlink" title="配置检查"></a>配置检查</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
-<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>main 配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 指定 worker 进程的运行身份，如组不指定，默认和用户名同名</span></span><br><span class="line">user nginx;</span><br><span class="line"><span class="comment"># worker 进程的数量，通常为当前主机 cpu 物理核心数</span></span><br><span class="line">worker_processes auto;</span><br><span class="line"><span class="comment"># worker 进程能够打开的文件数量上限（支持的并发数如：65535）</span></span><br><span class="line">worker_rlimit_nofile number</span><br><span class="line">error_log /var/<span class="built_in">log</span>/nginx/error.log;</span><br><span class="line"><span class="comment"># 指定存储 nginx 主进程 PID 的文件路径</span></span><br><span class="line">pid /run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.</span></span><br><span class="line"><span class="comment"># 指明包含进来的其他配置文件片段</span></span><br><span class="line">include /usr/share/nginx/modules/*.conf;</span><br><span class="line"><span class="comment"># 后台执行，默认 on 开启，off 则关闭，适合调试使用</span></span><br><span class="line">daemon off;</span><br><span class="line"><span class="comment"># 是否以 master/worker 模式运行，默认 on ，off 将不启动 worker</span></span><br><span class="line">master_process on|off</span><br></pre></td></tr></table></figure>
-<p>events 配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">events&#123;</span><br><span class="line">      &#125;</span><br><span class="line"><span class="comment"># 参数</span></span><br><span class="line"><span class="comment"># 每个 worker 进程所能够打开的最大并发链接数数量</span></span><br><span class="line"><span class="comment"># 总最大并发数：worker_processes * worker_connections</span></span><br><span class="line">worker_connections number</span><br><span class="line"><span class="comment"># 并发连接请求处理方式，默认选择最优 epoll</span></span><br><span class="line">use epoll/select</span><br><span class="line"><span class="comment"># 处理新连接请求方法，on 指 worker 轮流处理新请求，off 指每个新请求到达会通知（唤醒）所有 worker 进程，但是只有一个进程可以获得连接，造成‘惊群’，影响性能。</span></span><br><span class="line">accept_mutex on | off</span><br></pre></td></tr></table></figure>
-<p>http 配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">http&#123;</span><br><span class="line">    <span class="comment"># 各个 server 的公共配置</span></span><br><span class="line">    server&#123;</span><br><span class="line">      <span class="comment"># 每个 server 用于定义一个虚拟主机  </span></span><br><span class="line">    &#125;</span><br><span class="line">    server&#123;</span><br><span class="line">        <span class="comment"># 当前虚拟主机监听的端口</span></span><br><span class="line">        listen IP:PORT                       <span class="comment"># ipV4 地址</span></span><br><span class="line">        listen       [::]:80 default_server; <span class="comment"># ipV6 地址</span></span><br><span class="line">        <span class="comment"># 当前虚拟主机名称 eg：www.baidu.com</span></span><br><span class="line">        server_name 虚拟主机名</span><br><span class="line">        <span class="comment"># root：server 虚拟主机下的根目录</span></span><br><span class="line">        root        主目录</span><br><span class="line">        location [OPERATOR] URL &#123;  <span class="comment"># 指定 URL 的特性</span></span><br><span class="line">            <span class="keyword">if</span> CONDITION&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>server_name</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1. 虚拟主机名称后可以跟多个由空白字符分割的字符串</span><br><span class="line">2. 支持 * 通配任意长度的任意字符：server_name *.baidu.com www.baidu.*</span><br><span class="line">3. 支持 ~ 起始的字符做正则表达式匹配，但是存在性能问题：server_name ~^www\d+\.baidu\.com$</span><br><span class="line">匹配优先级：</span><br><span class="line">a. 字符串精确匹。b. 左侧 * 通配符。c. 右侧 * 通配符 eg:com.www.baidu.* 。 d. 正则。e. defult_server</span><br></pre></td></tr></table></figure>
-<p>location 配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在一个 sever 中 location 配置段可存在多个，用于实现从 uri 到文件系统的路径映射，nginx 会根据用户请求的 uri 来检查定义的所有 location,并找出一个最佳匹配进行应用。</span></span><br><span class="line">location [ = | ~ | ~* | ^~ ] uri &#123; ... &#125;</span><br><span class="line">location @name &#123; ... &#125;</span><br></pre></td></tr></table></figure>
-<p>location 中也有 root 路径，当请求是具体的 location 指向的路径时，走 location 中的 root 目录</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 如果访问 http:192.168.31.107/news 则访问的时 location 指向的 /usr/local/html/news 目录下的文件，不带路径则访问的是 server 下 root 目录下的文件</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80 default_server;</span><br><span class="line">        server_name  _;</span><br><span class="line">        root        /usr/<span class="built_in">local</span>/html;</span><br><span class="line">        location /news &#123;</span><br><span class="line">                root /usr/<span class="built_in">local</span>/html</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>路径解析</p>
-<blockquote>
-<p>在 location 中指定路径有两种方式，一种是 root，一种是 alias。它们之间的区别是：<br>root 方式处理结果 = root 路径 + location 路径<br>alias 方式处理结果 = alias 路径直接替换 location 路径。</p>
-</blockquote>
-<p>匹配：<br><code>=</code> ：对 URL 精确匹配；</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">location = /&#123;  &#125;  只能精确匹配 http:fengzhu.top/  </span><br></pre></td></tr></table></figure>
-<p><code>^~</code>：对 URL　的最右边部分做匹配检查，不区分字符大小写<br><code>~</code>：对 URL 做正则匹配，区分大小写<br><code>~*</code>：对 URL 做正则匹配，不区分大小写<br>不带符号：匹配起始于此 URL 的所有 URL<br>优先级：=,^<del>,</del>/~*,不带符号</p>
-<p><strong>还是要自己配置试试，才能知道具体是怎么运行的</strong></p>
-<hr>
-<center>just do it</center>]]></content>
-      <categories>
-        <category>Nginx</category>
-      </categories>
-      <tags>
-        <tag>Nginx</tag>
       </tags>
   </entry>
   <entry>
@@ -2103,14 +2103,14 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
 <p><img src="/2021/03/27/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/flow.jpeg" alt="流程"></p>
 <p>上面几个流程其实前 3 个和最后一个大家做的事情是一样的，抽象成代码就是 窗口买票方法，检票入场方法，出口回家方法。但是玩这里是不同的，因为每个人进来之后有的人喜欢刺激去玩过山车🎢，有的比较怂「我？」就去玩儿童项目。哈哈，总之 玩这个方法对于每个人来说都是变动的，所以把它抽象出来，交给子类，也就是每个人去实现自己的玩方法，其他方法放在父类中，统一处理，这就是模板方法，简单而实用。</p>
 <h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>接着上面游乐场的例子，用代码实现的话是下面这样的。</p>
-<h4 id="游乐场"><a href="#游乐场" class="headerlink" title="游乐场"></a>游乐场</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * @author ck</span><br><span class="line"> *&#x2F;</span><br><span class="line">public abstract class Playground &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 游玩所有流程</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public void playTemplate() &#123;</span><br><span class="line">        buyTicket();</span><br><span class="line">        checkTicket();</span><br><span class="line">        play();</span><br><span class="line">        goHome();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 窗口统一买票</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public void buyTicket() &#123;</span><br><span class="line">        System.out.println(&quot;我买到双人票了！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 统一排队检票</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public void checkTicket() &#123;</span><br><span class="line">        System.out.println(&quot;检票入场了&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 统一出口离开</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public void goHome() &#123;</span><br><span class="line">        System.out.println(&quot;我们从出口回家了&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 玩：每个人玩法都不一样</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public abstract void play();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="游乐场"><a href="#游乐场" class="headerlink" title="游乐场"></a>游乐场</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ck</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Playground</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 游玩所有流程</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">playTemplate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        buyTicket();</span><br><span class="line">        checkTicket();</span><br><span class="line">        play();</span><br><span class="line">        goHome();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 窗口统一买票</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buyTicket</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;我买到双人票了！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 统一排队检票</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">checkTicket</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;检票入场了&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 统一出口离开</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">goHome</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;我们从出口回家了&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 玩：每个人玩法都不一样</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="游客"><a href="#游客" class="headerlink" title="游客"></a>游客</h4><p>李明</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Liming extends Playground&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void play() &#123;</span><br><span class="line">        System.out.println(&quot;我先玩了过山车🎢，然后又玩了跳楼机。。。。哈哈哈&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Liming</span> <span class="keyword">extends</span> <span class="title">Playground</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;我先玩了过山车🎢，然后又玩了跳楼机。。。。哈哈哈&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>张三</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Zhangsan extends Playground&#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void play() &#123;</span><br><span class="line">        System.out.println(&quot;儿童项目真好玩😄&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Zhangsan</span> <span class="keyword">extends</span> <span class="title">Playground</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;儿童项目真好玩😄&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>让两个游客都执行相同的方法，但是看到的模板中执行的结果是不一样的。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Liming liming &#x3D; new Liming();</span><br><span class="line">        liming.playTemplate();</span><br><span class="line">        System.out.println(&quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot;);</span><br><span class="line">        Zhangsan zhangsan &#x3D; new Zhangsan();</span><br><span class="line">        zhangsan.playTemplate();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">我买到双人票了！</span><br><span class="line">检票入场了</span><br><span class="line">我先玩了过山车🎢，然后又玩了跳楼机。。。。哈哈哈</span><br><span class="line">我们从出口回家了</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">我买到双人票了！</span><br><span class="line">检票入场了</span><br><span class="line">儿童项目真好玩😄</span><br><span class="line">我们从出口回家了</span><br><span class="line"></span><br><span class="line">Process finished with exit code 0</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Liming liming = <span class="keyword">new</span> Liming();</span><br><span class="line">        liming.playTemplate();</span><br><span class="line">        System.out.println(<span class="string">&quot;=================&quot;</span>);</span><br><span class="line">        Zhangsan zhangsan = <span class="keyword">new</span> Zhangsan();</span><br><span class="line">        zhangsan.playTemplate();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">我买到双人票了！</span><br><span class="line">检票入场了</span><br><span class="line">我先玩了过山车🎢，然后又玩了跳楼机。。。。哈哈哈</span><br><span class="line">我们从出口回家了</span><br><span class="line">=================</span><br><span class="line">我买到双人票了！</span><br><span class="line">检票入场了</span><br><span class="line">儿童项目真好玩😄</span><br><span class="line">我们从出口回家了</span><br><span class="line"></span><br><span class="line">Process finished with <span class="built_in">exit</span> code 0</span><br></pre></td></tr></table></figure>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>可以看得出来，模板的好处就是将不变的抽离出来，放在一个父类中，将变化的留出入口，让不同的子类是实现自己对应的方法。简单且实用，我之前在工作中有对接第三方提现业务，但是因为财务和运营各方原因「对内这样说的」接了4家左右的第三方公司，而且说后续还可能陆续会有。在这个工程中我发现很多方法，比如创建提现订单，创建提现记录，提现信息校验等一些基础方法是不变的，而请求第三发发起提现，实名认证，查询在第三方账户余额是不一样的。所以采用了模板的方式来实现这个需求，让代码的冗余度减少很多，完美的解决了问题。</p>
 <hr>
 <p>慢慢更新，争取所有的模式都能用到我自己真是工作中，并带来正收益。</p>

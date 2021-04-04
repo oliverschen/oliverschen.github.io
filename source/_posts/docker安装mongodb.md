@@ -18,7 +18,7 @@ mongodb 是一款很优秀的开源 nosql 数据库，它内部以 json 作为�
 |    os  |  Mangaro 18.0.1    |       
 |    mongodb  |    v4.0.6  |       
 
-关于 docker 的安装，如果是 Manjaro 的话，请在[这里](https://fengzhu.top/2019/03/17/manjaro%E5%AE%89%E8%A3%85/#more)参考，如果是其他系统的话， Google 应该有很多好的博客可以参考。
+关于 docker 的安装，如果是 Manjaro 的话，请在[这里](https://oliverschen.github.io/2019/03/17/manjaro安装)参考，如果是其他系统的话， Google 应该有很多好的博客可以参考。
 #### 安装 mongodb
 
 ``` bash

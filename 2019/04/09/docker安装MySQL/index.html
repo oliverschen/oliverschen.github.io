@@ -57,7 +57,7 @@
                             <a class=""
                                href="/"
                             >
-                                首页
+                                HOME
                             </a>
                         </li>
                     
@@ -65,7 +65,7 @@
                             <a class=""
                                href="/archives"
                             >
-                                归档
+                                ARCHIVES
                             </a>
                         </li>
                     
@@ -73,7 +73,7 @@
                             <a class=""
                                href="/categories"
                             >
-                                分类
+                                CATEGORIES
                             </a>
                         </li>
                     
@@ -81,7 +81,7 @@
                             <a class=""
                                href="/about"
                             >
-                                关于
+                                ABOUT
                             </a>
                         </li>
                     
@@ -108,22 +108,22 @@
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/">首页</a>
+                       href="/">HOME</a>
                 </li>
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/archives">归档</a>
+                       href="/archives">ARCHIVES</a>
                 </li>
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/categories">分类</a>
+                       href="/categories">CATEGORIES</a>
                 </li>
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/about">关于</a>
+                       href="/about">ABOUT</a>
                 </li>
             
         </ul>
@@ -201,12 +201,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>525 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>881 Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>2 分钟</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>4 Mins</span>
         </span>
     
     
@@ -225,15 +225,29 @@
             <p><img src="/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/mysql.png"></p>
 <p>自从接触到 docker 之后，就想把所有组件都安装在上面，方便后面使用。今天开始折腾安装 MySQL，虽然目前公司项目使用 MySQL 非常少，但是我很喜欢 MySQL，哈哈。</p>
 <a id="more"></a>
-
-<h5 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 拉去最新版的 mysql</span></span><br><span class="line">sudo docker pull mysql</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="单机部署"><a href="#单机部署" class="headerlink" title="单机部署"></a>单机部署</h3><h5 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 拉去最新版的 mysql</span></span><br><span class="line">sudo docker pull mysql</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>使用以上命令拉取最新版 MySQL</p>
 <h5 id="启动-MySQL"><a href="#启动-MySQL" class="headerlink" title="启动 MySQL"></a>启动 MySQL</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 3306:3306 --name mysql-ck -v /usr/<span class="built_in">local</span>/mysql/conf:/etc/mysql/conf.d -v /usr/<span class="built_in">local</span>/mysql/logs:/logs -v /usr/<span class="built_in">local</span>/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.7</span><br><span class="line"></span><br><span class="line"><span class="comment"># -p 将 3306 端口映射到本机 3306 端口</span></span><br><span class="line"><span class="comment"># --name 后面跟 MySQL 别名</span></span><br><span class="line"><span class="comment"># -v MySQL 数据保存路径：/usr/local/mysql/conf:/etc/mysql/conf.d   将本机 /usr/local/mysql/conf 映射到 docker 的 /etc/mysql/conf.d 目录</span></span><br><span class="line"><span class="comment"># -e 设置初始密码</span></span><br><span class="line"><span class="comment"># -d 后台运行</span></span><br></pre></td></tr></table></figure>
 <p>启动 MySQL 成功之后，容器会返回一个 id 类似 <code>6d2b3575b78f67481300d01cd65ca47a2a1868f448f2a53bb68d7b056f7ef23d</code></p>
 <h5 id="进入-MySQL"><a href="#进入-MySQL" class="headerlink" title="进入 MySQL"></a>进入 MySQL</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> -it mysql bash</span><br><span class="line"><span class="comment"># 登录</span></span><br><span class="line">root@6d2b3575b78f:/<span class="comment"># mysql -uroot -proot</span></span><br><span class="line">mysql: [Warning] Using a password on the <span class="built_in">command</span> line interface can be insecure.</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 8</span><br><span class="line">Server version: 8.0.15 MySQL Community Server - GPL</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type <span class="string">&#x27;help;&#x27;</span> or <span class="string">&#x27;\h&#x27;</span> <span class="keyword">for</span> <span class="built_in">help</span>. Type <span class="string">&#x27;\c&#x27;</span> to clear the current input statement.</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h5 id="客户端安装"><a href="#客户端安装" class="headerlink" title="客户端安装"></a>客户端安装</h5><p>建议到<a class="link" target="_blank" rel="noopener" href="https://www.navicat.com.cn/products/">官网<i class="fas fa-external-link-alt"></i></a>下载 navicat 客户端，当然条件允许的建议购买正版产品，实在不行就先下载下来，有半个月的试用期，体验一般，个人觉得他们家的产品用起来很不错。下载后解压，直接启动即可使用。</p>
-<p>此时就进入到我们熟悉的客户端了，接下来的操作就和在物理机上的操作是一样的了。虽然公司项目可能接触 MySQL 会很少，但是 MySQL 依然是很多公司数据存储不可替代的部分，所以嘛，好好学习，天天向上。</p>
-<p>今天没有加班，下班早早就溜了，最近加班比较多，希望程序狗们都能天天没 bug ,天天早下班。</p>
+<h3 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h3><h4 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h4><p>Docker 部署 Mysql5.7 </p>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">## 设置server_id，一般设置为IP，注意要唯一</span><br><span class="line">server_id&#x3D;6</span><br><span class="line">## 复制过滤：也就是指定哪个数据库不用同步（mysql库一般不同步）</span><br><span class="line">binlog-ignore-db&#x3D;mysql</span><br><span class="line">## 开启二进制日志功能，可以随便取，最好有含义（关键就是这里了）</span><br><span class="line">log-bin&#x3D;replicas-mysql-bin</span><br><span class="line">## 为每个session分配的内存，在事务过程中用来存储二进制日志的缓存</span><br><span class="line">binlog_cache_size&#x3D;1M</span><br><span class="line">## 主从复制的格式（mixed,statement,row，默认格式是statement）</span><br><span class="line">binlog_format&#x3D;mixed</span><br><span class="line">## 二进制日志自动删除&#x2F;过期的天数。默认值为0，表示不自动删除。</span><br><span class="line">expire_logs_days&#x3D;7</span><br><span class="line">## 跳过主从复制中遇到的所有错误或指定类型的错误，避免slave端复制中断。</span><br><span class="line">## 如：1062错误是指一些主键重复，1032错误是因为主从数据库数据不一致</span><br><span class="line">slave_skip_errors&#x3D;1062</span><br></pre></td></tr></table></figure>
+<h4 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h4><p>指定不同的配置和端口启动两个容器</p>
+<blockquote>
+<p>docker run –name mysql-6 -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -v ~/develop/mysql/mysql-6/data:/var/lib/mysql -v ~/develop/mysql/mysql-6/conf/my.cnf:/etc/mysql/my.cnf mysql:5.7</p>
+</blockquote>
+<blockquote>
+<p>docker run –name mysql-7 -d -p 3307:3306 -e MYSQL_ROOT_PASSWORD=root -v ~/develop/mysql/mysql-7/data:/var/lib/mysql -v ~/develop/mysql/mysql-7/conf/my.cnf:/etc/mysql/my.cnf mysql:5.7</p>
+</blockquote>
+<h4 id="主节点"><a href="#主节点" class="headerlink" title="主节点"></a>主节点</h4><p>连接主节点授权</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GRANT REPLICATION SLAVE ON *.* to &#39;sync&#39;@&#39;%&#39; identified by &#39;root&#39;;</span><br><span class="line"># 查看主节点状态</span><br><span class="line">show master status;</span><br></pre></td></tr></table></figure>
+<h4 id="IP"><a href="#IP" class="headerlink" title="IP"></a>IP</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect --format &#39;&#123;&#123; .NetworkSettings.IPAddress &#125;&#125;&#39; &lt;container-ID&gt; </span><br></pre></td></tr></table></figure>
+<h4 id="从节点"><a href="#从节点" class="headerlink" title="从节点"></a>从节点</h4><p>连接主节点，指定主节点的地址信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">change master to master_host&#x3D;&#39;172.17.0.2&#39;,master_user&#x3D;&#39;sync&#39;,master_password&#x3D;&#39;root&#39;,master_log_file&#x3D;&#39;mysql-bin.000001&#39;,master_log_pos&#x3D;437,master_port&#x3D;3306;</span><br></pre></td></tr></table></figure>
+<p>开启从节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">reset slave;</span><br><span class="line"></span><br><span class="line">start slave;</span><br></pre></td></tr></table></figure>
+<h4 id><a href="#" class="headerlink" title></a></h4><p>今天没有加班，下班早早就溜了，最近加班比较多，希望程序狗们都能天天没 bug ,天天早下班。</p>
 <hr>
 <center>道理都懂，但做不到</center>
 
@@ -245,14 +259,14 @@
             <div class="post-copyright-info">
                 <div class="article-copyright-info-container">
     <ul>
-        <li>本文标题：Docker安装MySQL</li>
-        <li>本文作者：jihe</li>
-        <li>创建时间：2019-04-09 22:46:42</li>
+        <li>Post title：Docker安装MySQL</li>
+        <li>Post author：jihe</li>
+        <li>Create time：2019-04-09 22:46:42</li>
         <li>
-            本文链接：https://oliverschen.github.io/2019/04/09/docker安装MySQL/
+            Post link：https://oliverschen.github.io/2019/04/09/docker安装MySQL/
         </li>
         <li>
-            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
         </li>
     </ul>
 </div>
@@ -273,7 +287,7 @@
                             </span>
                             <span class="title flex-center">
                                 <span class="post-nav-title-item">Manjaro编译Openjdk</span>
-                                <span class="post-nav-item">上一篇</span>
+                                <span class="post-nav-item">Prev posts</span>
                             </span>
                         </a>
                     </div>
@@ -286,7 +300,7 @@
                         >
                             <span class="title flex-center">
                                 <span class="post-nav-title-item">Mongo乐观锁</span>
-                                <span class="post-nav-item">下一篇</span>
+                                <span class="post-nav-item">Next posts</span>
                             </span>
                             <span class="right arrow-icon flex-center">
                               <i class="fas fa-chevron-right"></i>
@@ -302,7 +316,7 @@
                 <div class="comments-container">
     <div id="comment-anchor"></div>
     <div class="comment-area-title">
-        <i class="fas fa-comments">&nbsp;评论</i>
+        <i class="fas fa-comments">&nbsp;Comments</i>
     </div>
     
 
@@ -379,18 +393,18 @@
             <div class="website-count info-item">
                 
                     <span id="busuanzi_container_site_uv">
-                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                        Visitor Count&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
                     </span>
                 
                 
                     <span id="busuanzi_container_site_pv">
-                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                        Totalview&nbsp;<span id="busuanzi_value_site_pv"></span>
                     </span>
                 
             </div>
         
         <div class="theme-info info-item">
-            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
         </div>
         
     </div>
@@ -469,7 +483,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F"><span class="nav-number">1.</span> <span class="nav-text">拉取镜像</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8-MySQL"><span class="nav-number">2.</span> <span class="nav-text">启动 MySQL</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5-MySQL"><span class="nav-number">3.</span> <span class="nav-text">进入 MySQL</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85"><span class="nav-number">4.</span> <span class="nav-text">客户端安装</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E9%83%A8%E7%BD%B2"><span class="nav-number">1.</span> <span class="nav-text">单机部署</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F"><span class="nav-number">1.0.1.</span> <span class="nav-text">拉取镜像</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8-MySQL"><span class="nav-number">1.0.2.</span> <span class="nav-text">启动 MySQL</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5-MySQL"><span class="nav-number">1.0.3.</span> <span class="nav-text">进入 MySQL</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85"><span class="nav-number">1.0.4.</span> <span class="nav-text">客户端安装</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="nav-number">2.</span> <span class="nav-text">主从复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC"><span class="nav-number">2.1.</span> <span class="nav-text">版本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8"><span class="nav-number">2.3.</span> <span class="nav-text">启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E8%8A%82%E7%82%B9"><span class="nav-number">2.4.</span> <span class="nav-text">主节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IP"><span class="nav-number">2.5.</span> <span class="nav-text">IP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8E%E8%8A%82%E7%82%B9"><span class="nav-number">2.6.</span> <span class="nav-text">从节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">2.7.</span> <span class="nav-text"></span></a></li></ol></li></ol>
     </div>
 </div>
         </aside>
@@ -491,7 +505,7 @@
                 <input autocomplete="off"
                        autocorrect="off"
                        autocapitalize="off"
-                       placeholder="搜索..."
+                       placeholder="Search..."
                        spellcheck="false"
                        type="search"
                        class="search-input"

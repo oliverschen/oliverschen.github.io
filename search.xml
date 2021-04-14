@@ -378,48 +378,6 @@
       </tags>
   </entry>
   <entry>
-    <title>SpringBoot源码</title>
-    <url>/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/</url>
-    <content><![CDATA[<p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/SpringBoot.png" alt="Photo by destex on JustJon"></p>
-<p>Springboot 是 Spring 退出的一个快速集成开发框架，可以很容易的搭建一个 Web 项目，它采用 <code>starter</code> 的方式来引入需要的组件，自动装配需要的配置信息。很大程度的提高了开发效率，让开发者专注于具体业务的开发。这里是我在看 SpringBoot 源码时的一些分析和流程梳理。 </p>
-<a id="more"></a>
-
-<h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><h3 id="SpringBootApplication"><a href="#SpringBootApplication" class="headerlink" title="@SpringBootApplication"></a>@SpringBootApplication</h3><p>这是 SpringBoot 启动动类注解，它是一个组合注解。</p>
-<p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/SpringBoot-anno.jpg" alt="SpringBootApplication 注解"></p>
-<h4 id="SpringBootConfiguration"><a href="#SpringBootConfiguration" class="headerlink" title="@SpringBootConfiguration"></a>@SpringBootConfiguration</h4><p>它导入了 @Configuration 注解，拥有配置属性。所以 @SpringBootApplication 注解也拥有「配置类」属性。</p>
-<h4 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h4><h5 id="AutoConfigurationImportSelector"><a href="#AutoConfigurationImportSelector" class="headerlink" title="AutoConfigurationImportSelector"></a>AutoConfigurationImportSelector</h5><p>开启自动配置注解，这个注解 Import 了一个 AutoConfigurationImportSelector 自动配置导入选择器。</p>
-<p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/impl.png" alt="实现类"></p>
-<p>它实现了 Aware 接口，在 IoC 容器启动后，在初始化 Bean 时执行导入，Selector 类会去加载 <code>spring-boot-autoconfigure</code> 包下 <code>Resource/META-INFO/spring.factories</code> 文件中的  <code>Auto Configure</code> 自动配置类，这个文件已经默认将 Redis,RabbitMQ,Kafka,Mybatis,elasticsearch 等常见的第三方自动配置类配置了。只要引入依赖就可以直接使用了。</p>
-<h5 id="AutoConfigurationPackage"><a href="#AutoConfigurationPackage" class="headerlink" title="@AutoConfigurationPackage"></a>@AutoConfigurationPackage</h5><p>自动配置基础扫描包，这个注解 Import 了 AutoConfigurationPackages.Registrar 类，负责将标注次注解的类所在的包名注册到 Bean 定义中</p>
-<h4 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h4><p>组建扫描注解，通过 ClassUtils.<em>getPackageName</em>(启动类) 扫描启动类包以及子包中的 @Component，@Service 等注解，将其加入到 IoC 容器中。</p>
-<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><p>下图是源码的大致调用和启动流程，蓝色为主干，其他均为各个分支。</p>
-<p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/flow.png" alt="源码流程图"></p>
-<h3 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h3><h4 id="invokeBeanFactoryPostProcessors-beanFactory"><a href="#invokeBeanFactoryPostProcessors-beanFactory" class="headerlink" title="invokeBeanFactoryPostProcessors(beanFactory)"></a>invokeBeanFactoryPostProcessors(beanFactory)</h4><p>扫描 Bean 定义并且执行核心的自动配置都是在这里完成的，@SpringBootApplication 包含的所有注解涉及的步骤也是在这个方法中被加载使用。</p>
-<h5 id="AutoConfigurationImportSelector-1"><a href="#AutoConfigurationImportSelector-1" class="headerlink" title="AutoConfigurationImportSelector"></a>AutoConfigurationImportSelector</h5><p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/auto-import.png" alt="自动装配类"></p>
-<p>它实现 Aware 和 ImportSelector 接口，在配置类记载是执行，并找到 <code>spring-boot-autoconfigure</code></p>
-<p>包中的 spring.factories 下所有的自动配置类，进行过滤并且自动装配。</p>
-<h5 id="过滤规则"><a href="#过滤规则" class="headerlink" title="过滤规则"></a>过滤规则</h5><p>SpringBoot 自动装配时不会把所有的配置都加载进来 ，它会进行过滤，只添加项目需要的配置类，根据下面的注解：</p>
-<ol>
-<li>@ConditionalOnProperty</li>
-<li>@ConditionalOnClass</li>
-<li>@ConditionalOnBean</li>
-<li>@ConditionalOnWebApplication</li>
-</ol>
-<p>通过自动配置类上面的注解进行过滤，筛选出项目依赖的配置类。</p>
-<h5 id="DispatcherServletAutoConfiguration"><a href="#DispatcherServletAutoConfiguration" class="headerlink" title="DispatcherServletAutoConfiguration"></a>DispatcherServletAutoConfiguration</h5><p>@ConditionalOnWebApplication(type = Type.SERVLET) 以 SERVLET 类型启动并且 @ConditionalOnClass(DispatcherServlet.class) 存在该类时会自动加载 DispatcherServlet 相关配置。</p>
-<h4 id="onRefresh"><a href="#onRefresh" class="headerlink" title="onRefresh()"></a>onRefresh()</h4><p>如果依赖了 <code>spring-boot-starter-web</code> ，会在此时去创建 tomcat 相关的操作。</p>
-<h3 id="refresh"><a href="#refresh" class="headerlink" title="refresh"></a>refresh</h3><p>refresh() 方法是容器启动的核心方法。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line">        <span class="comment">// Prepare this context for refreshing.</span></span><br><span class="line">        <span class="comment">//1. 设置容器启动状态。创建早期事件监听，发布于多播器创建之前</span></span><br><span class="line">        prepareRefresh();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// Tell the subclass to refresh the internal bean factory.</span></span><br><span class="line">        <span class="comment">//2. 创建 beanFactory，加载 beanDefinitions(bean 定义)</span></span><br><span class="line">        ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// Prepare the bean factory for use in this context.</span></span><br><span class="line">        <span class="comment">//3. 准备工厂的类加载器等信息。设置 aware 类型的后置处理器，注册默认的环境 bean 到工厂中的一级缓存。</span></span><br><span class="line">        prepareBeanFactory(beanFactory);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// Allows post-processing of the bean factory in context subclasses.</span></span><br><span class="line">            <span class="comment">//4. 处理 BeanFactoryPostProcessor 后置处理器流程</span></span><br><span class="line">            postProcessBeanFactory(beanFactory);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Invoke factory processors registered as beans in the context.</span></span><br><span class="line">            <span class="comment">//5. 调用执行后置处理器 BeanDefinitionRegistryPostProcessors, BeanFactoryPostProcessors </span></span><br><span class="line">            invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Register bean processors that intercept bean creation.</span></span><br><span class="line">            <span class="comment">//6. 注册 BeanPostProcessors 后置处理器</span></span><br><span class="line">            registerBeanPostProcessors(beanFactory);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//7. Initialize message source for this context.初始化国际化的一直资源</span></span><br><span class="line">            initMessageSource();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//8. Initialize event multicaster for this context.初始化事件多播器</span></span><br><span class="line">            initApplicationEventMulticaster();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//9. Initialize other special beans in specific context subclasses.留给子类的扩展点</span></span><br><span class="line">            onRefresh();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//10. Check for listener beans and register them.注册监听到多播器中</span></span><br><span class="line">            registerListeners();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Instantiate all remaining (non-lazy-init) singletons.</span></span><br><span class="line">            <span class="comment">//11. 初始化所有的非懒加载单例 bean，重要</span></span><br><span class="line">            finishBeanFactoryInitialization(beanFactory);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//12. Last step: publish corresponding event.最后发布一些事件等</span></span><br><span class="line">            finishRefresh();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">            <span class="keyword">if</span> (logger.isWarnEnabled()) &#123;</span><br><span class="line">                logger.warn(<span class="string">&quot;Exception encountered during context initialization - &quot;</span> + <span class="string">&quot;cancelling refresh attempt: &quot;</span> + ex);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// Destroy already created singletons to avoid dangling resources.</span></span><br><span class="line">            destroyBeans();</span><br><span class="line">            <span class="comment">// Reset &#x27;active&#x27; flag.</span></span><br><span class="line">            cancelRefresh(ex);</span><br><span class="line">            <span class="comment">// Propagate exception to caller.</span></span><br><span class="line">            <span class="keyword">throw</span> ex;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="comment">// Reset common introspection caches in Spring&#x27;s core, since we</span></span><br><span class="line">            <span class="comment">// might not ever need metadata for singleton beans anymore...</span></span><br><span class="line">            resetCommonCaches();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<center>🌵</center>]]></content>
-      <categories>
-        <category>Spring</category>
-      </categories>
-      <tags>
-        <tag>Spring</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>RabbitMQ安装和使用</title>
     <url>/2019/09/05/RabbitMQ%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<p><img src="/2019/09/05/RabbitMQ%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/rabbitmq.png" alt="Photo by Vadim Sadovski on Unsplash"></p>
@@ -535,6 +493,48 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
+    <title>SpringBoot源码</title>
+    <url>/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/</url>
+    <content><![CDATA[<p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/SpringBoot.png" alt="Photo by destex on JustJon"></p>
+<p>Springboot 是 Spring 退出的一个快速集成开发框架，可以很容易的搭建一个 Web 项目，它采用 <code>starter</code> 的方式来引入需要的组件，自动装配需要的配置信息。很大程度的提高了开发效率，让开发者专注于具体业务的开发。这里是我在看 SpringBoot 源码时的一些分析和流程梳理。 </p>
+<a id="more"></a>
+
+<h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><h3 id="SpringBootApplication"><a href="#SpringBootApplication" class="headerlink" title="@SpringBootApplication"></a>@SpringBootApplication</h3><p>这是 SpringBoot 启动动类注解，它是一个组合注解。</p>
+<p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/SpringBoot-anno.jpg" alt="SpringBootApplication 注解"></p>
+<h4 id="SpringBootConfiguration"><a href="#SpringBootConfiguration" class="headerlink" title="@SpringBootConfiguration"></a>@SpringBootConfiguration</h4><p>它导入了 @Configuration 注解，拥有配置属性。所以 @SpringBootApplication 注解也拥有「配置类」属性。</p>
+<h4 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h4><h5 id="AutoConfigurationImportSelector"><a href="#AutoConfigurationImportSelector" class="headerlink" title="AutoConfigurationImportSelector"></a>AutoConfigurationImportSelector</h5><p>开启自动配置注解，这个注解 Import 了一个 AutoConfigurationImportSelector 自动配置导入选择器。</p>
+<p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/impl.png" alt="实现类"></p>
+<p>它实现了 Aware 接口，在 IoC 容器启动后，在初始化 Bean 时执行导入，Selector 类会去加载 <code>spring-boot-autoconfigure</code> 包下 <code>Resource/META-INFO/spring.factories</code> 文件中的  <code>Auto Configure</code> 自动配置类，这个文件已经默认将 Redis,RabbitMQ,Kafka,Mybatis,elasticsearch 等常见的第三方自动配置类配置了。只要引入依赖就可以直接使用了。</p>
+<h5 id="AutoConfigurationPackage"><a href="#AutoConfigurationPackage" class="headerlink" title="@AutoConfigurationPackage"></a>@AutoConfigurationPackage</h5><p>自动配置基础扫描包，这个注解 Import 了 AutoConfigurationPackages.Registrar 类，负责将标注次注解的类所在的包名注册到 Bean 定义中</p>
+<h4 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h4><p>组建扫描注解，通过 ClassUtils.<em>getPackageName</em>(启动类) 扫描启动类包以及子包中的 @Component，@Service 等注解，将其加入到 IoC 容器中。</p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><p>下图是源码的大致调用和启动流程，蓝色为主干，其他均为各个分支。</p>
+<p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/flow.png" alt="源码流程图"></p>
+<h3 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h3><h4 id="invokeBeanFactoryPostProcessors-beanFactory"><a href="#invokeBeanFactoryPostProcessors-beanFactory" class="headerlink" title="invokeBeanFactoryPostProcessors(beanFactory)"></a>invokeBeanFactoryPostProcessors(beanFactory)</h4><p>扫描 Bean 定义并且执行核心的自动配置都是在这里完成的，@SpringBootApplication 包含的所有注解涉及的步骤也是在这个方法中被加载使用。</p>
+<h5 id="AutoConfigurationImportSelector-1"><a href="#AutoConfigurationImportSelector-1" class="headerlink" title="AutoConfigurationImportSelector"></a>AutoConfigurationImportSelector</h5><p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/auto-import.png" alt="自动装配类"></p>
+<p>它实现 Aware 和 ImportSelector 接口，在配置类记载是执行，并找到 <code>spring-boot-autoconfigure</code></p>
+<p>包中的 spring.factories 下所有的自动配置类，进行过滤并且自动装配。</p>
+<h5 id="过滤规则"><a href="#过滤规则" class="headerlink" title="过滤规则"></a>过滤规则</h5><p>SpringBoot 自动装配时不会把所有的配置都加载进来 ，它会进行过滤，只添加项目需要的配置类，根据下面的注解：</p>
+<ol>
+<li>@ConditionalOnProperty</li>
+<li>@ConditionalOnClass</li>
+<li>@ConditionalOnBean</li>
+<li>@ConditionalOnWebApplication</li>
+</ol>
+<p>通过自动配置类上面的注解进行过滤，筛选出项目依赖的配置类。</p>
+<h5 id="DispatcherServletAutoConfiguration"><a href="#DispatcherServletAutoConfiguration" class="headerlink" title="DispatcherServletAutoConfiguration"></a>DispatcherServletAutoConfiguration</h5><p>@ConditionalOnWebApplication(type = Type.SERVLET) 以 SERVLET 类型启动并且 @ConditionalOnClass(DispatcherServlet.class) 存在该类时会自动加载 DispatcherServlet 相关配置。</p>
+<h4 id="onRefresh"><a href="#onRefresh" class="headerlink" title="onRefresh()"></a>onRefresh()</h4><p>如果依赖了 <code>spring-boot-starter-web</code> ，会在此时去创建 tomcat 相关的操作。</p>
+<h3 id="refresh"><a href="#refresh" class="headerlink" title="refresh"></a>refresh</h3><p>refresh() 方法是容器启动的核心方法。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line">        <span class="comment">// Prepare this context for refreshing.</span></span><br><span class="line">        <span class="comment">//1. 设置容器启动状态。创建早期事件监听，发布于多播器创建之前</span></span><br><span class="line">        prepareRefresh();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// Tell the subclass to refresh the internal bean factory.</span></span><br><span class="line">        <span class="comment">//2. 创建 beanFactory，加载 beanDefinitions(bean 定义)</span></span><br><span class="line">        ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// Prepare the bean factory for use in this context.</span></span><br><span class="line">        <span class="comment">//3. 准备工厂的类加载器等信息。设置 aware 类型的后置处理器，注册默认的环境 bean 到工厂中的一级缓存。</span></span><br><span class="line">        prepareBeanFactory(beanFactory);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// Allows post-processing of the bean factory in context subclasses.</span></span><br><span class="line">            <span class="comment">//4. 处理 BeanFactoryPostProcessor 后置处理器流程</span></span><br><span class="line">            postProcessBeanFactory(beanFactory);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Invoke factory processors registered as beans in the context.</span></span><br><span class="line">            <span class="comment">//5. 调用执行后置处理器 BeanDefinitionRegistryPostProcessors, BeanFactoryPostProcessors </span></span><br><span class="line">            invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Register bean processors that intercept bean creation.</span></span><br><span class="line">            <span class="comment">//6. 注册 BeanPostProcessors 后置处理器</span></span><br><span class="line">            registerBeanPostProcessors(beanFactory);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//7. Initialize message source for this context.初始化国际化的一直资源</span></span><br><span class="line">            initMessageSource();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//8. Initialize event multicaster for this context.初始化事件多播器</span></span><br><span class="line">            initApplicationEventMulticaster();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//9. Initialize other special beans in specific context subclasses.留给子类的扩展点</span></span><br><span class="line">            onRefresh();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//10. Check for listener beans and register them.注册监听到多播器中</span></span><br><span class="line">            registerListeners();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Instantiate all remaining (non-lazy-init) singletons.</span></span><br><span class="line">            <span class="comment">//11. 初始化所有的非懒加载单例 bean，重要</span></span><br><span class="line">            finishBeanFactoryInitialization(beanFactory);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//12. Last step: publish corresponding event.最后发布一些事件等</span></span><br><span class="line">            finishRefresh();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">            <span class="keyword">if</span> (logger.isWarnEnabled()) &#123;</span><br><span class="line">                logger.warn(<span class="string">&quot;Exception encountered during context initialization - &quot;</span> + <span class="string">&quot;cancelling refresh attempt: &quot;</span> + ex);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// Destroy already created singletons to avoid dangling resources.</span></span><br><span class="line">            destroyBeans();</span><br><span class="line">            <span class="comment">// Reset &#x27;active&#x27; flag.</span></span><br><span class="line">            cancelRefresh(ex);</span><br><span class="line">            <span class="comment">// Propagate exception to caller.</span></span><br><span class="line">            <span class="keyword">throw</span> ex;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="comment">// Reset common introspection caches in Spring&#x27;s core, since we</span></span><br><span class="line">            <span class="comment">// might not ever need metadata for singleton beans anymore...</span></span><br><span class="line">            resetCommonCaches();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<center>🌵</center>]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring源码</title>
     <url>/2021/02/10/Spring%E6%BA%90%E7%A0%81/</url>
     <content><![CDATA[<p><img src="/2021/02/10/Spring%E6%BA%90%E7%A0%81/Spring-source.png" alt="Photo by destex on wallhaven.cc"></p>
@@ -588,35 +588,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
-    <title>Docker安装MySQL</title>
-    <url>/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/</url>
-    <content><![CDATA[<p><img src="/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/mysql.png"></p>
-<p>自从接触到 docker 之后，就想把所有组件都安装在上面，方便后面使用。今天开始折腾安装 MySQL，虽然目前公司项目使用 MySQL 非常少，但是我很喜欢 MySQL，哈哈。</p>
-<a id="more"></a>
-
-<h5 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 拉去最新版的 mysql</span></span><br><span class="line">sudo docker pull mysql</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>使用以上命令拉取最新版 MySQL</p>
-<h5 id="启动-MySQL"><a href="#启动-MySQL" class="headerlink" title="启动 MySQL"></a>启动 MySQL</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3306:3306 --name mysql-ck -v /usr/<span class="built_in">local</span>/mysql/conf:/etc/mysql/conf.d -v /usr/<span class="built_in">local</span>/mysql/logs:/logs -v /usr/<span class="built_in">local</span>/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.7</span><br><span class="line"></span><br><span class="line"><span class="comment"># -p 将 3306 端口映射到本机 3306 端口</span></span><br><span class="line"><span class="comment"># --name 后面跟 MySQL 别名</span></span><br><span class="line"><span class="comment"># -v MySQL 数据保存路径：/usr/local/mysql/conf:/etc/mysql/conf.d   将本机 /usr/local/mysql/conf 映射到 docker 的 /etc/mysql/conf.d 目录</span></span><br><span class="line"><span class="comment"># -e 设置初始密码</span></span><br><span class="line"><span class="comment"># -d 后台运行</span></span><br></pre></td></tr></table></figure>
-<p>启动 MySQL 成功之后，容器会返回一个 id 类似 <code>6d2b3575b78f67481300d01cd65ca47a2a1868f448f2a53bb68d7b056f7ef23d</code></p>
-<h5 id="进入-MySQL"><a href="#进入-MySQL" class="headerlink" title="进入 MySQL"></a>进入 MySQL</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> -it mysql bash</span><br><span class="line"><span class="comment"># 登录</span></span><br><span class="line">root@6d2b3575b78f:/<span class="comment"># mysql -uroot -proot</span></span><br><span class="line">mysql: [Warning] Using a password on the <span class="built_in">command</span> line interface can be insecure.</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 8</span><br><span class="line">Server version: 8.0.15 MySQL Community Server - GPL</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type <span class="string">&#x27;help;&#x27;</span> or <span class="string">&#x27;\h&#x27;</span> <span class="keyword">for</span> <span class="built_in">help</span>. Type <span class="string">&#x27;\c&#x27;</span> to clear the current input statement.</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="客户端安装"><a href="#客户端安装" class="headerlink" title="客户端安装"></a>客户端安装</h5><p>建议到<a class="link" href="https://www.navicat.com.cn/products/">官网<i class="fas fa-external-link-alt"></i></a>下载 navicat 客户端，当然条件允许的建议购买正版产品，实在不行就先下载下来，有半个月的试用期，体验一般，个人觉得他们家的产品用起来很不错。下载后解压，直接启动即可使用。</p>
-<p>此时就进入到我们熟悉的客户端了，接下来的操作就和在物理机上的操作是一样的了。虽然公司项目可能接触 MySQL 会很少，但是 MySQL 依然是很多公司数据存储不可替代的部分，所以嘛，好好学习，天天向上。</p>
-<p>今天没有加班，下班早早就溜了，最近加班比较多，希望程序狗们都能天天没 bug ,天天早下班。</p>
-<hr>
-<center>道理都懂，但做不到</center>
-
-
-]]></content>
-      <categories>
-        <category>Docker</category>
-        <category>Mysql</category>
-      </categories>
-      <tags>
-        <tag>Docker</tag>
-        <tag>Mysql</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>WebSocket</title>
     <url>/2021/03/08/WebSocket/</url>
     <content><![CDATA[<p><img src="/2021/03/08/WebSocket/websocket.png" alt="Photo by JustJon on wallhaven.cc"></p>
@@ -641,6 +612,49 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </categories>
       <tags>
         <tag>WebSocket</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Docker安装MySQL</title>
+    <url>/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/</url>
+    <content><![CDATA[<p><img src="/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/mysql.png"></p>
+<p>自从接触到 docker 之后，就想把所有组件都安装在上面，方便后面使用。今天开始折腾安装 MySQL，虽然目前公司项目使用 MySQL 非常少，但是我很喜欢 MySQL，哈哈。</p>
+<a id="more"></a>
+<h3 id="单机部署"><a href="#单机部署" class="headerlink" title="单机部署"></a>单机部署</h3><h5 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 拉去最新版的 mysql</span></span><br><span class="line">sudo docker pull mysql</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>使用以上命令拉取最新版 MySQL</p>
+<h5 id="启动-MySQL"><a href="#启动-MySQL" class="headerlink" title="启动 MySQL"></a>启动 MySQL</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3306:3306 --name mysql-ck -v /usr/<span class="built_in">local</span>/mysql/conf:/etc/mysql/conf.d -v /usr/<span class="built_in">local</span>/mysql/logs:/logs -v /usr/<span class="built_in">local</span>/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.7</span><br><span class="line"></span><br><span class="line"><span class="comment"># -p 将 3306 端口映射到本机 3306 端口</span></span><br><span class="line"><span class="comment"># --name 后面跟 MySQL 别名</span></span><br><span class="line"><span class="comment"># -v MySQL 数据保存路径：/usr/local/mysql/conf:/etc/mysql/conf.d   将本机 /usr/local/mysql/conf 映射到 docker 的 /etc/mysql/conf.d 目录</span></span><br><span class="line"><span class="comment"># -e 设置初始密码</span></span><br><span class="line"><span class="comment"># -d 后台运行</span></span><br></pre></td></tr></table></figure>
+<p>启动 MySQL 成功之后，容器会返回一个 id 类似 <code>6d2b3575b78f67481300d01cd65ca47a2a1868f448f2a53bb68d7b056f7ef23d</code></p>
+<h5 id="进入-MySQL"><a href="#进入-MySQL" class="headerlink" title="进入 MySQL"></a>进入 MySQL</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入</span></span><br><span class="line">sudo docker <span class="built_in">exec</span> -it mysql bash</span><br><span class="line"><span class="comment"># 登录</span></span><br><span class="line">root@6d2b3575b78f:/<span class="comment"># mysql -uroot -proot</span></span><br><span class="line">mysql: [Warning] Using a password on the <span class="built_in">command</span> line interface can be insecure.</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 8</span><br><span class="line">Server version: 8.0.15 MySQL Community Server - GPL</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type <span class="string">&#x27;help;&#x27;</span> or <span class="string">&#x27;\h&#x27;</span> <span class="keyword">for</span> <span class="built_in">help</span>. Type <span class="string">&#x27;\c&#x27;</span> to clear the current input statement.</span><br><span class="line"></span><br><span class="line">mysql&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="客户端安装"><a href="#客户端安装" class="headerlink" title="客户端安装"></a>客户端安装</h5><p>建议到<a class="link" href="https://www.navicat.com.cn/products/">官网<i class="fas fa-external-link-alt"></i></a>下载 navicat 客户端，当然条件允许的建议购买正版产品，实在不行就先下载下来，有半个月的试用期，体验一般，个人觉得他们家的产品用起来很不错。下载后解压，直接启动即可使用。</p>
+<h3 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h3><h4 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h4><p>Docker 部署 Mysql5.7 </p>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">## 设置server_id，一般设置为IP，注意要唯一</span><br><span class="line">server_id&#x3D;6</span><br><span class="line">## 复制过滤：也就是指定哪个数据库不用同步（mysql库一般不同步）</span><br><span class="line">binlog-ignore-db&#x3D;mysql</span><br><span class="line">## 开启二进制日志功能，可以随便取，最好有含义（关键就是这里了）</span><br><span class="line">log-bin&#x3D;replicas-mysql-bin</span><br><span class="line">## 为每个session分配的内存，在事务过程中用来存储二进制日志的缓存</span><br><span class="line">binlog_cache_size&#x3D;1M</span><br><span class="line">## 主从复制的格式（mixed,statement,row，默认格式是statement）</span><br><span class="line">binlog_format&#x3D;mixed</span><br><span class="line">## 二进制日志自动删除&#x2F;过期的天数。默认值为0，表示不自动删除。</span><br><span class="line">expire_logs_days&#x3D;7</span><br><span class="line">## 跳过主从复制中遇到的所有错误或指定类型的错误，避免slave端复制中断。</span><br><span class="line">## 如：1062错误是指一些主键重复，1032错误是因为主从数据库数据不一致</span><br><span class="line">slave_skip_errors&#x3D;1062</span><br></pre></td></tr></table></figure>
+<h4 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h4><p>指定不同的配置和端口启动两个容器</p>
+<blockquote>
+<p>docker run –name mysql-6 -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -v ~/develop/mysql/mysql-6/data:/var/lib/mysql -v ~/develop/mysql/mysql-6/conf/my.cnf:/etc/mysql/my.cnf mysql:5.7</p>
+</blockquote>
+<blockquote>
+<p>docker run –name mysql-7 -d -p 3307:3306 -e MYSQL_ROOT_PASSWORD=root -v ~/develop/mysql/mysql-7/data:/var/lib/mysql -v ~/develop/mysql/mysql-7/conf/my.cnf:/etc/mysql/my.cnf mysql:5.7</p>
+</blockquote>
+<h4 id="主节点"><a href="#主节点" class="headerlink" title="主节点"></a>主节点</h4><p>连接主节点授权</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">GRANT REPLICATION SLAVE ON *.* to &#39;sync&#39;@&#39;%&#39; identified by &#39;root&#39;;</span><br><span class="line"># 查看主节点状态</span><br><span class="line">show master status;</span><br></pre></td></tr></table></figure>
+<h4 id="IP"><a href="#IP" class="headerlink" title="IP"></a>IP</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker inspect --format &#39;&#123;&#123; .NetworkSettings.IPAddress &#125;&#125;&#39; &lt;container-ID&gt; </span><br></pre></td></tr></table></figure>
+<h4 id="从节点"><a href="#从节点" class="headerlink" title="从节点"></a>从节点</h4><p>连接主节点，指定主节点的地址信息</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">change master to master_host&#x3D;&#39;172.17.0.2&#39;,master_user&#x3D;&#39;sync&#39;,master_password&#x3D;&#39;root&#39;,master_log_file&#x3D;&#39;mysql-bin.000001&#39;,master_log_pos&#x3D;437,master_port&#x3D;3306;</span><br></pre></td></tr></table></figure>
+<p>开启从节点</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">reset slave;</span><br><span class="line"></span><br><span class="line">start slave;</span><br></pre></td></tr></table></figure>
+<h4 id><a href="#" class="headerlink" title></a></h4><p>今天没有加班，下班早早就溜了，最近加班比较多，希望程序狗们都能天天没 bug ,天天早下班。</p>
+<hr>
+<center>道理都懂，但做不到</center>
+
+
+]]></content>
+      <categories>
+        <category>Docker</category>
+        <category>Mysql</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+        <tag>Mysql</tag>
       </tags>
   </entry>
   <entry>
@@ -1376,6 +1390,48 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
+    <title>Nginx安装和使用</title>
+    <url>/2019/11/25/nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<p><img src="/2019/11/25/nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/nginx.png" alt="Photo by deleted on wallhaven.cc"></p>
+<p>nginx 是互联网公司必不可少的一个中间件。它不仅性能好，而且资源占用极低。nginx <a class="link" href="http://www.nginx.cn/doc/">中文文档<i class="fas fa-external-link-alt"></i></a>，<a class="link" href="http://nginx.org/en/download.html">官方下载地址<i class="fas fa-external-link-alt"></i></a></p>
+<a id="more"></a>
+
+
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 epel 源，如果 yum 安装时提示没有找到 nginx 的话</span></span><br><span class="line">yum install epel-release</span><br><span class="line"></span><br><span class="line">yum install nginx</span><br></pre></td></tr></table></figure>
+<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><h5 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx</span><br></pre></td></tr></table></figure>
+<h5 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -s stop</span><br></pre></td></tr></table></figure>
+<h5 id="重新加载配置"><a href="#重新加载配置" class="headerlink" title="重新加载配置"></a>重新加载配置</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
+<h5 id="配置检查"><a href="#配置检查" class="headerlink" title="配置检查"></a>配置检查</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>main 配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 指定 worker 进程的运行身份，如组不指定，默认和用户名同名</span></span><br><span class="line">user nginx;</span><br><span class="line"><span class="comment"># worker 进程的数量，通常为当前主机 cpu 物理核心数</span></span><br><span class="line">worker_processes auto;</span><br><span class="line"><span class="comment"># worker 进程能够打开的文件数量上限（支持的并发数如：65535）</span></span><br><span class="line">worker_rlimit_nofile number</span><br><span class="line">error_log /var/<span class="built_in">log</span>/nginx/error.log;</span><br><span class="line"><span class="comment"># 指定存储 nginx 主进程 PID 的文件路径</span></span><br><span class="line">pid /run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.</span></span><br><span class="line"><span class="comment"># 指明包含进来的其他配置文件片段</span></span><br><span class="line">include /usr/share/nginx/modules/*.conf;</span><br><span class="line"><span class="comment"># 后台执行，默认 on 开启，off 则关闭，适合调试使用</span></span><br><span class="line">daemon off;</span><br><span class="line"><span class="comment"># 是否以 master/worker 模式运行，默认 on ，off 将不启动 worker</span></span><br><span class="line">master_process on|off</span><br></pre></td></tr></table></figure>
+<p>events 配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">events&#123;</span><br><span class="line">      &#125;</span><br><span class="line"><span class="comment"># 参数</span></span><br><span class="line"><span class="comment"># 每个 worker 进程所能够打开的最大并发链接数数量</span></span><br><span class="line"><span class="comment"># 总最大并发数：worker_processes * worker_connections</span></span><br><span class="line">worker_connections number</span><br><span class="line"><span class="comment"># 并发连接请求处理方式，默认选择最优 epoll</span></span><br><span class="line">use epoll/select</span><br><span class="line"><span class="comment"># 处理新连接请求方法，on 指 worker 轮流处理新请求，off 指每个新请求到达会通知（唤醒）所有 worker 进程，但是只有一个进程可以获得连接，造成‘惊群’，影响性能。</span></span><br><span class="line">accept_mutex on | off</span><br></pre></td></tr></table></figure>
+<p>http 配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">http&#123;</span><br><span class="line">    <span class="comment"># 各个 server 的公共配置</span></span><br><span class="line">    server&#123;</span><br><span class="line">      <span class="comment"># 每个 server 用于定义一个虚拟主机  </span></span><br><span class="line">    &#125;</span><br><span class="line">    server&#123;</span><br><span class="line">        <span class="comment"># 当前虚拟主机监听的端口</span></span><br><span class="line">        listen IP:PORT                       <span class="comment"># ipV4 地址</span></span><br><span class="line">        listen       [::]:80 default_server; <span class="comment"># ipV6 地址</span></span><br><span class="line">        <span class="comment"># 当前虚拟主机名称 eg：www.baidu.com</span></span><br><span class="line">        server_name 虚拟主机名</span><br><span class="line">        <span class="comment"># root：server 虚拟主机下的根目录</span></span><br><span class="line">        root        主目录</span><br><span class="line">        location [OPERATOR] URL &#123;  <span class="comment"># 指定 URL 的特性</span></span><br><span class="line">            <span class="keyword">if</span> CONDITION&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>server_name</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1. 虚拟主机名称后可以跟多个由空白字符分割的字符串</span><br><span class="line">2. 支持 * 通配任意长度的任意字符：server_name *.baidu.com www.baidu.*</span><br><span class="line">3. 支持 ~ 起始的字符做正则表达式匹配，但是存在性能问题：server_name ~^www\d+\.baidu\.com$</span><br><span class="line">匹配优先级：</span><br><span class="line">a. 字符串精确匹。b. 左侧 * 通配符。c. 右侧 * 通配符 eg:com.www.baidu.* 。 d. 正则。e. defult_server</span><br></pre></td></tr></table></figure>
+<p>location 配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在一个 sever 中 location 配置段可存在多个，用于实现从 uri 到文件系统的路径映射，nginx 会根据用户请求的 uri 来检查定义的所有 location,并找出一个最佳匹配进行应用。</span></span><br><span class="line">location [ = | ~ | ~* | ^~ ] uri &#123; ... &#125;</span><br><span class="line">location @name &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<p>location 中也有 root 路径，当请求是具体的 location 指向的路径时，走 location 中的 root 目录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 如果访问 http:192.168.31.107/news 则访问的时 location 指向的 /usr/local/html/news 目录下的文件，不带路径则访问的是 server 下 root 目录下的文件</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80 default_server;</span><br><span class="line">        server_name  _;</span><br><span class="line">        root        /usr/<span class="built_in">local</span>/html;</span><br><span class="line">        location /news &#123;</span><br><span class="line">                root /usr/<span class="built_in">local</span>/html</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>路径解析</p>
+<blockquote>
+<p>在 location 中指定路径有两种方式，一种是 root，一种是 alias。它们之间的区别是：<br>root 方式处理结果 = root 路径 + location 路径<br>alias 方式处理结果 = alias 路径直接替换 location 路径。</p>
+</blockquote>
+<p>匹配：<br><code>=</code> ：对 URL 精确匹配；</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">location = /&#123;  &#125;  只能精确匹配 http:fengzhu.top/  </span><br></pre></td></tr></table></figure>
+<p><code>^~</code>：对 URL　的最右边部分做匹配检查，不区分字符大小写<br><code>~</code>：对 URL 做正则匹配，区分大小写<br><code>~*</code>：对 URL 做正则匹配，不区分大小写<br>不带符号：匹配起始于此 URL 的所有 URL<br>优先级：=,^<del>,</del>/~*,不带符号</p>
+<p><strong>还是要自己配置试试，才能知道具体是怎么运行的</strong></p>
+<hr>
+<center>just do it</center>]]></content>
+      <categories>
+        <category>Nginx</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RabbitMQ延时队列</title>
     <url>/2019/11/02/rabbitMQ%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/</url>
     <content><![CDATA[<p><img src="/2019/11/02/rabbitMQ%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/rabbitMqDelayQueue.png" alt="Photo by on Unsplash"></p>
@@ -1427,48 +1483,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       <tags>
         <tag>MQ</tag>
         <tag>RabbitMQ</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Nginx安装和使用</title>
-    <url>/2019/11/25/nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<p><img src="/2019/11/25/nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/nginx.png" alt="Photo by deleted on wallhaven.cc"></p>
-<p>nginx 是互联网公司必不可少的一个中间件。它不仅性能好，而且资源占用极低。nginx <a class="link" href="http://www.nginx.cn/doc/">中文文档<i class="fas fa-external-link-alt"></i></a>，<a class="link" href="http://nginx.org/en/download.html">官方下载地址<i class="fas fa-external-link-alt"></i></a></p>
-<a id="more"></a>
-
-
-<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 epel 源，如果 yum 安装时提示没有找到 nginx 的话</span></span><br><span class="line">yum install epel-release</span><br><span class="line"></span><br><span class="line">yum install nginx</span><br></pre></td></tr></table></figure>
-<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><h5 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx</span><br></pre></td></tr></table></figure>
-<h5 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -s stop</span><br></pre></td></tr></table></figure>
-<h5 id="重新加载配置"><a href="#重新加载配置" class="headerlink" title="重新加载配置"></a>重新加载配置</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
-<h5 id="配置检查"><a href="#配置检查" class="headerlink" title="配置检查"></a>配置检查</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
-<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>main 配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 指定 worker 进程的运行身份，如组不指定，默认和用户名同名</span></span><br><span class="line">user nginx;</span><br><span class="line"><span class="comment"># worker 进程的数量，通常为当前主机 cpu 物理核心数</span></span><br><span class="line">worker_processes auto;</span><br><span class="line"><span class="comment"># worker 进程能够打开的文件数量上限（支持的并发数如：65535）</span></span><br><span class="line">worker_rlimit_nofile number</span><br><span class="line">error_log /var/<span class="built_in">log</span>/nginx/error.log;</span><br><span class="line"><span class="comment"># 指定存储 nginx 主进程 PID 的文件路径</span></span><br><span class="line">pid /run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.</span></span><br><span class="line"><span class="comment"># 指明包含进来的其他配置文件片段</span></span><br><span class="line">include /usr/share/nginx/modules/*.conf;</span><br><span class="line"><span class="comment"># 后台执行，默认 on 开启，off 则关闭，适合调试使用</span></span><br><span class="line">daemon off;</span><br><span class="line"><span class="comment"># 是否以 master/worker 模式运行，默认 on ，off 将不启动 worker</span></span><br><span class="line">master_process on|off</span><br></pre></td></tr></table></figure>
-<p>events 配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">events&#123;</span><br><span class="line">      &#125;</span><br><span class="line"><span class="comment"># 参数</span></span><br><span class="line"><span class="comment"># 每个 worker 进程所能够打开的最大并发链接数数量</span></span><br><span class="line"><span class="comment"># 总最大并发数：worker_processes * worker_connections</span></span><br><span class="line">worker_connections number</span><br><span class="line"><span class="comment"># 并发连接请求处理方式，默认选择最优 epoll</span></span><br><span class="line">use epoll/select</span><br><span class="line"><span class="comment"># 处理新连接请求方法，on 指 worker 轮流处理新请求，off 指每个新请求到达会通知（唤醒）所有 worker 进程，但是只有一个进程可以获得连接，造成‘惊群’，影响性能。</span></span><br><span class="line">accept_mutex on | off</span><br></pre></td></tr></table></figure>
-<p>http 配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">http&#123;</span><br><span class="line">    <span class="comment"># 各个 server 的公共配置</span></span><br><span class="line">    server&#123;</span><br><span class="line">      <span class="comment"># 每个 server 用于定义一个虚拟主机  </span></span><br><span class="line">    &#125;</span><br><span class="line">    server&#123;</span><br><span class="line">        <span class="comment"># 当前虚拟主机监听的端口</span></span><br><span class="line">        listen IP:PORT                       <span class="comment"># ipV4 地址</span></span><br><span class="line">        listen       [::]:80 default_server; <span class="comment"># ipV6 地址</span></span><br><span class="line">        <span class="comment"># 当前虚拟主机名称 eg：www.baidu.com</span></span><br><span class="line">        server_name 虚拟主机名</span><br><span class="line">        <span class="comment"># root：server 虚拟主机下的根目录</span></span><br><span class="line">        root        主目录</span><br><span class="line">        location [OPERATOR] URL &#123;  <span class="comment"># 指定 URL 的特性</span></span><br><span class="line">            <span class="keyword">if</span> CONDITION&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>server_name</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1. 虚拟主机名称后可以跟多个由空白字符分割的字符串</span><br><span class="line">2. 支持 * 通配任意长度的任意字符：server_name *.baidu.com www.baidu.*</span><br><span class="line">3. 支持 ~ 起始的字符做正则表达式匹配，但是存在性能问题：server_name ~^www\d+\.baidu\.com$</span><br><span class="line">匹配优先级：</span><br><span class="line">a. 字符串精确匹。b. 左侧 * 通配符。c. 右侧 * 通配符 eg:com.www.baidu.* 。 d. 正则。e. defult_server</span><br></pre></td></tr></table></figure>
-<p>location 配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在一个 sever 中 location 配置段可存在多个，用于实现从 uri 到文件系统的路径映射，nginx 会根据用户请求的 uri 来检查定义的所有 location,并找出一个最佳匹配进行应用。</span></span><br><span class="line">location [ = | ~ | ~* | ^~ ] uri &#123; ... &#125;</span><br><span class="line">location @name &#123; ... &#125;</span><br></pre></td></tr></table></figure>
-<p>location 中也有 root 路径，当请求是具体的 location 指向的路径时，走 location 中的 root 目录</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 如果访问 http:192.168.31.107/news 则访问的时 location 指向的 /usr/local/html/news 目录下的文件，不带路径则访问的是 server 下 root 目录下的文件</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80 default_server;</span><br><span class="line">        server_name  _;</span><br><span class="line">        root        /usr/<span class="built_in">local</span>/html;</span><br><span class="line">        location /news &#123;</span><br><span class="line">                root /usr/<span class="built_in">local</span>/html</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>路径解析</p>
-<blockquote>
-<p>在 location 中指定路径有两种方式，一种是 root，一种是 alias。它们之间的区别是：<br>root 方式处理结果 = root 路径 + location 路径<br>alias 方式处理结果 = alias 路径直接替换 location 路径。</p>
-</blockquote>
-<p>匹配：<br><code>=</code> ：对 URL 精确匹配；</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">location = /&#123;  &#125;  只能精确匹配 http:fengzhu.top/  </span><br></pre></td></tr></table></figure>
-<p><code>^~</code>：对 URL　的最右边部分做匹配检查，不区分字符大小写<br><code>~</code>：对 URL 做正则匹配，区分大小写<br><code>~*</code>：对 URL 做正则匹配，不区分大小写<br>不带符号：匹配起始于此 URL 的所有 URL<br>优先级：=,^<del>,</del>/~*,不带符号</p>
-<p><strong>还是要自己配置试试，才能知道具体是怎么运行的</strong></p>
-<hr>
-<center>just do it</center>]]></content>
-      <categories>
-        <category>Nginx</category>
-      </categories>
-      <tags>
-        <tag>Nginx</tag>
       </tags>
   </entry>
   <entry>
@@ -1759,6 +1773,49 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
+    <title>timeline</title>
+    <url>/2019/03/25/timeline/</url>
+    <content><![CDATA[<p><img src="/2019/03/25/timeline/timeline.png"></p>
+<center>时间旅途</center>   
+
+<a id="more"></a>
+
+<p><img src="/2019/03/25/timeline/%E4%B8%80%E7%94%9F%E6%89%80%E7%88%B1.png"></p>
+<p>时间线</p>
+<hr>
+<p>2015 年 3 月 14 号，我们在一起了。</p>
+<p>那时我没有送她最爱的满天星</p>
+<p>我们喜欢在学校周围的街边散步，一走就是几个小时。</p>
+<p>感觉很开心。</p>
+<p>在最好的年纪一起开心大笑过，一起流过泪。</p>
+<p>市中心那家面馆</p>
+<p>健身房下面的那家冰激凌店，还有农场里没有全开的樱花。</p>
+<p>综合楼前的操场。</p>
+<p>时间过的很快，转眼就毕业了。</p>
+<p>时间走了，我们都在。</p>
+<p>我很幸运。</p>
+<hr>
+<p>现在</p>
+<p>我们一起徒步上过华山，虽然这辈子都不想在爬第二次，但是觉得很值得。</p>
+<p>6 月份的天在青海穿着棉袄</p>
+<p>我们饶了青海湖一圈。</p>
+<p>刚察很好玩，北方城市的沧桑和寂静给人不一样的感觉。</p>
+<p>在重庆吃火锅，你眼睛不小心进了辣椒油，吃完感觉没有嘴了。</p>
+<p>但我们还是默默都说还会再来。</p>
+<p>到洪崖洞挤过人，也看了网红轻轨。</p>
+<p>还有那个全是我们足迹的小岛。</p>
+<p>这只是开始。</p>
+<p>之前有些东西放在 aboutme, 本来是要给删了，但是想了下还是留下，就像中学时代的空间留言一样，那是当时时间的自己</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">##梦想</span><br><span class="line">做人如果没有梦想，跟咸鱼有什么区别？</span><br><span class="line"></span><br><span class="line">##旅途</span><br><span class="line">如果你足够幸运，年轻时候在巴黎居住过，那么此后无论你到哪里，巴黎都将一直跟着你。</span><br><span class="line"></span><br><span class="line">## 遗憾</span><br><span class="line">人生如果没有遗憾，那该多无聊？</span><br><span class="line"></span><br><span class="line">## 我</span><br><span class="line">good good study, day day up.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>we</category>
+      </categories>
+      <tags>
+        <tag>we</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SpringCloud</title>
     <url>/2019/04/18/springcloud/</url>
     <content><![CDATA[<p><img src="/2019/04/18/springcloud/springcloud.png" alt="大多数人的生活，是无数次选择的结果"></p>
@@ -1827,49 +1884,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </categories>
       <tags>
         <tag>SpringCloud</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>timeline</title>
-    <url>/2019/03/25/timeline/</url>
-    <content><![CDATA[<p><img src="/2019/03/25/timeline/timeline.png"></p>
-<center>时间旅途</center>   
-
-<a id="more"></a>
-
-<p><img src="/2019/03/25/timeline/%E4%B8%80%E7%94%9F%E6%89%80%E7%88%B1.png"></p>
-<p>时间线</p>
-<hr>
-<p>2015 年 3 月 14 号，我们在一起了。</p>
-<p>那时我没有送她最爱的满天星</p>
-<p>我们喜欢在学校周围的街边散步，一走就是几个小时。</p>
-<p>感觉很开心。</p>
-<p>在最好的年纪一起开心大笑过，一起流过泪。</p>
-<p>市中心那家面馆</p>
-<p>健身房下面的那家冰激凌店，还有农场里没有全开的樱花。</p>
-<p>综合楼前的操场。</p>
-<p>时间过的很快，转眼就毕业了。</p>
-<p>时间走了，我们都在。</p>
-<p>我很幸运。</p>
-<hr>
-<p>现在</p>
-<p>我们一起徒步上过华山，虽然这辈子都不想在爬第二次，但是觉得很值得。</p>
-<p>6 月份的天在青海穿着棉袄</p>
-<p>我们饶了青海湖一圈。</p>
-<p>刚察很好玩，北方城市的沧桑和寂静给人不一样的感觉。</p>
-<p>在重庆吃火锅，你眼睛不小心进了辣椒油，吃完感觉没有嘴了。</p>
-<p>但我们还是默默都说还会再来。</p>
-<p>到洪崖洞挤过人，也看了网红轻轨。</p>
-<p>还有那个全是我们足迹的小岛。</p>
-<p>这只是开始。</p>
-<p>之前有些东西放在 aboutme, 本来是要给删了，但是想了下还是留下，就像中学时代的空间留言一样，那是当时时间的自己</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">##梦想</span><br><span class="line">做人如果没有梦想，跟咸鱼有什么区别？</span><br><span class="line"></span><br><span class="line">##旅途</span><br><span class="line">如果你足够幸运，年轻时候在巴黎居住过，那么此后无论你到哪里，巴黎都将一直跟着你。</span><br><span class="line"></span><br><span class="line">## 遗憾</span><br><span class="line">人生如果没有遗憾，那该多无聊？</span><br><span class="line"></span><br><span class="line">## 我</span><br><span class="line">good good study, day day up.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>we</category>
-      </categories>
-      <tags>
-        <tag>we</tag>
       </tags>
   </entry>
   <entry>

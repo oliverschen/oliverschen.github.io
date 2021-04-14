@@ -3,6 +3,7 @@ title: SpringCloud
 date: 2019-04-18 22:09:55
 tags: SpringCloud
 category: SpringCloud
+comments: true
 ---
 
 ![大多数人的生活，是无数次选择的结果](springcloud/springcloud.png)

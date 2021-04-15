@@ -254,6 +254,121 @@
       </tags>
   </entry>
   <entry>
+    <title>RabbitMQ安装和使用</title>
+    <url>/2019/09/05/RabbitMQ%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<p><img src="/2019/09/05/RabbitMQ%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/rabbitmq.png" alt="Photo by Vadim Sadovski on Unsplash"></p>
+<p>作为消息中间件，MQ （Message Queue） 在系统中有至关重要的作用，在高并发场景下，MQ 异步处理请求，缓解系统高峰期压力。在系统之间的调用中解耦，降低各个系统之间的依赖，提交系统的可扩展性。在一写复杂业务处理时，进行异步处理，类似乐观锁，及时返回给用户操作状态，至于业务逻辑通知 MQ 之后在进行处理，提高用户体验，也提高了服务器的处理能力。</p>
+<a id="more"></a>
+
+
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>|  系统    |   版本   |<br>| —- | —- | —- |<br>| CenterOS |  7.6       |<br>|   RabbitMq  | 3.6.10    | </p>
+<p>因为 RabbitMQ 是 erlang 实现的，所以先要安装 erlang 环境。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 没有 wget 命令的先安装 wget</span></span><br><span class="line">yum -y install wget</span><br><span class="line"><span class="comment"># 下载</span></span><br><span class="line">wget http://www.rabbitmq.com/releases/erlang/erlang-19.0.4-1.el7.centos.x86_64.rpm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 升级包</span></span><br><span class="line">rpm -ivh erlang-19.0.4-1.el7.centos.x86_64.rpm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">yum -y install erlang</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载 rabbitmq</span></span><br><span class="line">wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.6/rabbitmq-server-3.6.6-1.el6.noarch.rpm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 mq</span></span><br><span class="line">yum -y install rabbitmq-server-3.6.6-1.el6.noarch.rpm</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在安装过程中碰到了缺少一些依赖包的情况，但是 Google 上都有解决方案，下载安装后可以解决。</p>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><h5 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/sbin</span><br><span class="line">service rabbitmq-server start</span><br><span class="line"><span class="comment"># 查看进程</span></span><br><span class="line">ps -ef | grep rabbitmq </span><br></pre></td></tr></table></figure>
+<h5 id="后台运行"><a href="#后台运行" class="headerlink" title="后台运行"></a>后台运行</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rabbitmq-server -detached</span><br></pre></td></tr></table></figure>
+<h5 id="开机启动"><a href="#开机启动" class="headerlink" title="开机启动"></a>开机启动</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chkconfig rabbitmq-server on</span><br></pre></td></tr></table></figure>
+<h5 id="安装-web-管理插件"><a href="#安装-web-管理插件" class="headerlink" title="安装 web 管理插件"></a>安装 web 管理插件</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rabbitmq-plugins <span class="built_in">enable</span> rabbitmq_management</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>访问： <a class="link" href="http://ip:15672/">http://ip:15672<i class="fas fa-external-link-alt"></i></a> 就可以进入到管理页面了</p>
+<h5 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h5><p>rabbitmq 有个默认的 guest/guest 用户，但是只能在 localhost 下访问，所以要创建一个用户来可以进行远程访问</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 创建用户</span></span><br><span class="line">abbitmqctl add_user admin admin</span><br><span class="line"><span class="comment"># 授予权限</span></span><br><span class="line">rabbitmqctl set_user_tags admin administrator</span><br><span class="line"><span class="comment"># 分配权限</span></span><br><span class="line">rabbitmqctl add_vhost admin</span><br><span class="line"></span><br><span class="line">rabbitmqctl set_permissions -p admin admin <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h5><ol>
+<li>Broker：可以理解成 rabbitmq 服务。</li>
+<li>vhost:  虚拟主机，一个 broker 可以创建多个 vhost，用作权限分离。</li>
+<li>Producer：消息生产者，消息的来源。</li>
+<li>Consumer：消息消费者，负责消费生产者生产的消息。</li>
+<li>Exchange：交换机，可以看作是一个消息的中转站。</li>
+<li>Queue：队列，消息的载体，消息会被投递到一个或者多个队列中。</li>
+<li>Binding：绑定，按照一定规则绑定交换机和队列。</li>
+<li>Routing Key：路由key，交换机根据这个关键字投递到对应的队列。</li>
+<li>Channel：通道，在 client 端每个链接，可以建立多个通道。</li>
+</ol>
+<h4 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h4><h5 id="简单队列"><a href="#简单队列" class="headerlink" title="简单队列"></a>简单队列</h5><p>生产者将消息推到队列，消费者从队列消费消息。一个生产者对应一个消费者。</p>
+<h6 id="work-模式"><a href="#work-模式" class="headerlink" title="work 模式"></a>work 模式</h6><p>一个生产者对应多个消费者，但是一个消息只能被一个消费者获取。</p>
+<ol>
+<li><p>创建一个 Direct 交换机</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExchangeConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> DirectExchange <span class="title">directExchange</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// params</span></span><br><span class="line">        <span class="comment">// 1. name:交换机名字</span></span><br><span class="line">        <span class="comment">// 2. durable:持久化，当为 true 时，在 mq 重启之后会重新加载此交换机</span></span><br><span class="line">        <span class="comment">// 3. autoDelete:自动删除，当交换机长时间不使用时，自动删除此交换机</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> DirectExchange(RabbitMqConfig.EXCHANGE_TEST,</span><br><span class="line">                <span class="keyword">true</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>配置</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RabbitMqConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String EXCHANGE_TEST = <span class="string">&quot;exchange_test&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String FIRST_QUEUE = <span class="string">&quot;first_queue&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SECOND_QUEUE = <span class="string">&quot;second_queue&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 队列key1*/</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String FIRST_ROUTING_KEY = <span class="string">&quot;first_routing_key&quot;</span>;</span><br><span class="line">    <span class="comment">/** 队列key2*/</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SECOND_ROUTING_KEY = <span class="string">&quot;second_routing_key&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ConnectionFactory connectionFactory;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ExchangeConfig exchangeConfig;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> QueueConfig queueConfig;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RabbitMqConfig</span><span class="params">(ConnectionFactory connectionFactory, ExchangeConfig exchangeConfig,</span></span></span><br><span class="line"><span class="function"><span class="params">                          QueueConfig queueConfig)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.connectionFactory = connectionFactory;</span><br><span class="line">        <span class="keyword">this</span>.exchangeConfig = exchangeConfig;</span><br><span class="line">        <span class="keyword">this</span>.queueConfig = queueConfig;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> SimpleMessageListenerContainer <span class="title">simpleMessageListenerContainer</span><span class="params">()</span></span>&#123;</span><br><span class="line">        SimpleMessageListenerContainer simpleMessageListenerContainer = <span class="keyword">new</span> SimpleMessageListenerContainer(connectionFactory);</span><br><span class="line">        simpleMessageListenerContainer.addQueues(queueConfig.firstQueue());</span><br><span class="line">        simpleMessageListenerContainer.setExposeListenerChannel(<span class="keyword">true</span>);</span><br><span class="line">        simpleMessageListenerContainer.setMaxConcurrentConsumers(<span class="number">5</span>);</span><br><span class="line">        simpleMessageListenerContainer.setConcurrentConsumers(<span class="number">1</span>);</span><br><span class="line">        <span class="comment">//设置确认模式手工确认</span></span><br><span class="line">        simpleMessageListenerContainer.setAcknowledgeMode(AcknowledgeMode.MANUAL);</span><br><span class="line">        <span class="keyword">return</span> simpleMessageListenerContainer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RabbitTemplate <span class="title">rabbitTemplate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        RabbitTemplate template = <span class="keyword">new</span> RabbitTemplate(connectionFactory);</span><br><span class="line">        template.setConfirmCallback(msgSendConfirmCallBack());</span><br><span class="line">        <span class="keyword">return</span> template;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> AckCallback <span class="title">msgSendConfirmCallBack</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> AckCallback();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据指定的 key 将具体的队列绑定到 direct 交换机</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Binding <span class="title">firstBinding</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queueConfig.firstQueue())</span><br><span class="line">                             .to(exchangeConfig.directExchange())</span><br><span class="line">                             .with(RabbitMqConfig.FIRST_ROUTING_KEY);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Binding <span class="title">secondBinding</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queueConfig.secondQueue())</span><br><span class="line">                             .to(exchangeConfig.directExchange())</span><br><span class="line">                             .with(RabbitMqConfig.SECOND_ROUTING_KEY);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>队列</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QueueConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Queue <span class="title">firstQueue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// params</span></span><br><span class="line">        <span class="comment">// 1. name:队列名称</span></span><br><span class="line">        <span class="comment">// 2. durable:持久化，当为 true 时，在 mq 重启之后此队列自动加载</span></span><br><span class="line">        <span class="comment">// 3. exclusive:排他队列，当为 true 时，只有队列声明者才能调用</span></span><br><span class="line">        <span class="comment">// 4. autoDelete:自动删除，当为 true 时，自动删除长时间不适用的队列</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Queue(RabbitMqConfig.FIRST_QUEUE,</span><br><span class="line">                <span class="keyword">true</span>,<span class="keyword">false</span>,<span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Queue <span class="title">secondQueue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Queue(RabbitMqConfig.SECOND_QUEUE,</span><br><span class="line">                <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>回调</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AckCallback</span> <span class="keyword">implements</span> <span class="title">RabbitTemplate</span>.<span class="title">ConfirmCallback</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">confirm</span><span class="params">(CorrelationData correlationData, <span class="keyword">boolean</span> ack, String cause)</span> </span>&#123;</span><br><span class="line">        log.info(<span class="string">&quot;AckCallback 回调，ID:&#123;&#125;&quot;</span>,correlationData);</span><br><span class="line">        <span class="keyword">if</span> (ack) &#123;</span><br><span class="line">            log.info(<span class="string">&quot;消息消费成功&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            log.info(<span class="string">&quot;消息消费失败，原因：&#123;&#125;&quot;</span>,cause);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>消息消费完之后会有回调</p>
+</li>
+<li><p>生产者</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sender</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    CorrelationData correlationData = <span class="keyword">new</span> CorrelationData(<span class="string">&quot;123456789&quot;</span>);</span><br><span class="line">    String msg = <span class="string">&quot;第一次发送消息&quot;</span>;</span><br><span class="line">    rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_TEST,</span><br><span class="line">            RabbitMqConfig.SECOND_ROUTING_KEY,msg,correlationData);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我这里直接用 JUnit 进行测试</p>
+</li>
+<li><p>消费费者</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MqConsumer</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 监听的队列名称，链接工厂实例</span></span><br><span class="line">    <span class="meta">@RabbitListener(queues = &#123;RabbitMqConfig.SECOND_QUEUE, RabbitMqConfig.FIRST_QUEUE&#125;,</span></span><br><span class="line"><span class="meta">            containerFactory = &quot;rabbitListenerContainerFactory&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handlerMessage</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;消费成功&quot;</span> + msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 Direct 交换机中，一个交换机可以绑定多个队列，通过不同的路由 key 来指定消息发送到对应的队列中进行消费。当消费者启动时，会自动监听消费相应的消息。</p>
+</li>
+</ol>
+<h5 id="Fanout-交换机（订阅模式）"><a href="#Fanout-交换机（订阅模式）" class="headerlink" title="Fanout 交换机（订阅模式）"></a>Fanout 交换机（订阅模式）</h5><p>订阅模式类似公众号，推送一条消息之后，关注者都可以收到这天推送。</p>
+<ol>
+<li>枚举类</li>
+</ol>
+<p>交换机配置枚举类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">MqExchangeEnum</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    FANOUT_EXCHANGE_TEST(<span class="string">&quot;fanout_exchange_test&quot;</span>, <span class="string">&quot;fanout交换机&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String key;</span><br><span class="line">    <span class="keyword">private</span> String desc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>队列枚举类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">MqQueueEnum</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    FANOUT_QUEUE_A(<span class="string">&quot;fanout_queue_a&quot;</span>,<span class="string">&quot;fanout交换机队列1&quot;</span>),</span><br><span class="line">    FANOUT_QUEUE_B(<span class="string">&quot;fanout_queue_b&quot;</span>, <span class="string">&quot;fanout交换机队列2&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String key;</span><br><span class="line">    <span class="keyword">private</span> String desc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>交换机配置</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FanoutExchangeConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> FanoutExchange <span class="title">fanoutExchange</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> FanoutExchange(MqExchangeEnum.FANOUT_EXCHANGE_TEST.getKey(),</span><br><span class="line">                <span class="keyword">true</span>,<span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>绑定<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Binding <span class="title">fanBindingA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queueConfig.fanoutQueueA()).to(fanoutExchangeConfig.fanoutExchange());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Binding <span class="title">fanBindingB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queueConfig.fanoutQueueB()).to(fanoutExchangeConfig.fanoutExchange());</span><br></pre></td></tr></table></figure></li>
+<li>发送消息<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fanoutSender</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            CorrelationData correlationData = <span class="keyword">new</span> CorrelationData(i + <span class="string">&quot;消息&quot;</span>);</span><br><span class="line">            String msg = <span class="string">&quot;fanout exchange first test, time: &quot;</span> + System.currentTimeMillis() + <span class="string">&quot; . msg num: &quot;</span> + i;</span><br><span class="line">            rabbitTemplate.convertAndSend(MqExchangeEnum.FANOUT_EXCHANGE_TEST.getKey(),<span class="string">&quot;&quot;</span>,msg,correlationData);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+<li>消费消息<br>监听相应的队列，进行消息处理。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@RabbitListener(queues = &#123;&quot;fanout_queue_a&quot;, &quot;fanout_queue_b&quot;&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FanoutConsumer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RabbitHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;fanout exchange 消息内容：&quot;</span> + msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+fanout 交换机推送消息到所有绑定到它的队列，这里指定具体的路由也是不会生效的</li>
+</ol>
+<h5 id="Topic-交换机（匹配模式）"><a href="#Topic-交换机（匹配模式）" class="headerlink" title="Topic 交换机（匹配模式）"></a>Topic 交换机（匹配模式）</h5><p>topic 交换机绑定队列之后，可以根据路由 key 来匹配具体的队列，进行消息消费，以通配符的方式绑定到相应的队列，生产者发送相应的路由后，会按照规则匹配到具体的队列</p>
+<ol>
+<li>交换机配置</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TopicExchangeConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> TopicExchange <span class="title">topicExchange</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> TopicExchange(MqExchangeEnum.TOPIC_EXCHANGE_TEST.getKey());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>队列<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Queue <span class="title">topicQueueA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Queue(MqQueueEnum.TOPIC_QUEUE_A.getKey(),</span><br><span class="line">                <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Queue <span class="title">topicQueueB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Queue(MqQueueEnum.TOPIC_QUEUE_B.getKey(),</span><br><span class="line">            <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>路由</li>
+</ol>
+<blockquote>
+<p><code>#</code> 表示 零个或者多个单词，匹配任何字符， 以 # 作为路由，topic 交换机的工作模式会和 fanout 交换机工作模式相同</p>
+<ul>
+<li>  表示一个单词</li>
+</ul>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Binding <span class="title">topicBindingA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queueConfig.topicQueueA())</span><br><span class="line">                .to(topicExchangeConfig.topicExchange()).with(<span class="string">&quot;#.user.#&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Binding <span class="title">topicBindingB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> BindingBuilder.bind(queueConfig.topicQueueB())</span><br><span class="line">            .to(topicExchangeConfig.topicExchange()).with(<span class="string">&quot;topic.#&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>生产者<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">topicSender</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        String msg = <span class="string">&quot;top message:&quot;</span> + i;</span><br><span class="line">        rabbitTemplate.convertAndSend(MqExchangeEnum.TOPIC_EXCHANGE_TEST.getKey(), <span class="string">&quot;topic.user&quot;</span>, msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>消费者</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TopicConsumer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RabbitListener(queues = &quot;topic_queue_a&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">topicConsumerOne</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;topic_queue_a 1 消费&quot;</span> + msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RabbitListener(queues = &quot;topic_queue_b&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">topicConTow</span><span class="params">(String tow)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;topic_queue_b 2 消费&quot;</span> + tow);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>参考<a class="link" href="https://blog.csdn.net/zhuzhezhuzhe1/article/details/80454956">链接<i class="fas fa-external-link-alt"></i></a><br>参考<a class="link" href="https://www.kancloud.cn/digest/rabbitmq-for-java/122041">RabbitMq教程<i class="fas fa-external-link-alt"></i></a></p>
+<hr>
+<center>When life gives you lemons,make Lemonade</center>
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>MQ</category>
+        <category>RabbitMQ</category>
+      </categories>
+      <tags>
+        <tag>MQ</tag>
+        <tag>RabbitMQ</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux-常用命令</title>
     <url>/2020/01/01/Linux/</url>
     <content><![CDATA[<p><img src="/2020/01/01/Linux/linux.png" alt="Photo by kejsirajbek on wallhaven.cc"></p>
@@ -378,121 +493,6 @@
       </tags>
   </entry>
   <entry>
-    <title>RabbitMQ安装和使用</title>
-    <url>/2019/09/05/RabbitMQ%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<p><img src="/2019/09/05/RabbitMQ%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/rabbitmq.png" alt="Photo by Vadim Sadovski on Unsplash"></p>
-<p>作为消息中间件，MQ （Message Queue） 在系统中有至关重要的作用，在高并发场景下，MQ 异步处理请求，缓解系统高峰期压力。在系统之间的调用中解耦，降低各个系统之间的依赖，提交系统的可扩展性。在一写复杂业务处理时，进行异步处理，类似乐观锁，及时返回给用户操作状态，至于业务逻辑通知 MQ 之后在进行处理，提高用户体验，也提高了服务器的处理能力。</p>
-<a id="more"></a>
-
-
-<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>|  系统    |   版本   |<br>| —- | —- | —- |<br>| CenterOS |  7.6       |<br>|   RabbitMq  | 3.6.10    | </p>
-<p>因为 RabbitMQ 是 erlang 实现的，所以先要安装 erlang 环境。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 没有 wget 命令的先安装 wget</span></span><br><span class="line">yum -y install wget</span><br><span class="line"><span class="comment"># 下载</span></span><br><span class="line">wget http://www.rabbitmq.com/releases/erlang/erlang-19.0.4-1.el7.centos.x86_64.rpm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 升级包</span></span><br><span class="line">rpm -ivh erlang-19.0.4-1.el7.centos.x86_64.rpm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">yum -y install erlang</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载 rabbitmq</span></span><br><span class="line">wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.6/rabbitmq-server-3.6.6-1.el6.noarch.rpm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 mq</span></span><br><span class="line">yum -y install rabbitmq-server-3.6.6-1.el6.noarch.rpm</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>在安装过程中碰到了缺少一些依赖包的情况，但是 Google 上都有解决方案，下载安装后可以解决。</p>
-<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><h5 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/sbin</span><br><span class="line">service rabbitmq-server start</span><br><span class="line"><span class="comment"># 查看进程</span></span><br><span class="line">ps -ef | grep rabbitmq </span><br></pre></td></tr></table></figure>
-<h5 id="后台运行"><a href="#后台运行" class="headerlink" title="后台运行"></a>后台运行</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rabbitmq-server -detached</span><br></pre></td></tr></table></figure>
-<h5 id="开机启动"><a href="#开机启动" class="headerlink" title="开机启动"></a>开机启动</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chkconfig rabbitmq-server on</span><br></pre></td></tr></table></figure>
-<h5 id="安装-web-管理插件"><a href="#安装-web-管理插件" class="headerlink" title="安装 web 管理插件"></a>安装 web 管理插件</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rabbitmq-plugins <span class="built_in">enable</span> rabbitmq_management</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>访问： <a class="link" href="http://ip:15672/">http://ip:15672<i class="fas fa-external-link-alt"></i></a> 就可以进入到管理页面了</p>
-<h5 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h5><p>rabbitmq 有个默认的 guest/guest 用户，但是只能在 localhost 下访问，所以要创建一个用户来可以进行远程访问</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 创建用户</span></span><br><span class="line">abbitmqctl add_user admin admin</span><br><span class="line"><span class="comment"># 授予权限</span></span><br><span class="line">rabbitmqctl set_user_tags admin administrator</span><br><span class="line"><span class="comment"># 分配权限</span></span><br><span class="line">rabbitmqctl add_vhost admin</span><br><span class="line"></span><br><span class="line">rabbitmqctl set_permissions -p admin admin <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span> <span class="string">&quot;.*&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h5 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h5><ol>
-<li>Broker：可以理解成 rabbitmq 服务。</li>
-<li>vhost:  虚拟主机，一个 broker 可以创建多个 vhost，用作权限分离。</li>
-<li>Producer：消息生产者，消息的来源。</li>
-<li>Consumer：消息消费者，负责消费生产者生产的消息。</li>
-<li>Exchange：交换机，可以看作是一个消息的中转站。</li>
-<li>Queue：队列，消息的载体，消息会被投递到一个或者多个队列中。</li>
-<li>Binding：绑定，按照一定规则绑定交换机和队列。</li>
-<li>Routing Key：路由key，交换机根据这个关键字投递到对应的队列。</li>
-<li>Channel：通道，在 client 端每个链接，可以建立多个通道。</li>
-</ol>
-<h4 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h4><h5 id="简单队列"><a href="#简单队列" class="headerlink" title="简单队列"></a>简单队列</h5><p>生产者将消息推到队列，消费者从队列消费消息。一个生产者对应一个消费者。</p>
-<h6 id="work-模式"><a href="#work-模式" class="headerlink" title="work 模式"></a>work 模式</h6><p>一个生产者对应多个消费者，但是一个消息只能被一个消费者获取。</p>
-<ol>
-<li><p>创建一个 Direct 交换机</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExchangeConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> DirectExchange <span class="title">directExchange</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// params</span></span><br><span class="line">        <span class="comment">// 1. name:交换机名字</span></span><br><span class="line">        <span class="comment">// 2. durable:持久化，当为 true 时，在 mq 重启之后会重新加载此交换机</span></span><br><span class="line">        <span class="comment">// 3. autoDelete:自动删除，当交换机长时间不使用时，自动删除此交换机</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> DirectExchange(RabbitMqConfig.EXCHANGE_TEST,</span><br><span class="line">                <span class="keyword">true</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>配置</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RabbitMqConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String EXCHANGE_TEST = <span class="string">&quot;exchange_test&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String FIRST_QUEUE = <span class="string">&quot;first_queue&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SECOND_QUEUE = <span class="string">&quot;second_queue&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 队列key1*/</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String FIRST_ROUTING_KEY = <span class="string">&quot;first_routing_key&quot;</span>;</span><br><span class="line">    <span class="comment">/** 队列key2*/</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SECOND_ROUTING_KEY = <span class="string">&quot;second_routing_key&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ConnectionFactory connectionFactory;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ExchangeConfig exchangeConfig;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> QueueConfig queueConfig;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RabbitMqConfig</span><span class="params">(ConnectionFactory connectionFactory, ExchangeConfig exchangeConfig,</span></span></span><br><span class="line"><span class="function"><span class="params">                          QueueConfig queueConfig)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.connectionFactory = connectionFactory;</span><br><span class="line">        <span class="keyword">this</span>.exchangeConfig = exchangeConfig;</span><br><span class="line">        <span class="keyword">this</span>.queueConfig = queueConfig;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> SimpleMessageListenerContainer <span class="title">simpleMessageListenerContainer</span><span class="params">()</span></span>&#123;</span><br><span class="line">        SimpleMessageListenerContainer simpleMessageListenerContainer = <span class="keyword">new</span> SimpleMessageListenerContainer(connectionFactory);</span><br><span class="line">        simpleMessageListenerContainer.addQueues(queueConfig.firstQueue());</span><br><span class="line">        simpleMessageListenerContainer.setExposeListenerChannel(<span class="keyword">true</span>);</span><br><span class="line">        simpleMessageListenerContainer.setMaxConcurrentConsumers(<span class="number">5</span>);</span><br><span class="line">        simpleMessageListenerContainer.setConcurrentConsumers(<span class="number">1</span>);</span><br><span class="line">        <span class="comment">//设置确认模式手工确认</span></span><br><span class="line">        simpleMessageListenerContainer.setAcknowledgeMode(AcknowledgeMode.MANUAL);</span><br><span class="line">        <span class="keyword">return</span> simpleMessageListenerContainer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RabbitTemplate <span class="title">rabbitTemplate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        RabbitTemplate template = <span class="keyword">new</span> RabbitTemplate(connectionFactory);</span><br><span class="line">        template.setConfirmCallback(msgSendConfirmCallBack());</span><br><span class="line">        <span class="keyword">return</span> template;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> AckCallback <span class="title">msgSendConfirmCallBack</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> AckCallback();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据指定的 key 将具体的队列绑定到 direct 交换机</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Binding <span class="title">firstBinding</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queueConfig.firstQueue())</span><br><span class="line">                             .to(exchangeConfig.directExchange())</span><br><span class="line">                             .with(RabbitMqConfig.FIRST_ROUTING_KEY);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Binding <span class="title">secondBinding</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queueConfig.secondQueue())</span><br><span class="line">                             .to(exchangeConfig.directExchange())</span><br><span class="line">                             .with(RabbitMqConfig.SECOND_ROUTING_KEY);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>队列</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QueueConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Queue <span class="title">firstQueue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// params</span></span><br><span class="line">        <span class="comment">// 1. name:队列名称</span></span><br><span class="line">        <span class="comment">// 2. durable:持久化，当为 true 时，在 mq 重启之后此队列自动加载</span></span><br><span class="line">        <span class="comment">// 3. exclusive:排他队列，当为 true 时，只有队列声明者才能调用</span></span><br><span class="line">        <span class="comment">// 4. autoDelete:自动删除，当为 true 时，自动删除长时间不适用的队列</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Queue(RabbitMqConfig.FIRST_QUEUE,</span><br><span class="line">                <span class="keyword">true</span>,<span class="keyword">false</span>,<span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Queue <span class="title">secondQueue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Queue(RabbitMqConfig.SECOND_QUEUE,</span><br><span class="line">                <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>回调</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AckCallback</span> <span class="keyword">implements</span> <span class="title">RabbitTemplate</span>.<span class="title">ConfirmCallback</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">confirm</span><span class="params">(CorrelationData correlationData, <span class="keyword">boolean</span> ack, String cause)</span> </span>&#123;</span><br><span class="line">        log.info(<span class="string">&quot;AckCallback 回调，ID:&#123;&#125;&quot;</span>,correlationData);</span><br><span class="line">        <span class="keyword">if</span> (ack) &#123;</span><br><span class="line">            log.info(<span class="string">&quot;消息消费成功&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            log.info(<span class="string">&quot;消息消费失败，原因：&#123;&#125;&quot;</span>,cause);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>消息消费完之后会有回调</p>
-</li>
-<li><p>生产者</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sender</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    CorrelationData correlationData = <span class="keyword">new</span> CorrelationData(<span class="string">&quot;123456789&quot;</span>);</span><br><span class="line">    String msg = <span class="string">&quot;第一次发送消息&quot;</span>;</span><br><span class="line">    rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_TEST,</span><br><span class="line">            RabbitMqConfig.SECOND_ROUTING_KEY,msg,correlationData);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我这里直接用 JUnit 进行测试</p>
-</li>
-<li><p>消费费者</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MqConsumer</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 监听的队列名称，链接工厂实例</span></span><br><span class="line">    <span class="meta">@RabbitListener(queues = &#123;RabbitMqConfig.SECOND_QUEUE, RabbitMqConfig.FIRST_QUEUE&#125;,</span></span><br><span class="line"><span class="meta">            containerFactory = &quot;rabbitListenerContainerFactory&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handlerMessage</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;消费成功&quot;</span> + msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在 Direct 交换机中，一个交换机可以绑定多个队列，通过不同的路由 key 来指定消息发送到对应的队列中进行消费。当消费者启动时，会自动监听消费相应的消息。</p>
-</li>
-</ol>
-<h5 id="Fanout-交换机（订阅模式）"><a href="#Fanout-交换机（订阅模式）" class="headerlink" title="Fanout 交换机（订阅模式）"></a>Fanout 交换机（订阅模式）</h5><p>订阅模式类似公众号，推送一条消息之后，关注者都可以收到这天推送。</p>
-<ol>
-<li>枚举类</li>
-</ol>
-<p>交换机配置枚举类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">MqExchangeEnum</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    FANOUT_EXCHANGE_TEST(<span class="string">&quot;fanout_exchange_test&quot;</span>, <span class="string">&quot;fanout交换机&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String key;</span><br><span class="line">    <span class="keyword">private</span> String desc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>队列枚举类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">MqQueueEnum</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    FANOUT_QUEUE_A(<span class="string">&quot;fanout_queue_a&quot;</span>,<span class="string">&quot;fanout交换机队列1&quot;</span>),</span><br><span class="line">    FANOUT_QUEUE_B(<span class="string">&quot;fanout_queue_b&quot;</span>, <span class="string">&quot;fanout交换机队列2&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String key;</span><br><span class="line">    <span class="keyword">private</span> String desc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>交换机配置</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FanoutExchangeConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> FanoutExchange <span class="title">fanoutExchange</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> FanoutExchange(MqExchangeEnum.FANOUT_EXCHANGE_TEST.getKey(),</span><br><span class="line">                <span class="keyword">true</span>,<span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>绑定<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Binding <span class="title">fanBindingA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queueConfig.fanoutQueueA()).to(fanoutExchangeConfig.fanoutExchange());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Binding <span class="title">fanBindingB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queueConfig.fanoutQueueB()).to(fanoutExchangeConfig.fanoutExchange());</span><br></pre></td></tr></table></figure></li>
-<li>发送消息<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fanoutSender</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            CorrelationData correlationData = <span class="keyword">new</span> CorrelationData(i + <span class="string">&quot;消息&quot;</span>);</span><br><span class="line">            String msg = <span class="string">&quot;fanout exchange first test, time: &quot;</span> + System.currentTimeMillis() + <span class="string">&quot; . msg num: &quot;</span> + i;</span><br><span class="line">            rabbitTemplate.convertAndSend(MqExchangeEnum.FANOUT_EXCHANGE_TEST.getKey(),<span class="string">&quot;&quot;</span>,msg,correlationData);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
-<li>消费消息<br>监听相应的队列，进行消息处理。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@RabbitListener(queues = &#123;&quot;fanout_queue_a&quot;, &quot;fanout_queue_b&quot;&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FanoutConsumer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RabbitHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;fanout exchange 消息内容：&quot;</span> + msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-fanout 交换机推送消息到所有绑定到它的队列，这里指定具体的路由也是不会生效的</li>
-</ol>
-<h5 id="Topic-交换机（匹配模式）"><a href="#Topic-交换机（匹配模式）" class="headerlink" title="Topic 交换机（匹配模式）"></a>Topic 交换机（匹配模式）</h5><p>topic 交换机绑定队列之后，可以根据路由 key 来匹配具体的队列，进行消息消费，以通配符的方式绑定到相应的队列，生产者发送相应的路由后，会按照规则匹配到具体的队列</p>
-<ol>
-<li>交换机配置</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TopicExchangeConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> TopicExchange <span class="title">topicExchange</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> TopicExchange(MqExchangeEnum.TOPIC_EXCHANGE_TEST.getKey());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>队列<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Queue <span class="title">topicQueueA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Queue(MqQueueEnum.TOPIC_QUEUE_A.getKey(),</span><br><span class="line">                <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Queue <span class="title">topicQueueB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Queue(MqQueueEnum.TOPIC_QUEUE_B.getKey(),</span><br><span class="line">            <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>路由</li>
-</ol>
-<blockquote>
-<p><code>#</code> 表示 零个或者多个单词，匹配任何字符， 以 # 作为路由，topic 交换机的工作模式会和 fanout 交换机工作模式相同</p>
-<ul>
-<li>  表示一个单词</li>
-</ul>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Binding <span class="title">topicBindingA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(queueConfig.topicQueueA())</span><br><span class="line">                .to(topicExchangeConfig.topicExchange()).with(<span class="string">&quot;#.user.#&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Binding <span class="title">topicBindingB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> BindingBuilder.bind(queueConfig.topicQueueB())</span><br><span class="line">            .to(topicExchangeConfig.topicExchange()).with(<span class="string">&quot;topic.#&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol start="4">
-<li>生产者<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">topicSender</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        String msg = <span class="string">&quot;top message:&quot;</span> + i;</span><br><span class="line">        rabbitTemplate.convertAndSend(MqExchangeEnum.TOPIC_EXCHANGE_TEST.getKey(), <span class="string">&quot;topic.user&quot;</span>, msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>消费者</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TopicConsumer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RabbitListener(queues = &quot;topic_queue_a&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">topicConsumerOne</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;topic_queue_a 1 消费&quot;</span> + msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RabbitListener(queues = &quot;topic_queue_b&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">topicConTow</span><span class="params">(String tow)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;topic_queue_b 2 消费&quot;</span> + tow);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>参考<a class="link" href="https://blog.csdn.net/zhuzhezhuzhe1/article/details/80454956">链接<i class="fas fa-external-link-alt"></i></a><br>参考<a class="link" href="https://www.kancloud.cn/digest/rabbitmq-for-java/122041">RabbitMq教程<i class="fas fa-external-link-alt"></i></a></p>
-<hr>
-<center>When life gives you lemons,make Lemonade</center>
-
-
-
-
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>MQ</category>
-        <category>RabbitMQ</category>
-      </categories>
-      <tags>
-        <tag>MQ</tag>
-        <tag>RabbitMQ</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>SpringBoot源码</title>
     <url>/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/</url>
     <content><![CDATA[<p><img src="/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/SpringBoot.png" alt="Photo by destex on JustJon"></p>
@@ -588,6 +588,33 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
+    <title>WebSocket</title>
+    <url>/2021/03/08/WebSocket/</url>
+    <content><![CDATA[<p><img src="/2021/03/08/WebSocket/websocket.png" alt="Photo by JustJon on wallhaven.cc"></p>
+<p>WebSocket 协议建立的是一个长连接，Http 协议是浏览器通过主动请求服务端建立连接获取数据，而 WebScoket 协议服务端可以实现主动向浏览器推送数据服务，浏览器也可以主动向服务端发生请求，它是一个全双工通信协议。WebSocket 协议在第一次连接时需要通过 Http 协议进行建立，建立成功之后通过 TCP 进行数据交换。在一些需要即使获取服务端信息的场景下，如果使用 Http 只能采用轮训的方式来获取，在及时性和资源方面都不友好，而通过 WebSocket 可以立即收到服务端的推送消息。</p>
+<a id="more"></a>
+<h3 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h3><p>Socket：一组系统为了避免直接操作底层 TCP/UDP 协议而提供的 API 接口。在通过网络层 IP 协议找到对应的主机和应用程序。<br>WebSocket：和 Http 一样，是应用层协议。首次建立连接时需要通过 Http 进行连接，连接建立成功后通过 TCP 进行通讯。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><h4 id="gradle-坐标"><a href="#gradle-坐标" class="headerlink" title="gradle 坐标"></a>gradle 坐标</h4><figure class="highlight"><table><tr><td class="code"><pre><span class="line">implementation &#x27;org.springframework.boot:spring-boot-starter-websocket&#x27;</span><br></pre></td></tr></table></figure>
+<h4 id="启动类"><a href="#启动类" class="headerlink" title="启动类"></a>启动类</h4><p>开启 WebSocket 自动装配，和测试群发消息的 API</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@EnableWebSocket</span> <span class="comment">// 开启 WebSocket</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebSocketApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(DemoGradleApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> WsService wsService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 群发消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/publish/&#123;msg&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">publish</span><span class="params">(<span class="meta">@PathVariable(&quot;msg&quot;)</span> String msg)</span> </span>&#123;</span><br><span class="line">        wsService.publishMsg(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="配置类"><a href="#配置类" class="headerlink" title="配置类"></a>配置类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebScoketConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ServerEndpointExporter <span class="title">serverEndpointExporter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ServerEndpointExporter();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="WebSocket对外服务"><a href="#WebSocket对外服务" class="headerlink" title="WebSocket对外服务"></a>WebSocket对外服务</h4><p>这里需要注意使用 Spring 自动注入的时候只能在首次获取到注入值</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@ServerEndpoint(value = &quot;/ws/conn&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WsServer</span> <span class="keyword">implements</span> <span class="title">InitializingBean</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> WsService wsService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 建立webSocket连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@OnOpen</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onOpen</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        wsService.create(session);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 接收到前端消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@OnMessage</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMessage</span><span class="params">(Session session, String message)</span> </span>&#123;</span><br><span class="line">        wsService.receiveMessage(session, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发生异常</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@OnError</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Session session, Throwable throwable)</span> </span>&#123;</span><br><span class="line">        log.error(<span class="string">&quot;发生异常，sessionId：&#123;&#125;&quot;</span>, session.getUserPrincipal().getName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关闭连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@OnClose</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClose</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        wsService.close(session);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 实际有用的是静态变量，自动注入的只是在 bean 初始化完成时赋值给静态变量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> WsService wsServiceAuto;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * WebSocket 是多例的，启动之后客户端访问时创建的新的实例中 wsService 为空，</span></span><br><span class="line"><span class="comment">     * 这里初始化完成之后设置一个全局静态变量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        wsService = <span class="keyword">this</span>.wsServiceAuto;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="service类"><a href="#service类" class="headerlink" title="service类"></a>service类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WsService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 保存所有的WebSocket连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ConcurrentHashMap&lt;Integer, Session&gt; WEB_SOCKET_MAP = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">create</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        Integer sessionId = getSessionId(session);</span><br><span class="line">        WEB_SOCKET_MAP.put(sessionId, session);</span><br><span class="line">        log.info(<span class="string">&quot;新客户端&#123;&#125;连接成功&quot;</span>, sessionId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 收到消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">receiveMessage</span><span class="params">(Session session, String message)</span> </span>&#123;</span><br><span class="line">        log.info(<span class="string">&quot;客户端&#123;&#125;收到消息&#123;&#125;&quot;</span>, getSessionId(session), message);</span><br><span class="line">        sendMessage(session, message.replace(<span class="string">&quot;吗？&quot;</span>, <span class="string">&quot;！&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">(Session session, String msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            session.getBasicRemote().sendText(msg);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;error msg:&quot;</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">        log.info(<span class="string">&quot;发送消息成功：&#123;&#125;&quot;</span>, msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关闭</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        Integer sessionId = getSessionId(session);</span><br><span class="line">        WEB_SOCKET_MAP.remove(sessionId);</span><br><span class="line">        log.info(<span class="string">&quot;客户端&#123;&#125;关闭&quot;</span>, sessionId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 群发消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">publishMsg</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        WEB_SOCKET_MAP.forEach((key, value) -&gt; sendMessage(value, msg));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getSessionId</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Integer.valueOf(session.getId());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><ol>
+<li>使用<a class="link" href="http://www.websocket-test.com/">在线测试地址<i class="fas fa-external-link-alt"></i></a>测试 WebSocket 连接是否能正常建立。</li>
+<li>多开窗口，访问 <code>http://localhost:7777/publish</code> 测试群发消息。</li>
+</ol>
+<hr>
+<center>别拖延，都要还回来</center>]]></content>
+      <categories>
+        <category>WebSocket</category>
+      </categories>
+      <tags>
+        <tag>WebSocket</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Docker安装MySQL</title>
     <url>/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/</url>
     <content><![CDATA[<p><img src="/2019/04/09/docker%E5%AE%89%E8%A3%85MySQL/mysql.png"></p>
@@ -631,30 +658,21 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
-    <title>WebSocket</title>
-    <url>/2021/03/08/WebSocket/</url>
-    <content><![CDATA[<p><img src="/2021/03/08/WebSocket/websocket.png" alt="Photo by JustJon on wallhaven.cc"></p>
-<p>WebSocket 协议建立的是一个长连接，Http 协议是浏览器通过主动请求服务端建立连接获取数据，而 WebScoket 协议服务端可以实现主动向浏览器推送数据服务，浏览器也可以主动向服务端发生请求，它是一个全双工通信协议。WebSocket 协议在第一次连接时需要通过 Http 协议进行建立，建立成功之后通过 TCP 进行数据交换。在一些需要即使获取服务端信息的场景下，如果使用 Http 只能采用轮训的方式来获取，在及时性和资源方面都不友好，而通过 WebSocket 可以立即收到服务端的推送消息。</p>
+    <title>Java-fragment-knowledge</title>
+    <url>/2019/12/15/java-fragment-knowledge/</url>
+    <content><![CDATA[<p><img src="/2019/12/15/java-fragment-knowledge/java-konwlege.png" alt="Photo by vinc on wallhaven.cc"></p>
+<p>记录 Java 中一些有趣但是容易忽略的碎片知识。</p>
 <a id="more"></a>
-<h3 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h3><p>Socket：一组系统为了避免直接操作底层 TCP/UDP 协议而提供的 API 接口。在通过网络层 IP 协议找到对应的主机和应用程序。<br>WebSocket：和 Http 一样，是应用层协议。首次建立连接时需要通过 Http 进行连接，连接建立成功后通过 TCP 进行通讯。</p>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><h4 id="gradle-坐标"><a href="#gradle-坐标" class="headerlink" title="gradle 坐标"></a>gradle 坐标</h4><figure class="highlight"><table><tr><td class="code"><pre><span class="line">implementation &#x27;org.springframework.boot:spring-boot-starter-websocket&#x27;</span><br></pre></td></tr></table></figure>
-<h4 id="启动类"><a href="#启动类" class="headerlink" title="启动类"></a>启动类</h4><p>开启 WebSocket 自动装配，和测试群发消息的 API</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@EnableWebSocket</span> <span class="comment">// 开启 WebSocket</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebSocketApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(DemoGradleApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> WsService wsService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 群发消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/publish/&#123;msg&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">publish</span><span class="params">(<span class="meta">@PathVariable(&quot;msg&quot;)</span> String msg)</span> </span>&#123;</span><br><span class="line">        wsService.publishMsg(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="配置类"><a href="#配置类" class="headerlink" title="配置类"></a>配置类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebScoketConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ServerEndpointExporter <span class="title">serverEndpointExporter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ServerEndpointExporter();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="WebSocket对外服务"><a href="#WebSocket对外服务" class="headerlink" title="WebSocket对外服务"></a>WebSocket对外服务</h4><p>这里需要注意使用 Spring 自动注入的时候只能在首次获取到注入值</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@ServerEndpoint(value = &quot;/ws/conn&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WsServer</span> <span class="keyword">implements</span> <span class="title">InitializingBean</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> WsService wsService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 建立webSocket连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@OnOpen</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onOpen</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        wsService.create(session);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 接收到前端消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@OnMessage</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMessage</span><span class="params">(Session session, String message)</span> </span>&#123;</span><br><span class="line">        wsService.receiveMessage(session, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发生异常</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@OnError</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Session session, Throwable throwable)</span> </span>&#123;</span><br><span class="line">        log.error(<span class="string">&quot;发生异常，sessionId：&#123;&#125;&quot;</span>, session.getUserPrincipal().getName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关闭连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@OnClose</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClose</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        wsService.close(session);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 实际有用的是静态变量，自动注入的只是在 bean 初始化完成时赋值给静态变量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> WsService wsServiceAuto;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * WebSocket 是多例的，启动之后客户端访问时创建的新的实例中 wsService 为空，</span></span><br><span class="line"><span class="comment">     * 这里初始化完成之后设置一个全局静态变量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        wsService = <span class="keyword">this</span>.wsServiceAuto;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="service类"><a href="#service类" class="headerlink" title="service类"></a>service类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WsService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 保存所有的WebSocket连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ConcurrentHashMap&lt;Integer, Session&gt; WEB_SOCKET_MAP = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">create</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        Integer sessionId = getSessionId(session);</span><br><span class="line">        WEB_SOCKET_MAP.put(sessionId, session);</span><br><span class="line">        log.info(<span class="string">&quot;新客户端&#123;&#125;连接成功&quot;</span>, sessionId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 收到消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">receiveMessage</span><span class="params">(Session session, String message)</span> </span>&#123;</span><br><span class="line">        log.info(<span class="string">&quot;客户端&#123;&#125;收到消息&#123;&#125;&quot;</span>, getSessionId(session), message);</span><br><span class="line">        sendMessage(session, message.replace(<span class="string">&quot;吗？&quot;</span>, <span class="string">&quot;！&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">(Session session, String msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            session.getBasicRemote().sendText(msg);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;error msg:&quot;</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">        log.info(<span class="string">&quot;发送消息成功：&#123;&#125;&quot;</span>, msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关闭</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        Integer sessionId = getSessionId(session);</span><br><span class="line">        WEB_SOCKET_MAP.remove(sessionId);</span><br><span class="line">        log.info(<span class="string">&quot;客户端&#123;&#125;关闭&quot;</span>, sessionId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 群发消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">publishMsg</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        WEB_SOCKET_MAP.forEach((key, value) -&gt; sendMessage(value, msg));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getSessionId</span><span class="params">(Session session)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Integer.valueOf(session.getId());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><ol>
-<li>使用<a class="link" href="http://www.websocket-test.com/">在线测试地址<i class="fas fa-external-link-alt"></i></a>测试 WebSocket 连接是否能正常建立。</li>
-<li>多开窗口，访问 <code>http://localhost:7777/publish</code> 测试群发消息。</li>
-</ol>
-<hr>
-<center>别拖延，都要还回来</center>]]></content>
+
+<h3 id="碎片"><a href="#碎片" class="headerlink" title="碎片"></a>碎片</h3><h4 id="时间戳"><a href="#时间戳" class="headerlink" title="时间戳"></a>时间戳</h4><p>System.currentTimeMillis() 和 System.nanoTime()。前者精度不及后者精度高，一般高精度时间获取使用后者。这里有个具体<a class="link" href="https://blog.csdn.net/elky1982/article/details/4677365">测试<i class="fas fa-external-link-alt"></i></a></p>
+<center></center>
+
+]]></content>
       <categories>
-        <category>WebSocket</category>
+        <category>Java</category>
       </categories>
       <tags>
-        <tag>WebSocket</tag>
+        <tag>Java</tag>
       </tags>
   </entry>
   <entry>
@@ -719,24 +737,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       <tags>
         <tag>Docker</tag>
         <tag>Mongo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java-fragment-knowledge</title>
-    <url>/2019/12/15/java-fragment-knowledge/</url>
-    <content><![CDATA[<p><img src="/2019/12/15/java-fragment-knowledge/java-konwlege.png" alt="Photo by vinc on wallhaven.cc"></p>
-<p>记录 Java 中一些有趣但是容易忽略的碎片知识。</p>
-<a id="more"></a>
-
-<h3 id="碎片"><a href="#碎片" class="headerlink" title="碎片"></a>碎片</h3><h4 id="时间戳"><a href="#时间戳" class="headerlink" title="时间戳"></a>时间戳</h4><p>System.currentTimeMillis() 和 System.nanoTime()。前者精度不及后者精度高，一般高精度时间获取使用后者。这里有个具体<a class="link" href="https://blog.csdn.net/elky1982/article/details/4677365">测试<i class="fas fa-external-link-alt"></i></a></p>
-<center></center>
-
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
       </tags>
   </entry>
   <entry>
@@ -888,6 +888,58 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
+    <title>Manjaro输入密码卡死问题</title>
+    <url>/2019/04/24/manjaro%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><img src="/2019/04/24/manjaro%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98/%E5%AF%86%E7%A0%81%E5%8D%A1%E6%AD%BB.png" alt="年轻才不怕"></p>
+<p>最近玩 manjaro 还是听开心的，该有的软件都有了，用起来也挺方便的。事故发生在一次更新之后，我第二天晚上打开电脑输入密码，卡死在输密码的界面…（嗯…小问题，开启重启。我太天真了，还是没有解决问题）因为最近比较忙，手头也没有多余的电脑，就搁置了几天。最近查了各种资料，问了一些大佬，终于解决了问题。</p>
+<a id="more"></a>
+
+<h4 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h4><table>
+<thead>
+<tr>
+<th>ev</th>
+<th>version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>os</td>
+<td>Mangaro 18.0.4</td>
+</tr>
+<tr>
+<td>Kernel</td>
+<td>x86_64 Linux 4.19.34-1-MANJARO</td>
+</tr>
+<tr>
+<td>DE</td>
+<td>KDE 5.56.0 / Plasma 5.15.4</td>
+</tr>
+<tr>
+<td>GPU</td>
+<td>Mesa DRI Intel(R) Haswell Mobile</td>
+</tr>
+</tbody></table>
+<h4 id="问题定位"><a href="#问题定位" class="headerlink" title="问题定位"></a>问题定位</h4><p>Google 了很多同学碰到的问题，说卡死是双显卡导致的，因为我也是双显卡，所以准备先在这里排除问题。首先 CTRL + ALT + F3 进入到 tty3 终端。使用 root 登录之后就有问题了，所有的命令都报错</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">## 报错信息</span></span><br><span class="line"><span class="comment"># ll</span></span><br><span class="line">-bash: 口口口口口</span><br></pre></td></tr></table></figure>
+<p>基本所有命令都不能使用，很难受。后面请教了一些大佬说应该是环境变量的问题，后面的<code>口口口口</code> 应该是中文不支持原因，实际应该是下面的情况</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">## 报错信息</span></span><br><span class="line">-bash: 未找到命令</span><br></pre></td></tr></table></figure>
+<h4 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h4><p>上面的问题终于有了眉目，命令不存在应该是环境变量导致的，所以先要设置环境变量</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 编辑环境变量</span></span><br><span class="line">$ /usr/bin/vim /etc/profile</span><br><span class="line"><span class="comment"># 添加下面的值</span></span><br><span class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/sbin:/usr/<span class="built_in">local</span>/bin:/bin</span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+<p>到这里所有的命令应该就可以使用了。</p>
+<h4 id="更新显卡依赖"><a href="#更新显卡依赖" class="headerlink" title="更新显卡依赖"></a>更新显卡依赖</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pacman -S virtualgl lib32-virtualgl lib32-primus primus</span><br></pre></td></tr></table></figure>
+<p>更新完成之后</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
+<p>重启之后，终于进去了…切还是那样熟悉 。</p>
+<hr>
+<center>白马非马</center>
+]]></content>
+      <categories>
+        <category>Manjaro</category>
+      </categories>
+      <tags>
+        <tag>Manjaro</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Manjaro编译Openjdk</title>
     <url>/2019/04/09/manjaro%E7%BC%96%E8%AF%91openjdk/</url>
     <content><![CDATA[<p><img src="/2019/04/09/manjaro%E7%BC%96%E8%AF%91openjdk/openjdk.png"></p>
@@ -956,58 +1008,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
-    <title>Manjaro输入密码卡死问题</title>
-    <url>/2019/04/24/manjaro%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img src="/2019/04/24/manjaro%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E5%8D%A1%E6%AD%BB%E9%97%AE%E9%A2%98/%E5%AF%86%E7%A0%81%E5%8D%A1%E6%AD%BB.png" alt="年轻才不怕"></p>
-<p>最近玩 manjaro 还是听开心的，该有的软件都有了，用起来也挺方便的。事故发生在一次更新之后，我第二天晚上打开电脑输入密码，卡死在输密码的界面…（嗯…小问题，开启重启。我太天真了，还是没有解决问题）因为最近比较忙，手头也没有多余的电脑，就搁置了几天。最近查了各种资料，问了一些大佬，终于解决了问题。</p>
-<a id="more"></a>
-
-<h4 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h4><table>
-<thead>
-<tr>
-<th>ev</th>
-<th>version</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>os</td>
-<td>Mangaro 18.0.4</td>
-</tr>
-<tr>
-<td>Kernel</td>
-<td>x86_64 Linux 4.19.34-1-MANJARO</td>
-</tr>
-<tr>
-<td>DE</td>
-<td>KDE 5.56.0 / Plasma 5.15.4</td>
-</tr>
-<tr>
-<td>GPU</td>
-<td>Mesa DRI Intel(R) Haswell Mobile</td>
-</tr>
-</tbody></table>
-<h4 id="问题定位"><a href="#问题定位" class="headerlink" title="问题定位"></a>问题定位</h4><p>Google 了很多同学碰到的问题，说卡死是双显卡导致的，因为我也是双显卡，所以准备先在这里排除问题。首先 CTRL + ALT + F3 进入到 tty3 终端。使用 root 登录之后就有问题了，所有的命令都报错</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">## 报错信息</span></span><br><span class="line"><span class="comment"># ll</span></span><br><span class="line">-bash: 口口口口口</span><br></pre></td></tr></table></figure>
-<p>基本所有命令都不能使用，很难受。后面请教了一些大佬说应该是环境变量的问题，后面的<code>口口口口</code> 应该是中文不支持原因，实际应该是下面的情况</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">## 报错信息</span></span><br><span class="line">-bash: 未找到命令</span><br></pre></td></tr></table></figure>
-<h4 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h4><p>上面的问题终于有了眉目，命令不存在应该是环境变量导致的，所以先要设置环境变量</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 编辑环境变量</span></span><br><span class="line">$ /usr/bin/vim /etc/profile</span><br><span class="line"><span class="comment"># 添加下面的值</span></span><br><span class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/sbin:/usr/<span class="built_in">local</span>/bin:/bin</span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
-<p>到这里所有的命令应该就可以使用了。</p>
-<h4 id="更新显卡依赖"><a href="#更新显卡依赖" class="headerlink" title="更新显卡依赖"></a>更新显卡依赖</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pacman -S virtualgl lib32-virtualgl lib32-primus primus</span><br></pre></td></tr></table></figure>
-<p>更新完成之后</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
-<p>重启之后，终于进去了…切还是那样熟悉 。</p>
-<hr>
-<center>白马非马</center>
-]]></content>
-      <categories>
-        <category>Manjaro</category>
-      </categories>
-      <tags>
-        <tag>Manjaro</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Mongo乐观锁</title>
     <url>/2019/03/31/mongo%E4%B9%90%E8%A7%82%E9%94%81/</url>
     <content><![CDATA[<p><img src="/2019/03/31/mongo%E4%B9%90%E8%A7%82%E9%94%81/mongoLock.png"></p>
@@ -1028,6 +1028,94 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
 <p>开始写东西不久，在很多表达方面可能不是很到位，但是会坚持下去的，这里也算是对自己进行约束的一个地方。我一直是一个不敢表达自我的人，希望在这里用书写的方式先把自己的东西写出来，能在回顾的时候不断提高自己。good luck…</p>
 <hr>
 <center>盖一处庭院，养一只大狗</center>]]></content>
+      <categories>
+        <category>Mongo</category>
+      </categories>
+      <tags>
+        <tag>Mongo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL</title>
+    <url>/2020/01/18/mysql/</url>
+    <content><![CDATA[<p><img src="/2020/01/18/mysql/mysql.png" alt="Photo by WoshWosh on wallhaven.cc"></p>
+<p>趁着放假，准备系统的在理一理 MySQL 的知识，通过看网上大神的一些学习记录和自己工作中的一些经验总结。把 MySQL 数据库重新学习一边，加深对 MySQL 的理解，也方便以后复习时查看。</p>
+<a id="more"></a>
+
+<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>MySQL 是由两大部分 server 部分和存储引擎构成的。而 server 部分主要由 连接器，分析器，优化器和执行器组成的，server 部分主要负责客户端的连接，SQL 语句的解析，优化以及执行。 存储引擎主要负责数存储，并且提供数据的读写接口。</p>
+<h3 id="MySQL组件"><a href="#MySQL组件" class="headerlink" title="MySQL组件"></a>MySQL组件</h3><h4 id="server"><a href="#server" class="headerlink" title="server"></a>server</h4><p>MySQL 前置操作都在这里执行。</p>
+<h4 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h4><p>负责管理客户端连接，权限的验证等操作。当验证通过一个用户名和密码之后，此后的操作都是依赖当前权限，也就是说当一个用户连接成功之后，即使管理员修改密码，但是他还是能完成操作。</p>
+<h4 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h4><p>当用户通过连接器，SQL 到达之后，一般会先查询缓存（8.0 之前）。如果缓存中存在的话直接返回。没有的话则对 SQL 语句进行语法分析等动作。对于缓存不建议使用，因为当有表涉及到更新时，所有关于当前表的缓存会失效。除非是数据不经常变更的数据表。</p>
+<h4 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h4><p>优化器主要是分析 SQL 语句怎样执行最优，然后生成执行方案。</p>
+<h4 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h4><p>执行 SQL 语句，返回结果集。</p>
+<h2 id="日志系统"><a href="#日志系统" class="headerlink" title="日志系统"></a>日志系统</h2><h3 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h3><p>在 MySQL 语句更新过程中，如果每次都在磁盘找到相应记录，并且修改记录，写入磁盘的话，效率会很低。所以在执行过程中一些会将修改结果先保存在内存中，然后在 redo log 中记录当前的修改，当事务提交之后。服务在空闲的时候，或者日志空间不够时，在刷新 redo log 中 commit 的数据到磁盘中去。WAL （write-ahead logging）技术, 先写日志，在写磁盘。redo log 是存储引擎 InnoDB 独有的日志记录系统，它保证了在 MySQL 服务宕机之后保证数据不丢失。 可以通过设置参数 <code>innodb_flush_log_at_trx_commit=1</code> 保证每次 redo lod 都写在磁盘上，保证重启之后数据不丢失。</p>
+<h3 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h3><p>MySQL server 层提供的日志系统，支持所有引擎。bin log 是追加的形式写入的，不像 redo log 有大小限制。binlog有两种记录模式，statement格式的话是记sql语句， row格式会记录行的内容，记两条，更新前和更新后都有。</p>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>在网上购物从确认商品，下订单，扣减库存，到付款成功。这是一个整体的操作。对于这个操作来说，如果有其中一步操作失败，那意味着在它之前的操作都要回滚。这就是一个事务。在这一系列操作中，要么都成功。要么都失败。</p>
+<p>事务特性：ACID，原子性（atomictity），一致性（consistency），隔离性（isolation），持久性（durablity）</p>
+<h3 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h3><p>隔离级别越高，效率越低。</p>
+<h4 id="读未提交（read-uncommitted）"><a href="#读未提交（read-uncommitted）" class="headerlink" title="读未提交（read uncommitted）"></a>读未提交（read uncommitted）</h4><blockquote>
+<p>一个事务还没有提交，它的变更能别其他事务看到</p>
+</blockquote>
+<h4 id="读提交（read-commit）"><a href="#读提交（read-commit）" class="headerlink" title="读提交（read commit）"></a>读提交（read commit）</h4><blockquote>
+<p>事务提交之后，变更才能被其他事务看到</p>
+</blockquote>
+<h4 id="可重复读（repeatable-read）"><a href="#可重复读（repeatable-read）" class="headerlink" title="可重复读（repeatable read）"></a>可重复读（repeatable read）</h4><blockquote>
+<p>事务启动之后，在事务提交之前，看到的数据和启动之前一致。没有提交的事务对其他事务不可见。</p>
+</blockquote>
+<h4 id="串行化（serialiable）"><a href="#串行化（serialiable）" class="headerlink" title="串行化（serialiable）"></a>串行化（serialiable）</h4><blockquote>
+<p>对于同一行记录，写会加写锁，读会加读锁，当出现读写锁冲突时，必须等上个事务完成之后才能执行下一个事务。</p>
+</blockquote>
+<h4 id="开启"><a href="#开启" class="headerlink" title="开启"></a>开启</h4><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 开启</span></span><br><span class="line"><span class="keyword">begin</span> (<span class="keyword">start</span>) transaction;</span><br><span class="line"><span class="comment">-- 提交</span></span><br><span class="line"><span class="keyword">commit</span>;</span><br><span class="line"><span class="comment">-- 回滚</span></span><br><span class="line"><span class="keyword">rollback</span>;</span><br></pre></td></tr></table></figure>
+<p>或者设置参数</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 0 关闭自动提交，查询也会自动开启，并且不会自动提交。一直持续到commit/rollback，或者断开连接。</span></span><br><span class="line"><span class="keyword">set</span> autocommit<span class="operator">=</span><span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>由于 MySQL MVCC 多版本并发控制，每个操作都会有相应的回滚操作保存下来，每个事务都会记录。当设置为自动提交时，连接成功就会执行 set autocommit=0 的操作，每个操作都会在事务中，如果时长连接就会导致意外长事务。<strong>所以一般 set autocommit=1,显示开启事务</strong></p>
+<h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><p>Docker 部署 Mysql5.7 </p>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">## 设置server_id，一般设置为IP，注意要唯一</span><br><span class="line">server_id&#x3D;6</span><br><span class="line">## 复制过滤：也就是指定哪个数据库不用同步（mysql库一般不同步）</span><br><span class="line">binlog-ignore-db&#x3D;mysql</span><br><span class="line">## 开启二进制日志功能，可以随便取，最好有含义（关键就是这里了）</span><br><span class="line">log-bin&#x3D;replicas-mysql-bin</span><br><span class="line">## 为每个session分配的内存，在事务过程中用来存储二进制日志的缓存</span><br><span class="line">binlog_cache_size&#x3D;1M</span><br><span class="line">## 主从复制的格式（mixed,statement,row，默认格式是statement）</span><br><span class="line">binlog_format&#x3D;mixed</span><br><span class="line">## 二进制日志自动删除&#x2F;过期的天数。默认值为0，表示不自动删除。</span><br><span class="line">expire_logs_days&#x3D;7</span><br><span class="line">## 跳过主从复制中遇到的所有错误或指定类型的错误，避免slave端复制中断。</span><br><span class="line">## 如：1062错误是指一些主键重复，1032错误是因为主从数据库数据不一致</span><br><span class="line">slave_skip_errors&#x3D;1062</span><br></pre></td></tr></table></figure>
+<h4 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h4><p>指定不同的配置和端口启动两个容器</p>
+<blockquote>
+<p>docker run –name mysql-6 -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -v ~/develop/mysql/mysql-6/data:/var/lib/mysql -v ~/develop/mysql/mysql-6/conf/my.cnf:/etc/mysql/my.cnf mysql:5.7</p>
+</blockquote>
+<blockquote>
+<p>docker run –name mysql-7 -d -p 3307:3306 -e MYSQL_ROOT_PASSWORD=root -v ~/develop/mysql/mysql-7/data:/var/lib/mysql -v ~/develop/mysql/mysql-7/conf/my.cnf:/etc/mysql/my.cnf mysql:5.7</p>
+</blockquote>
+<h4 id="主节点"><a href="#主节点" class="headerlink" title="主节点"></a>主节点</h4><p>连接主节点授权</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">GRANT REPLICATION SLAVE ON *.* to &#39;sync&#39;@&#39;%&#39; identified by &#39;root&#39;;</span><br><span class="line"># 查看主节点状态</span><br><span class="line">show master status;</span><br></pre></td></tr></table></figure>
+<h4 id="IP"><a href="#IP" class="headerlink" title="IP"></a>IP</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker inspect --format &#39;&#123;&#123; .NetworkSettings.IPAddress &#125;&#125;&#39; &lt;container-ID&gt; </span><br></pre></td></tr></table></figure>
+<h4 id="从节点"><a href="#从节点" class="headerlink" title="从节点"></a>从节点</h4><p>连接主节点，指定主节点的地址信息</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">change master to master_host&#x3D;&#39;172.17.0.2&#39;,master_user&#x3D;&#39;sync&#39;,master_password&#x3D;&#39;root&#39;,master_log_file&#x3D;&#39;mysql-bin.000001&#39;,master_log_pos&#x3D;437,master_port&#x3D;3306;</span><br></pre></td></tr></table></figure>
+<p>开启从节点</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">reset slave;</span><br><span class="line"></span><br><span class="line">start slave;</span><br></pre></td></tr></table></figure>
+
+
+<hr>
+<center>我该选哪个？</center>]]></content>
+      <categories>
+        <category>Mysql</category>
+      </categories>
+      <tags>
+        <tag>Mysql</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mongo权限设置</title>
+    <url>/2019/03/28/mongo%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE/</url>
+    <content><![CDATA[<p><img src="/2019/03/28/mongo%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE/mongoPower.png"></p>
+<p>mongodb 使用起来还是相对简单的，但是在权限设置时，遇到了几个小问题，以至于花了比较久的时间，在给 mongo 设置权限前首先要清楚几点：</p>
+<a id="more"></a>
+
+<ol>
+<li>mongo 默认是没有用户的。</li>
+<li>mongo 每个数据库由独立的用户来管理。<br>因为 mongo 默认是没有用户的，所以首先要创建管理员用户，这里创建管理员用户时要进入 admin 数据库来设置</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入 adimn 数据库</span></span><br><span class="line">&gt; use admin</span><br><span class="line">switched to db admin</span><br><span class="line">&gt; db.createUser(</span><br><span class="line">   &#123;</span><br><span class="line">     user: <span class="string">&quot;admin&quot;</span>, <span class="comment"># admin 用户名</span></span><br><span class="line">     <span class="built_in">pwd</span>: <span class="string">&quot;123456&quot;</span>, <span class="comment"># 密码</span></span><br><span class="line">     roles: [ &#123; role: <span class="string">&quot;userAdminAnyDatabase&quot;</span>, db: <span class="string">&quot;admin&quot;</span> &#125; ] <span class="comment"># admin 此用户作用的目标数据库</span></span><br><span class="line">   &#125;</span><br><span class="line">);</span><br><span class="line"><span class="comment"># 此处创建成功 bash 会返回成功信息</span></span><br><span class="line"><span class="comment"># 验证权限</span></span><br><span class="line">&gt; db.auth(<span class="string">&quot;admin&quot;</span>,<span class="string">&quot;123456&quot;</span>);</span><br><span class="line">1 <span class="comment"># 成功会返回1</span></span><br></pre></td></tr></table></figure>
+<p>至此，mongo 管理员用户已经创建成功了，现在退出 mongo ,在配置文件中开启验证</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">auth&#x3D;ture</span><br></pre></td></tr></table></figure>
+<p>重启 mongo</p>
+<p>创建 test 数据库，给此数据库创建 test 用户方能连接到此数据库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 有的话进入，没有则创建此库</span></span><br><span class="line">&gt; use <span class="built_in">test</span></span><br><span class="line">&gt; db.createUser(</span><br><span class="line">   &#123;</span><br><span class="line">     user: <span class="string">&quot;test&quot;</span>,</span><br><span class="line">     <span class="built_in">pwd</span>: <span class="string">&quot;123456&quot;</span>,</span><br><span class="line">     roles: [ &#123; role: <span class="string">&quot;readWrite&quot;</span>, db: <span class="string">&quot;test&quot;</span> &#125; ]</span><br><span class="line">   &#125;</span><br><span class="line">);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>此时用户和关联的库已经创建好，在 robo3T 客户端就可以直接连接使用了。</p>
+<hr>
+<center>夜深人静的时候，世界才是自己的</center>]]></content>
       <categories>
         <category>Mongo</category>
       </categories>
@@ -1174,91 +1262,45 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
-    <title>Mongo权限设置</title>
-    <url>/2019/03/28/mongo%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE/</url>
-    <content><![CDATA[<p><img src="/2019/03/28/mongo%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE/mongoPower.png"></p>
-<p>mongodb 使用起来还是相对简单的，但是在权限设置时，遇到了几个小问题，以至于花了比较久的时间，在给 mongo 设置权限前首先要清楚几点：</p>
+    <title>Nginx安装和使用</title>
+    <url>/2019/11/25/nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<p><img src="/2019/11/25/nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/nginx.png" alt="Photo by deleted on wallhaven.cc"></p>
+<p>nginx 是互联网公司必不可少的一个中间件。它不仅性能好，而且资源占用极低。nginx <a class="link" href="http://www.nginx.cn/doc/">中文文档<i class="fas fa-external-link-alt"></i></a>，<a class="link" href="http://nginx.org/en/download.html">官方下载地址<i class="fas fa-external-link-alt"></i></a></p>
 <a id="more"></a>
 
-<ol>
-<li>mongo 默认是没有用户的。</li>
-<li>mongo 每个数据库由独立的用户来管理。<br>因为 mongo 默认是没有用户的，所以首先要创建管理员用户，这里创建管理员用户时要进入 admin 数据库来设置</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入 adimn 数据库</span></span><br><span class="line">&gt; use admin</span><br><span class="line">switched to db admin</span><br><span class="line">&gt; db.createUser(</span><br><span class="line">   &#123;</span><br><span class="line">     user: <span class="string">&quot;admin&quot;</span>, <span class="comment"># admin 用户名</span></span><br><span class="line">     <span class="built_in">pwd</span>: <span class="string">&quot;123456&quot;</span>, <span class="comment"># 密码</span></span><br><span class="line">     roles: [ &#123; role: <span class="string">&quot;userAdminAnyDatabase&quot;</span>, db: <span class="string">&quot;admin&quot;</span> &#125; ] <span class="comment"># admin 此用户作用的目标数据库</span></span><br><span class="line">   &#125;</span><br><span class="line">);</span><br><span class="line"><span class="comment"># 此处创建成功 bash 会返回成功信息</span></span><br><span class="line"><span class="comment"># 验证权限</span></span><br><span class="line">&gt; db.auth(<span class="string">&quot;admin&quot;</span>,<span class="string">&quot;123456&quot;</span>);</span><br><span class="line">1 <span class="comment"># 成功会返回1</span></span><br></pre></td></tr></table></figure>
-<p>至此，mongo 管理员用户已经创建成功了，现在退出 mongo ,在配置文件中开启验证</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">auth&#x3D;ture</span><br></pre></td></tr></table></figure>
-<p>重启 mongo</p>
-<p>创建 test 数据库，给此数据库创建 test 用户方能连接到此数据库</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 有的话进入，没有则创建此库</span></span><br><span class="line">&gt; use <span class="built_in">test</span></span><br><span class="line">&gt; db.createUser(</span><br><span class="line">   &#123;</span><br><span class="line">     user: <span class="string">&quot;test&quot;</span>,</span><br><span class="line">     <span class="built_in">pwd</span>: <span class="string">&quot;123456&quot;</span>,</span><br><span class="line">     roles: [ &#123; role: <span class="string">&quot;readWrite&quot;</span>, db: <span class="string">&quot;test&quot;</span> &#125; ]</span><br><span class="line">   &#125;</span><br><span class="line">);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>此时用户和关联的库已经创建好，在 robo3T 客户端就可以直接连接使用了。</p>
+
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 epel 源，如果 yum 安装时提示没有找到 nginx 的话</span></span><br><span class="line">yum install epel-release</span><br><span class="line"></span><br><span class="line">yum install nginx</span><br></pre></td></tr></table></figure>
+<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><h5 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx</span><br></pre></td></tr></table></figure>
+<h5 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -s stop</span><br></pre></td></tr></table></figure>
+<h5 id="重新加载配置"><a href="#重新加载配置" class="headerlink" title="重新加载配置"></a>重新加载配置</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
+<h5 id="配置检查"><a href="#配置检查" class="headerlink" title="配置检查"></a>配置检查</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>main 配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 指定 worker 进程的运行身份，如组不指定，默认和用户名同名</span></span><br><span class="line">user nginx;</span><br><span class="line"><span class="comment"># worker 进程的数量，通常为当前主机 cpu 物理核心数</span></span><br><span class="line">worker_processes auto;</span><br><span class="line"><span class="comment"># worker 进程能够打开的文件数量上限（支持的并发数如：65535）</span></span><br><span class="line">worker_rlimit_nofile number</span><br><span class="line">error_log /var/<span class="built_in">log</span>/nginx/error.log;</span><br><span class="line"><span class="comment"># 指定存储 nginx 主进程 PID 的文件路径</span></span><br><span class="line">pid /run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.</span></span><br><span class="line"><span class="comment"># 指明包含进来的其他配置文件片段</span></span><br><span class="line">include /usr/share/nginx/modules/*.conf;</span><br><span class="line"><span class="comment"># 后台执行，默认 on 开启，off 则关闭，适合调试使用</span></span><br><span class="line">daemon off;</span><br><span class="line"><span class="comment"># 是否以 master/worker 模式运行，默认 on ，off 将不启动 worker</span></span><br><span class="line">master_process on|off</span><br></pre></td></tr></table></figure>
+<p>events 配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">events&#123;</span><br><span class="line">      &#125;</span><br><span class="line"><span class="comment"># 参数</span></span><br><span class="line"><span class="comment"># 每个 worker 进程所能够打开的最大并发链接数数量</span></span><br><span class="line"><span class="comment"># 总最大并发数：worker_processes * worker_connections</span></span><br><span class="line">worker_connections number</span><br><span class="line"><span class="comment"># 并发连接请求处理方式，默认选择最优 epoll</span></span><br><span class="line">use epoll/select</span><br><span class="line"><span class="comment"># 处理新连接请求方法，on 指 worker 轮流处理新请求，off 指每个新请求到达会通知（唤醒）所有 worker 进程，但是只有一个进程可以获得连接，造成‘惊群’，影响性能。</span></span><br><span class="line">accept_mutex on | off</span><br></pre></td></tr></table></figure>
+<p>http 配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">http&#123;</span><br><span class="line">    <span class="comment"># 各个 server 的公共配置</span></span><br><span class="line">    server&#123;</span><br><span class="line">      <span class="comment"># 每个 server 用于定义一个虚拟主机  </span></span><br><span class="line">    &#125;</span><br><span class="line">    server&#123;</span><br><span class="line">        <span class="comment"># 当前虚拟主机监听的端口</span></span><br><span class="line">        listen IP:PORT                       <span class="comment"># ipV4 地址</span></span><br><span class="line">        listen       [::]:80 default_server; <span class="comment"># ipV6 地址</span></span><br><span class="line">        <span class="comment"># 当前虚拟主机名称 eg：www.baidu.com</span></span><br><span class="line">        server_name 虚拟主机名</span><br><span class="line">        <span class="comment"># root：server 虚拟主机下的根目录</span></span><br><span class="line">        root        主目录</span><br><span class="line">        location [OPERATOR] URL &#123;  <span class="comment"># 指定 URL 的特性</span></span><br><span class="line">            <span class="keyword">if</span> CONDITION&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>server_name</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1. 虚拟主机名称后可以跟多个由空白字符分割的字符串</span><br><span class="line">2. 支持 * 通配任意长度的任意字符：server_name *.baidu.com www.baidu.*</span><br><span class="line">3. 支持 ~ 起始的字符做正则表达式匹配，但是存在性能问题：server_name ~^www\d+\.baidu\.com$</span><br><span class="line">匹配优先级：</span><br><span class="line">a. 字符串精确匹。b. 左侧 * 通配符。c. 右侧 * 通配符 eg:com.www.baidu.* 。 d. 正则。e. defult_server</span><br></pre></td></tr></table></figure>
+<p>location 配置</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在一个 sever 中 location 配置段可存在多个，用于实现从 uri 到文件系统的路径映射，nginx 会根据用户请求的 uri 来检查定义的所有 location,并找出一个最佳匹配进行应用。</span></span><br><span class="line">location [ = | ~ | ~* | ^~ ] uri &#123; ... &#125;</span><br><span class="line">location @name &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<p>location 中也有 root 路径，当请求是具体的 location 指向的路径时，走 location 中的 root 目录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 如果访问 http:192.168.31.107/news 则访问的时 location 指向的 /usr/local/html/news 目录下的文件，不带路径则访问的是 server 下 root 目录下的文件</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80 default_server;</span><br><span class="line">        server_name  _;</span><br><span class="line">        root        /usr/<span class="built_in">local</span>/html;</span><br><span class="line">        location /news &#123;</span><br><span class="line">                root /usr/<span class="built_in">local</span>/html</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>路径解析</p>
+<blockquote>
+<p>在 location 中指定路径有两种方式，一种是 root，一种是 alias。它们之间的区别是：<br>root 方式处理结果 = root 路径 + location 路径<br>alias 方式处理结果 = alias 路径直接替换 location 路径。</p>
+</blockquote>
+<p>匹配：<br><code>=</code> ：对 URL 精确匹配；</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">location = /&#123;  &#125;  只能精确匹配 http:fengzhu.top/  </span><br></pre></td></tr></table></figure>
+<p><code>^~</code>：对 URL　的最右边部分做匹配检查，不区分字符大小写<br><code>~</code>：对 URL 做正则匹配，区分大小写<br><code>~*</code>：对 URL 做正则匹配，不区分大小写<br>不带符号：匹配起始于此 URL 的所有 URL<br>优先级：=,^<del>,</del>/~*,不带符号</p>
+<p><strong>还是要自己配置试试，才能知道具体是怎么运行的</strong></p>
 <hr>
-<center>夜深人静的时候，世界才是自己的</center>]]></content>
+<center>just do it</center>]]></content>
       <categories>
-        <category>Mongo</category>
+        <category>Nginx</category>
       </categories>
       <tags>
-        <tag>Mongo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL</title>
-    <url>/2020/01/18/mysql/</url>
-    <content><![CDATA[<p><img src="/2020/01/18/mysql/mysql.png" alt="Photo by WoshWosh on wallhaven.cc"></p>
-<p>趁着放假，准备系统的在理一理 MySQL 的知识，通过看网上大神的一些学习记录和自己工作中的一些经验总结。把 MySQL 数据库重新学习一边，加深对 MySQL 的理解，也方便以后复习时查看。</p>
-<a id="more"></a>
-
-<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>MySQL 是由两大部分 server 部分和存储引擎构成的。而 server 部分主要由 连接器，分析器，优化器和执行器组成的，server 部分主要负责客户端的连接，SQL 语句的解析，优化以及执行。 存储引擎主要负责数存储，并且提供数据的读写接口。</p>
-<h3 id="MySQL组件"><a href="#MySQL组件" class="headerlink" title="MySQL组件"></a>MySQL组件</h3><h4 id="server"><a href="#server" class="headerlink" title="server"></a>server</h4><p>MySQL 前置操作都在这里执行。</p>
-<h4 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h4><p>负责管理客户端连接，权限的验证等操作。当验证通过一个用户名和密码之后，此后的操作都是依赖当前权限，也就是说当一个用户连接成功之后，即使管理员修改密码，但是他还是能完成操作。</p>
-<h4 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h4><p>当用户通过连接器，SQL 到达之后，一般会先查询缓存（8.0 之前）。如果缓存中存在的话直接返回。没有的话则对 SQL 语句进行语法分析等动作。对于缓存不建议使用，因为当有表涉及到更新时，所有关于当前表的缓存会失效。除非是数据不经常变更的数据表。</p>
-<h4 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h4><p>优化器主要是分析 SQL 语句怎样执行最优，然后生成执行方案。</p>
-<h4 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h4><p>执行 SQL 语句，返回结果集。</p>
-<h2 id="日志系统"><a href="#日志系统" class="headerlink" title="日志系统"></a>日志系统</h2><h3 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h3><p>在 MySQL 语句更新过程中，如果每次都在磁盘找到相应记录，并且修改记录，写入磁盘的话，效率会很低。所以在执行过程中一些会将修改结果先保存在内存中，然后在 redo log 中记录当前的修改，当事务提交之后。服务在空闲的时候，或者日志空间不够时，在刷新 redo log 中 commit 的数据到磁盘中去。WAL （write-ahead logging）技术, 先写日志，在写磁盘。redo log 是存储引擎 InnoDB 独有的日志记录系统，它保证了在 MySQL 服务宕机之后保证数据不丢失。 可以通过设置参数 <code>innodb_flush_log_at_trx_commit=1</code> 保证每次 redo lod 都写在磁盘上，保证重启之后数据不丢失。</p>
-<h3 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h3><p>MySQL server 层提供的日志系统，支持所有引擎。bin log 是追加的形式写入的，不像 redo log 有大小限制。binlog有两种记录模式，statement格式的话是记sql语句， row格式会记录行的内容，记两条，更新前和更新后都有。</p>
-<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>在网上购物从确认商品，下订单，扣减库存，到付款成功。这是一个整体的操作。对于这个操作来说，如果有其中一步操作失败，那意味着在它之前的操作都要回滚。这就是一个事务。在这一系列操作中，要么都成功。要么都失败。</p>
-<p>事务特性：ACID，原子性（atomictity），一致性（consistency），隔离性（isolation），持久性（durablity）</p>
-<h3 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h3><p>隔离级别越高，效率越低。</p>
-<h4 id="读未提交（read-uncommitted）"><a href="#读未提交（read-uncommitted）" class="headerlink" title="读未提交（read uncommitted）"></a>读未提交（read uncommitted）</h4><blockquote>
-<p>一个事务还没有提交，它的变更能别其他事务看到</p>
-</blockquote>
-<h4 id="读提交（read-commit）"><a href="#读提交（read-commit）" class="headerlink" title="读提交（read commit）"></a>读提交（read commit）</h4><blockquote>
-<p>事务提交之后，变更才能被其他事务看到</p>
-</blockquote>
-<h4 id="可重复读（repeatable-read）"><a href="#可重复读（repeatable-read）" class="headerlink" title="可重复读（repeatable read）"></a>可重复读（repeatable read）</h4><blockquote>
-<p>事务启动之后，在事务提交之前，看到的数据和启动之前一致。没有提交的事务对其他事务不可见。</p>
-</blockquote>
-<h4 id="串行化（serialiable）"><a href="#串行化（serialiable）" class="headerlink" title="串行化（serialiable）"></a>串行化（serialiable）</h4><blockquote>
-<p>对于同一行记录，写会加写锁，读会加读锁，当出现读写锁冲突时，必须等上个事务完成之后才能执行下一个事务。</p>
-</blockquote>
-<h4 id="开启"><a href="#开启" class="headerlink" title="开启"></a>开启</h4><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 开启</span></span><br><span class="line"><span class="keyword">begin</span> (<span class="keyword">start</span>) transaction;</span><br><span class="line"><span class="comment">-- 提交</span></span><br><span class="line"><span class="keyword">commit</span>;</span><br><span class="line"><span class="comment">-- 回滚</span></span><br><span class="line"><span class="keyword">rollback</span>;</span><br></pre></td></tr></table></figure>
-<p>或者设置参数</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 0 关闭自动提交，查询也会自动开启，并且不会自动提交。一直持续到commit/rollback，或者断开连接。</span></span><br><span class="line"><span class="keyword">set</span> autocommit<span class="operator">=</span><span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p>由于 MySQL MVCC 多版本并发控制，每个操作都会有相应的回滚操作保存下来，每个事务都会记录。当设置为自动提交时，连接成功就会执行 set autocommit=0 的操作，每个操作都会在事务中，如果时长连接就会导致意外长事务。<strong>所以一般 set autocommit=1,显示开启事务</strong></p>
-<h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><p>Docker 部署 Mysql5.7 </p>
-<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">## 设置server_id，一般设置为IP，注意要唯一</span><br><span class="line">server_id&#x3D;6</span><br><span class="line">## 复制过滤：也就是指定哪个数据库不用同步（mysql库一般不同步）</span><br><span class="line">binlog-ignore-db&#x3D;mysql</span><br><span class="line">## 开启二进制日志功能，可以随便取，最好有含义（关键就是这里了）</span><br><span class="line">log-bin&#x3D;replicas-mysql-bin</span><br><span class="line">## 为每个session分配的内存，在事务过程中用来存储二进制日志的缓存</span><br><span class="line">binlog_cache_size&#x3D;1M</span><br><span class="line">## 主从复制的格式（mixed,statement,row，默认格式是statement）</span><br><span class="line">binlog_format&#x3D;mixed</span><br><span class="line">## 二进制日志自动删除&#x2F;过期的天数。默认值为0，表示不自动删除。</span><br><span class="line">expire_logs_days&#x3D;7</span><br><span class="line">## 跳过主从复制中遇到的所有错误或指定类型的错误，避免slave端复制中断。</span><br><span class="line">## 如：1062错误是指一些主键重复，1032错误是因为主从数据库数据不一致</span><br><span class="line">slave_skip_errors&#x3D;1062</span><br></pre></td></tr></table></figure>
-<h4 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h4><p>指定不同的配置和端口启动两个容器</p>
-<blockquote>
-<p>docker run –name mysql-6 -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -v ~/develop/mysql/mysql-6/data:/var/lib/mysql -v ~/develop/mysql/mysql-6/conf/my.cnf:/etc/mysql/my.cnf mysql:5.7</p>
-</blockquote>
-<blockquote>
-<p>docker run –name mysql-7 -d -p 3307:3306 -e MYSQL_ROOT_PASSWORD=root -v ~/develop/mysql/mysql-7/data:/var/lib/mysql -v ~/develop/mysql/mysql-7/conf/my.cnf:/etc/mysql/my.cnf mysql:5.7</p>
-</blockquote>
-<h4 id="主节点"><a href="#主节点" class="headerlink" title="主节点"></a>主节点</h4><p>连接主节点授权</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">GRANT REPLICATION SLAVE ON *.* to &#39;sync&#39;@&#39;%&#39; identified by &#39;root&#39;;</span><br><span class="line"># 查看主节点状态</span><br><span class="line">show master status;</span><br></pre></td></tr></table></figure>
-<h4 id="IP"><a href="#IP" class="headerlink" title="IP"></a>IP</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker inspect --format &#39;&#123;&#123; .NetworkSettings.IPAddress &#125;&#125;&#39; &lt;container-ID&gt; </span><br></pre></td></tr></table></figure>
-<h4 id="从节点"><a href="#从节点" class="headerlink" title="从节点"></a>从节点</h4><p>连接主节点，指定主节点的地址信息</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">change master to master_host&#x3D;&#39;172.17.0.2&#39;,master_user&#x3D;&#39;sync&#39;,master_password&#x3D;&#39;root&#39;,master_log_file&#x3D;&#39;mysql-bin.000001&#39;,master_log_pos&#x3D;437,master_port&#x3D;3306;</span><br></pre></td></tr></table></figure>
-<p>开启从节点</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">reset slave;</span><br><span class="line"></span><br><span class="line">start slave;</span><br></pre></td></tr></table></figure>
-
-
-<hr>
-<center>我该选哪个？</center>]]></content>
-      <categories>
-        <category>Mysql</category>
-      </categories>
-      <tags>
-        <tag>Mysql</tag>
+        <tag>Nginx</tag>
       </tags>
   </entry>
   <entry>
@@ -1390,48 +1432,6 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
       </tags>
   </entry>
   <entry>
-    <title>Nginx安装和使用</title>
-    <url>/2019/11/25/nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<p><img src="/2019/11/25/nginx%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/nginx.png" alt="Photo by deleted on wallhaven.cc"></p>
-<p>nginx 是互联网公司必不可少的一个中间件。它不仅性能好，而且资源占用极低。nginx <a class="link" href="http://www.nginx.cn/doc/">中文文档<i class="fas fa-external-link-alt"></i></a>，<a class="link" href="http://nginx.org/en/download.html">官方下载地址<i class="fas fa-external-link-alt"></i></a></p>
-<a id="more"></a>
-
-
-<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 epel 源，如果 yum 安装时提示没有找到 nginx 的话</span></span><br><span class="line">yum install epel-release</span><br><span class="line"></span><br><span class="line">yum install nginx</span><br></pre></td></tr></table></figure>
-<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><h5 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx</span><br></pre></td></tr></table></figure>
-<h5 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -s stop</span><br></pre></td></tr></table></figure>
-<h5 id="重新加载配置"><a href="#重新加载配置" class="headerlink" title="重新加载配置"></a>重新加载配置</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
-<h5 id="配置检查"><a href="#配置检查" class="headerlink" title="配置检查"></a>配置检查</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
-<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>main 配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 指定 worker 进程的运行身份，如组不指定，默认和用户名同名</span></span><br><span class="line">user nginx;</span><br><span class="line"><span class="comment"># worker 进程的数量，通常为当前主机 cpu 物理核心数</span></span><br><span class="line">worker_processes auto;</span><br><span class="line"><span class="comment"># worker 进程能够打开的文件数量上限（支持的并发数如：65535）</span></span><br><span class="line">worker_rlimit_nofile number</span><br><span class="line">error_log /var/<span class="built_in">log</span>/nginx/error.log;</span><br><span class="line"><span class="comment"># 指定存储 nginx 主进程 PID 的文件路径</span></span><br><span class="line">pid /run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.</span></span><br><span class="line"><span class="comment"># 指明包含进来的其他配置文件片段</span></span><br><span class="line">include /usr/share/nginx/modules/*.conf;</span><br><span class="line"><span class="comment"># 后台执行，默认 on 开启，off 则关闭，适合调试使用</span></span><br><span class="line">daemon off;</span><br><span class="line"><span class="comment"># 是否以 master/worker 模式运行，默认 on ，off 将不启动 worker</span></span><br><span class="line">master_process on|off</span><br></pre></td></tr></table></figure>
-<p>events 配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">events&#123;</span><br><span class="line">      &#125;</span><br><span class="line"><span class="comment"># 参数</span></span><br><span class="line"><span class="comment"># 每个 worker 进程所能够打开的最大并发链接数数量</span></span><br><span class="line"><span class="comment"># 总最大并发数：worker_processes * worker_connections</span></span><br><span class="line">worker_connections number</span><br><span class="line"><span class="comment"># 并发连接请求处理方式，默认选择最优 epoll</span></span><br><span class="line">use epoll/select</span><br><span class="line"><span class="comment"># 处理新连接请求方法，on 指 worker 轮流处理新请求，off 指每个新请求到达会通知（唤醒）所有 worker 进程，但是只有一个进程可以获得连接，造成‘惊群’，影响性能。</span></span><br><span class="line">accept_mutex on | off</span><br></pre></td></tr></table></figure>
-<p>http 配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">http&#123;</span><br><span class="line">    <span class="comment"># 各个 server 的公共配置</span></span><br><span class="line">    server&#123;</span><br><span class="line">      <span class="comment"># 每个 server 用于定义一个虚拟主机  </span></span><br><span class="line">    &#125;</span><br><span class="line">    server&#123;</span><br><span class="line">        <span class="comment"># 当前虚拟主机监听的端口</span></span><br><span class="line">        listen IP:PORT                       <span class="comment"># ipV4 地址</span></span><br><span class="line">        listen       [::]:80 default_server; <span class="comment"># ipV6 地址</span></span><br><span class="line">        <span class="comment"># 当前虚拟主机名称 eg：www.baidu.com</span></span><br><span class="line">        server_name 虚拟主机名</span><br><span class="line">        <span class="comment"># root：server 虚拟主机下的根目录</span></span><br><span class="line">        root        主目录</span><br><span class="line">        location [OPERATOR] URL &#123;  <span class="comment"># 指定 URL 的特性</span></span><br><span class="line">            <span class="keyword">if</span> CONDITION&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>server_name</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1. 虚拟主机名称后可以跟多个由空白字符分割的字符串</span><br><span class="line">2. 支持 * 通配任意长度的任意字符：server_name *.baidu.com www.baidu.*</span><br><span class="line">3. 支持 ~ 起始的字符做正则表达式匹配，但是存在性能问题：server_name ~^www\d+\.baidu\.com$</span><br><span class="line">匹配优先级：</span><br><span class="line">a. 字符串精确匹。b. 左侧 * 通配符。c. 右侧 * 通配符 eg:com.www.baidu.* 。 d. 正则。e. defult_server</span><br></pre></td></tr></table></figure>
-<p>location 配置</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在一个 sever 中 location 配置段可存在多个，用于实现从 uri 到文件系统的路径映射，nginx 会根据用户请求的 uri 来检查定义的所有 location,并找出一个最佳匹配进行应用。</span></span><br><span class="line">location [ = | ~ | ~* | ^~ ] uri &#123; ... &#125;</span><br><span class="line">location @name &#123; ... &#125;</span><br></pre></td></tr></table></figure>
-<p>location 中也有 root 路径，当请求是具体的 location 指向的路径时，走 location 中的 root 目录</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 如果访问 http:192.168.31.107/news 则访问的时 location 指向的 /usr/local/html/news 目录下的文件，不带路径则访问的是 server 下 root 目录下的文件</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80 default_server;</span><br><span class="line">        server_name  _;</span><br><span class="line">        root        /usr/<span class="built_in">local</span>/html;</span><br><span class="line">        location /news &#123;</span><br><span class="line">                root /usr/<span class="built_in">local</span>/html</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>路径解析</p>
-<blockquote>
-<p>在 location 中指定路径有两种方式，一种是 root，一种是 alias。它们之间的区别是：<br>root 方式处理结果 = root 路径 + location 路径<br>alias 方式处理结果 = alias 路径直接替换 location 路径。</p>
-</blockquote>
-<p>匹配：<br><code>=</code> ：对 URL 精确匹配；</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">location = /&#123;  &#125;  只能精确匹配 http:fengzhu.top/  </span><br></pre></td></tr></table></figure>
-<p><code>^~</code>：对 URL　的最右边部分做匹配检查，不区分字符大小写<br><code>~</code>：对 URL 做正则匹配，区分大小写<br><code>~*</code>：对 URL 做正则匹配，不区分大小写<br>不带符号：匹配起始于此 URL 的所有 URL<br>优先级：=,^<del>,</del>/~*,不带符号</p>
-<p><strong>还是要自己配置试试，才能知道具体是怎么运行的</strong></p>
-<hr>
-<center>just do it</center>]]></content>
-      <categories>
-        <category>Nginx</category>
-      </categories>
-      <tags>
-        <tag>Nginx</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>RabbitMQ延时队列</title>
     <url>/2019/11/02/rabbitMQ%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/</url>
     <content><![CDATA[<p><img src="/2019/11/02/rabbitMQ%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/rabbitMqDelayQueue.png" alt="Photo by on Unsplash"></p>
@@ -1547,7 +1547,7 @@ fanout 交换机推送消息到所有绑定到它的队列，这里指定具体�
 <figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">user:</span></span><br><span class="line">  <span class="attr">username:</span> <span class="string">jihe</span></span><br><span class="line">  <span class="attr">age:</span> <span class="number">18</span></span><br><span class="line">  <span class="attr">email:</span> <span class="string">XXX@gmail.com</span></span><br></pre></td></tr></table></figure>
 <h5 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h5><p>访问远程仓库的配置文件 <code>http://localhost:9090/user-config-dev.yml</code> 就可以访问到用户配置文件了。</p>
 <h4 id="动态更新配置"><a href="#动态更新配置" class="headerlink" title="动态更新配置"></a>动态更新配置</h4><p>springcloud-config + springcloud-bus 实现配置文件动态刷新。</p>
-<h4 id="高可用配置中心"><a href="#高可用配置中心" class="headerlink" title="高可用配置中心"></a>高可用配置中心</h4>]]></content>
+]]></content>
       <categories>
         <category>SpringCloud</category>
       </categories>

@@ -142,7 +142,3 @@ user:
 springcloud-config + springcloud-bus 实现配置文件动态刷新。
 
 
-
-
-#### 高可用配置中心
-

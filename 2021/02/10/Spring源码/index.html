@@ -57,7 +57,7 @@
                             <a class=""
                                href="/"
                             >
-                                首页
+                                HOME
                             </a>
                         </li>
                     
@@ -65,7 +65,7 @@
                             <a class=""
                                href="/archives"
                             >
-                                归档
+                                ARCHIVES
                             </a>
                         </li>
                     
@@ -73,7 +73,7 @@
                             <a class=""
                                href="/categories"
                             >
-                                分类
+                                CATEGORIES
                             </a>
                         </li>
                     
@@ -81,7 +81,7 @@
                             <a class=""
                                href="/about"
                             >
-                                关于
+                                ABOUT
                             </a>
                         </li>
                     
@@ -108,22 +108,22 @@
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/">首页</a>
+                       href="/">HOME</a>
                 </li>
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/archives">归档</a>
+                       href="/archives">ARCHIVES</a>
                 </li>
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/categories">分类</a>
+                       href="/categories">CATEGORIES</a>
                 </li>
             
                 <li class="drawer-menu-item flex-center">
                     <a class=""
-                       href="/about">关于</a>
+                       href="/about">ABOUT</a>
                 </li>
             
         </ul>
@@ -193,12 +193,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>1.7k 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.7k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>8 分钟</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>8 Mins</span>
         </span>
     
     
@@ -255,22 +255,21 @@
 </ol>
 <h4 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h4><h5 id="切面"><a href="#切面" class="headerlink" title="切面"></a>切面</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ck</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AopLog</span></span>&#123;</span><br><span class="line">    <span class="meta">@Pointcut(&quot;execution(* com.github.oliverschen.springbean..*())&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">point</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    <span class="meta">@Before(&quot;point()&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">(JoinPoint joinPoint)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;before 方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@After(&quot;point()&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;after 方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@AfterReturning(&quot;point()&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ret</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;return 方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@AfterThrowing(&quot;point()&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">trw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;AfterThrowing 方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Around(&quot;point()&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">around</span><span class="params">(ProceedingJoinPoint joinPoint)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;around 方法进入&quot;</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            joinPoint.proceed();</span><br><span class="line">            System.out.println(<span class="string">&quot;around 方法完成&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable throwable) &#123;</span><br><span class="line">            throwable.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">启动类</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ck</span></span><br><span class="line"><span class="comment"> * 基于 xml 获取 bean</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">XmlBean</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">&quot;applicationContext.xml&quot;</span>);</span><br><span class="line">        OrderService orderService = (OrderService) context.getBean(<span class="string">&quot;orderService&quot;</span>);</span><br><span class="line">        orderService.order();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h5 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:context</span>=<span class="string">&quot;http://www.springframework.org/schema/context&quot;</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:aop</span>=<span class="string">&quot;http://www.springframework.org/schema/aop&quot;</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beans</span></span></span><br><span class="line"><span class="tag"><span class="string">                        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">                        http://www.springframework.org/schema/context</span></span></span><br><span class="line"><span class="tag"><span class="string">                        http://www.springframework.org/schema/context/spring-context-3.2.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">                        http://www.springframework.org/schema/aop</span></span></span><br><span class="line"><span class="tag"><span class="string">                        https://www.springframework.org/schema/aop/spring-aop.xsd&quot;</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;student001&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.github.oliverschen.springbean.Student&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> <span class="attr">value</span>=<span class="string">&quot;25&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;ck&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;student002&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.github.oliverschen.springbean.Student&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> <span class="attr">value</span>=<span class="string">&quot;24&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;fz&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;school&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.github.oliverschen.springbean.School&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;address&quot;</span> <span class="attr">value</span>=<span class="string">&quot;深圳&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;schoolName&quot;</span> <span class="attr">value</span>=<span class="string">&quot;深大&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;student&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;student001&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">&quot;com.github.oliverschen.springbean&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">aop:aspectj-autoproxy</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<hr>
-<center>再见，2020，你好，2021</center>
+<h2 id="Ioc-源码在SpringBoot源码"><a href="#Ioc-源码在SpringBoot源码" class="headerlink" title="Ioc 源码在SpringBoot源码"></a>Ioc 源码在<a href="https://oliverschen.github.io/2021/02/14/SpringBoot%E6%BA%90%E7%A0%81/">SpringBoot源码</a></h2><center>再见，2020，你好，2021</center>
         </div>
 
         
             <div class="post-copyright-info">
                 <div class="article-copyright-info-container">
     <ul>
-        <li>本文标题：Spring源码</li>
-        <li>本文作者：jihe</li>
-        <li>创建时间：2021-02-10 22:52:03</li>
+        <li>Post title：Spring源码</li>
+        <li>Post author：jihe</li>
+        <li>Create time：2021-02-10 22:52:03</li>
         <li>
-            本文链接：https://oliverschen.github.io/2021/02/10/Spring源码/
+            Post link：https://oliverschen.github.io/2021/02/10/Spring源码/
         </li>
         <li>
-            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
         </li>
     </ul>
 </div>
@@ -291,7 +290,7 @@
                             </span>
                             <span class="title flex-center">
                                 <span class="post-nav-title-item">SpringBoot源码</span>
-                                <span class="post-nav-item">上一篇</span>
+                                <span class="post-nav-item">Prev posts</span>
                             </span>
                         </a>
                     </div>
@@ -304,7 +303,7 @@
                         >
                             <span class="title flex-center">
                                 <span class="post-nav-title-item">启动Tomcat Shell脚本</span>
-                                <span class="post-nav-item">下一篇</span>
+                                <span class="post-nav-item">Next posts</span>
                             </span>
                             <span class="right arrow-icon flex-center">
                               <i class="fas fa-chevron-right"></i>
@@ -320,7 +319,7 @@
                 <div class="comments-container">
     <div id="comment-anchor"></div>
     <div class="comment-area-title">
-        <i class="fas fa-comments">&nbsp;评论</i>
+        <i class="fas fa-comments">&nbsp;Comments</i>
     </div>
     
 
@@ -397,18 +396,18 @@
             <div class="website-count info-item">
                 
                     <span id="busuanzi_container_site_uv">
-                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                        Visitor Count&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
                     </span>
                 
                 
                     <span id="busuanzi_container_site_pv">
-                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                        Totalview&nbsp;<span id="busuanzi_value_site_pv"></span>
                     </span>
                 
             </div>
         
         <div class="theme-info info-item">
-            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
         </div>
         
     </div>
@@ -487,7 +486,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Bean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.</span> <span class="nav-text">Bean生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%F0%9F%A6%B8%E2%80%8D%E2%99%80%EF%B8%8FIoC"><span class="nav-number">2.</span> <span class="nav-text">🦸‍♀️IoC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E5%AE%B9%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">两种容器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#BeanFactory"><span class="nav-number">2.1.1.</span> <span class="nav-text">BeanFactory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ApplicationContext"><span class="nav-number">2.1.2.</span> <span class="nav-text">ApplicationContext</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">2.2.</span> <span class="nav-text">流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8%F0%9F%A4%96%EF%B8%8F"><span class="nav-number">2.3.</span> <span class="nav-text">后置处理器🤖️</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#BeanFactoryPostProcessor"><span class="nav-number">2.3.1.</span> <span class="nav-text">BeanFactoryPostProcessor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BeanPostProcessor"><span class="nav-number">2.3.2.</span> <span class="nav-text">BeanPostProcessor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InitializingBean"><span class="nav-number">2.3.3.</span> <span class="nav-text">InitializingBean</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E7%B1%BB%E4%BB%A3%E7%A0%81"><span class="nav-number">3.1.</span> <span class="nav-text">启动类代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.1.</span> <span class="nav-text">配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%F0%9F%A6%B8%E2%80%8D%E2%99%82%EF%B8%8FAOP"><span class="nav-number">4.</span> <span class="nav-text">🦸‍♂️AOP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.1.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AspectJ"><span class="nav-number">4.1.1.</span> <span class="nav-text">AspectJ</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CGlib"><span class="nav-number">4.1.2.</span> <span class="nav-text">CGlib</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B"><span class="nav-number">4.2.</span> <span class="nav-text">流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%87%E9%9D%A2"><span class="nav-number">4.2.1.1.</span> <span class="nav-text">切面</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-1"><span class="nav-number">4.2.1.2.</span> <span class="nav-text">配置</span></a></li></ol></li></ol></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Bean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.</span> <span class="nav-text">Bean生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%F0%9F%A6%B8%E2%80%8D%E2%99%80%EF%B8%8FIoC"><span class="nav-number">2.</span> <span class="nav-text">🦸‍♀️IoC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E5%AE%B9%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">两种容器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#BeanFactory"><span class="nav-number">2.1.1.</span> <span class="nav-text">BeanFactory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ApplicationContext"><span class="nav-number">2.1.2.</span> <span class="nav-text">ApplicationContext</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">2.2.</span> <span class="nav-text">流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8%F0%9F%A4%96%EF%B8%8F"><span class="nav-number">2.3.</span> <span class="nav-text">后置处理器🤖️</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#BeanFactoryPostProcessor"><span class="nav-number">2.3.1.</span> <span class="nav-text">BeanFactoryPostProcessor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BeanPostProcessor"><span class="nav-number">2.3.2.</span> <span class="nav-text">BeanPostProcessor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InitializingBean"><span class="nav-number">2.3.3.</span> <span class="nav-text">InitializingBean</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E7%B1%BB%E4%BB%A3%E7%A0%81"><span class="nav-number">3.1.</span> <span class="nav-text">启动类代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">3.1.1.</span> <span class="nav-text">配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%F0%9F%A6%B8%E2%80%8D%E2%99%82%EF%B8%8FAOP"><span class="nav-number">4.</span> <span class="nav-text">🦸‍♂️AOP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.1.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AspectJ"><span class="nav-number">4.1.1.</span> <span class="nav-text">AspectJ</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CGlib"><span class="nav-number">4.1.2.</span> <span class="nav-text">CGlib</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B"><span class="nav-number">4.2.</span> <span class="nav-text">流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%87%E9%9D%A2"><span class="nav-number">4.2.1.1.</span> <span class="nav-text">切面</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-1"><span class="nav-number">4.2.1.2.</span> <span class="nav-text">配置</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ioc-%E6%BA%90%E7%A0%81%E5%9C%A8SpringBoot%E6%BA%90%E7%A0%81"><span class="nav-number">5.</span> <span class="nav-text">Ioc 源码在SpringBoot源码</span></a></li></ol>
     </div>
 </div>
         </aside>
@@ -509,7 +508,7 @@
                 <input autocomplete="off"
                        autocorrect="off"
                        autocapitalize="off"
-                       placeholder="搜索..."
+                       placeholder="Search..."
                        spellcheck="false"
                        type="search"
                        class="search-input"

@@ -91,6 +91,27 @@ public class OderController {
 
 引入 feign 接口，直接调用接口中的方法，实现对远程服务的调用。实现方式很快捷方便。访问 `http://localhost:8082/order-feign/jihe/1002` 这个路径，可以看到具体的结果。
 
+### 问题
+最近项目组有个新服务在开发的时候发现调用报下面的错误：
+```bash
+JSON parse error: Illegal character ((CTRL-CHAR, code 31)): only regular white space (\r, \n, \t) is allowed between tokens; nested exception is com.fasterxml.jackson.core.JsonParseException: Illegal character ((CTRL-CHAR, code 31)): only regular white space (\r, \n, \t) is allowed between tokens
+ at [Source: (PushbackInputStream); line: 1, column: 2]
+```
+#### feign 配置
+请求和响应都开启了 gzip 压缩，但是 feignClient 默认不支持 gzip ，所以导致报错
+```yml
+# 配置请求GZIP压缩
+feign.compression.request.enabled=true
+# 配置响应GZIP压缩
+feign.compression.response.enabled=true
+# 配置压缩支持的MIME TYPE
+feign.compression.request.mime-types=text/xml,application/xml,application/json
+```
+#### 解决
+引入 OkHttp 解决问题
+```json
+compile "io.github.openfeign:feign-okhttp:10.4.0"
+```
 
 ***
 

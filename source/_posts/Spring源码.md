@@ -13,7 +13,7 @@ Spring 源码流程分析，主要包含 Spring 核心功能 IoC 和 AOP 部分�
 <!--more-->
 
 ## Bean生命周期
-![生命周期](/bean.jpg)
+![生命周期](/Bean-Lifecycle.png)
 
 ## 🦸‍♀️IoC
 控制反转：将创建对象的权利交给 Spring 容器来完成
@@ -29,21 +29,121 @@ Spring 源码流程分析，主要包含 Spring 核心功能 IoC 和 AOP 部分�
 ![IoC](/IoC.png)
 
 以注解扫描的方式启动和 XML 的类似。流程是一样的。
+
+### 主要方法
+#### obtainFreshBeanFactory()
+刷新/创建 bean 工厂，加载所有的 bean 定义
+#### invokeBeanFactoryPostProcessors(beanFactory)
+本方法会实例化和调用所有 BeanFactoryPostProcessor （包括其子类 BeanDefinitionRegistryPostProcessor） postProcessBeanFactory
+BeanDefinitionRegistryPostProcessor 优先级比 BeanFactoryPostProcessor 优先级高，所以它的子类的 postProcessBeanFactory 方法会先执行
+
 ### 后置处理器🤖️
+
 Spring 提供了很多空接口，供开发者自己实现，比如下面是 PostProcessor 「后置处理器」相关接口
+
 #### BeanFactoryPostProcessor
-beanFactory 的后置处理器：有个 postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) 方法，获取到的是 「Bean 工厂」，是在 invokeBeanFactoryPostProcessors() 方法中调用的，这个时候已经获取到了所有的 Bean 定义实例，但是还没有进行初始化，可以对所有 Bean 定义进行操作修改。
+
+beanFactory 的后置处理器：有个 postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) 方法，获取到的是 「Bean 工厂」，是在 invokeBeanFactoryPostProcessors() 方法前一步调用的，这个时候已经获取到了所有的 Bean 定义实例，但是还没有进行初始化，可以对所有 Bean 定义进行操作修改。
+
 #### BeanPostProcessor
+
 Bean 后置处理器：在 initializeBean() 方法中执行，会拦截所有的 Bean 进入当前处理器。此时 Bean 已经实例化完成。它提供了两个方法：
+
 1. postProcessBeforeInitialization
+
 invokeInitMethods() 方法之前的处理器
-2. postProcessAfterInitialization
+
+1. postProcessAfterInitialization
+
 invokeInitMethods() 方法之后的处理器
+
 #### InitializingBean
-初始化 Bean 时在 Bean 的后置处理 before 方法之后执行（看上面的执行顺序），此时已经初始化完成。在调用 invokeInitMethods() 方法时执行，此时会有三种情况：
+
+初始化 Bean 时在 Bean 的后置处理 before 方法之后执行（看上面的执行顺序），此时已经初始化完成。在调用 invokeInitMethods() 方法时执行
+
 1. 只实现了 InitializingBean 接口，会执行 afterPropertiesSet() 方法。
-2. 如果只设置了 init-method （@Bean(name = "user", initMethod = "init")），此时会执行init()方法
-3. 如果以上都有，按照1，2的顺序执行
+
+ **自定义初始化方法**
+
+1. 如果只设置了 init-method （@Bean(name = "user", **initMethod** = "init")），此时会执行init()方法
+
+**初始化方法代码**
+
+```
+@Component
+public class InitMy {
+   
+    public static class InitMethod implements InitializingBean{
+
+        @Override
+        public void afterPropertiesSet() throws Exception {
+            System.out.println("初始化");
+        }
+
+        private void myInitTest() {
+            System.out.println("我笑了init");
+        }
+    }
+
+    @Bean(initMethod = "myInitTest")
+    public InitMethod initMethod() {
+        return new InitMethod();
+    }
+
+}
+```
+
+### 各个后置处理器
+
+```
+@Component
+public class InitMy implements BeanFactoryPostProcessor {
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        System.out.println("执行顺序-3");
+    }
+
+    @Component
+    public static class InitRegister implements BeanDefinitionRegistryPostProcessor{
+
+        @Override
+        public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+            System.out.println("执行顺序-1");
+        }
+
+        @Override
+        public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+            System.out.println("执行顺序-2");
+        }
+    }
+
+    @Component
+    public static class Post implements BeanPostProcessor{
+
+        @Override
+        public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+            return null;
+        }
+
+        @Override
+        public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+            return null;
+        }
+    }
+
+    @Component
+    public static class InitMethod implements InitializingBean{
+
+        @Override
+        public void afterPropertiesSet() throws Exception {
+
+        }
+    }
+}
+```
+
+### 
+
 ## 代码
 ### 启动类代码
 
@@ -119,12 +219,12 @@ JDK 内置的动态代理类。在 Spring 中如果目标类有接口就直接�
 ### 流程
 类关系
 下图是自动代理主要的类 AnnotationAwareAspectJAutoProxyCreator 继承关系，它本质其实是一个拥有BeanPostProcessor 接口特性的类。
-![](class-image.png)
+![](AbstractAutoProxyCreator.png)
 
 调用流程
 1. AOP 生成代理对象是依赖了 IoC 容器，在容器初始化完 Bean 之后，在 BeanPostProcessor 后置处理器的 after 方法中执行生成过程。
 2. 调用时先拿到目标方法的拦截器链，然后执行对应的切面方法。
-![AOP](/AOP.png)
+![AOP](/Spring-AOP.png)
 
 #### 代码
 ##### 切面

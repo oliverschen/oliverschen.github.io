@@ -1,14 +1,14 @@
 ---
 title: Spring事务
 date: 2021-04-21 23:53:38
-tags: Spring
-category: Spring
+tags: [Spring,事务]
+category: [Spring,事务]
 comments: true
 ---
 
 ![Photo by destex on wallhaven.cc](/tx.png)
 
-在关系型数据库开发中，事务是绕不开的一个环节，Spring 提供了健全的事务机制，联合 ORM 框架完成事务操作。
+在关系型数据库开发中，事务是绕不开的一个环节，Spring 提供了健全的事务机制，联合 ORM 框架完成事务操作。在 Spring 中，事务机制是通过 AOP 机制实现的，[这里就是 Spring AOP 和 IoC 流程](https://oliverschen.github.io/2021/02/10/Spring源码/)。
 
 <!--more-->
 

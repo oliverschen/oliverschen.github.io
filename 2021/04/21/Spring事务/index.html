@@ -174,6 +174,10 @@
                         <a href="/categories/Spring/">Spring</a>&nbsp;
                     </li>
                 
+                    <li>
+                        &gt; <a href="/categories/Spring/%E4%BA%8B%E5%8A%A1/">事务</a>&nbsp;
+                    </li>
+                
             </ul>
         </span>
     
@@ -186,6 +190,10 @@
                         <a href="/tags/Spring/">Spring</a>&nbsp;
                     </li>
                 
+                    <li>
+                        | <a href="/tags/%E4%BA%8B%E5%8A%A1/">事务</a>&nbsp;
+                    </li>
+                
             </ul>
         </span>
     
@@ -193,7 +201,7 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>459 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>485 字</span>
         </span>
     
     
@@ -215,7 +223,7 @@
 
         <div class="article-content markdown-body">
             <p><img src="/2021/04/21/Spring%E4%BA%8B%E5%8A%A1/tx.png" alt="Photo by destex on wallhaven.cc"></p>
-<p>在关系型数据库开发中，事务是绕不开的一个环节，Spring 提供了健全的事务机制，联合 ORM 框架完成事务操作。</p>
+<p>在关系型数据库开发中，事务是绕不开的一个环节，Spring 提供了健全的事务机制，联合 ORM 框架完成事务操作。在 Spring 中，事务机制是通过 AOP 机制实现的，<a href="https://oliverschen.github.io/2021/02/10/Spring%E6%BA%90%E7%A0%81/">这里就是 Spring AOP 和 IoC 流程</a>。</p>
 <a id="more"></a>
 
 <h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>事务分为编程式事务和声明式事务。前者顾名思义，可以控制事务粒度但是和业务代码耦合较高，一般不采用。声明式事务通过 AOP 实现，在 IoC 容器启动的时候，在 BeanPostProcessor 后置处理器的后置方法中实现事务。</p>

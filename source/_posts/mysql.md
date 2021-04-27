@@ -18,6 +18,8 @@ comments: true
 MySQL 是由两大部分 server 部分和存储引擎构成的。而 server 部分主要由 连接器，分析器，优化器和执行器组成的，server 部分主要负责客户端的连接，SQL 语句的解析，优化以及执行。 存储引擎主要负责数存储，并且提供数据的读写接口。
 
 ### MySQL组件
+
+![MySQL组成](/mysql-comp.jpg)
 #### server
 
 MySQL 前置操作都在这里执行。

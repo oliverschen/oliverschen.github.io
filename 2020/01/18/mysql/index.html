@@ -219,7 +219,8 @@
 <a id="more"></a>
 
 <h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>MySQL 是由两大部分 server 部分和存储引擎构成的。而 server 部分主要由 连接器，分析器，优化器和执行器组成的，server 部分主要负责客户端的连接，SQL 语句的解析，优化以及执行。 存储引擎主要负责数存储，并且提供数据的读写接口。</p>
-<h3 id="MySQL组件"><a href="#MySQL组件" class="headerlink" title="MySQL组件"></a>MySQL组件</h3><h4 id="server"><a href="#server" class="headerlink" title="server"></a>server</h4><p>MySQL 前置操作都在这里执行。</p>
+<h3 id="MySQL组件"><a href="#MySQL组件" class="headerlink" title="MySQL组件"></a>MySQL组件</h3><p><img src="/2020/01/18/mysql/mysql-comp.jpg" alt="MySQL组成"></p>
+<h4 id="server"><a href="#server" class="headerlink" title="server"></a>server</h4><p>MySQL 前置操作都在这里执行。</p>
 <h4 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h4><p>负责管理客户端连接，权限的验证等操作。当验证通过一个用户名和密码之后，此后的操作都是依赖当前权限，也就是说当一个用户连接成功之后，即使管理员修改密码，但是他还是能完成操作。</p>
 <h4 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h4><p>当用户通过连接器，SQL 到达之后，一般会先查询缓存（8.0 之前）。如果缓存中存在的话直接返回。没有的话则对 SQL 语句进行语法分析等动作。对于缓存不建议使用，因为当有表涉及到更新时，所有关于当前表的缓存会失效。除非是数据不经常变更的数据表。</p>
 <h4 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h4><p>优化器主要是分析 SQL 语句怎样执行最优，然后生成执行方案。</p>

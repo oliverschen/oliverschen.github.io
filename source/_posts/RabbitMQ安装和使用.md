@@ -438,6 +438,10 @@ public class TopicConsumer {
     }
 }
 ```
+
+##### Headers
+通过匹配消息 headers 中的 token 属性，会忽略「路由key」，如果一个消息 headers 中的 value 和队列绑定时的一样，那就会收到这条消息。
+
 参考[链接](https://blog.csdn.net/zhuzhezhuzhe1/article/details/80454956)
 参考[RabbitMq教程](https://www.kancloud.cn/digest/rabbitmq-for-java/122041)
 

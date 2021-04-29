@@ -442,6 +442,17 @@ public class TopicConsumer {
 ##### Headers
 通过匹配消息 headers 中的 token 属性，会忽略「路由key」，如果一个消息 headers 中的 value 和队列绑定时的一样，那就会收到这条消息。
 
+#### 可靠性投递
+##### 关注点
+1. 保证生产者发送成功消息
+2. 保证 MQ Server 收到消息
+3. 补偿机制
+##### 状态机实现
+将消息入库，给消息设置投递状态「0 默认」，「1 已消费」。在加入定时任务重试机制确保消息可以被 100% 消费，过程中要保证消息幂等性。
+![kekaoxing](RabbitMQ安装和使用/kekaoxing.jpg)
+##### 补偿机制
+如果定时任务重试一定次数之后还是不成功，只能人工来干预处理，设置 state=-1 将异常消息在后台管理系统中查询出来，进行手工处理。
+
 参考[链接](https://blog.csdn.net/zhuzhezhuzhe1/article/details/80454956)
 参考[RabbitMq教程](https://www.kancloud.cn/digest/rabbitmq-for-java/122041)
 

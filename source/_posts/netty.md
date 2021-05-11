@@ -152,6 +152,8 @@ zuul ,zuul2 ,Spring Cloud Gateway ,openResty ,Kong
 
 [Essential Netty in Action 《Netty 实战(精髓)》](https://waylau.gitbooks.io/essential-netty-in-action/content/GETTING%20STARTED/Asynchronous%20and%20Event%20Driven.html)
 
+[Scalable IO in Java](http://gee.cs.oswego.edu/dl/cpjslides/nio.pdf)
+
 
 ***
 
